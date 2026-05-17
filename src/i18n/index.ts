@@ -8,20 +8,22 @@ export type SupportedLocale = (typeof SUPPORT_LOCALES)[number];
 type MessageSchema = typeof en;
 
 const savedLocale = localStorage.getItem("locale");
-const browserLocale = navigator.language.startsWith("fr")? "fr" : "en";
+const browserLocale = navigator.language.startsWith("fr") ? "fr" : "en";
 
-const locale: SupportedLocale = SUPPORT_LOCALES.includes(savedLocale as SupportedLocale) ? (savedLocale as SupportedLocale) : browserLocale;
+const locale: SupportedLocale = SUPPORT_LOCALES.includes(savedLocale as SupportedLocale)
+  ? (savedLocale as SupportedLocale)
+  : browserLocale;
 
 const messages: Record<SupportedLocale, MessageSchema> = {
-    fr, 
-    en
+  fr,
+  en,
 };
 
 const i18n = createI18n<[MessageSchema], SupportedLocale>({
-    legacy: false,
-    locale,
-    fallbackLocale: "en",
-    messages
+  legacy: false,
+  locale,
+  fallbackLocale: "en",
+  messages,
 });
 
 export default i18n;
