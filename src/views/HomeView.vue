@@ -18,7 +18,7 @@
     </p>
 
     <RouterLink
-      to="/game"
+      to="/play"
       class="mt-8 rounded-xl bg-emerald-500 px-6 py-3 font-semibold text-white transition hover:bg-emerald-400"
     >
       {{ t("home.start") }}
