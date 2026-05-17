@@ -1,0 +1,25 @@
+{
+  "app": {
+    "name": "Naming Countries Game",
+    "home": "Home",
+    "play": "Play"
+  },
+  "home": {
+    "title": "Name the countries of the world",
+    "description": "Find country names, improve your geography memory, and beat your best score.",
+    "start": "Start"
+  },
+  "game": {
+    "classicMode": "Classic mode",
+    "score": "Score: {score} / {total}",
+    "inputPlaceholder": "Name a country...",
+    "submit": "Submit",
+    "correct": "Correct answer: {country}",
+    "wrong": "Wrong answer",
+    "alreadyFound": "Country already found: {country}"
+  },
+  "language": {
+    "fr": "French",
+    "en": "English"
+  }
+}
