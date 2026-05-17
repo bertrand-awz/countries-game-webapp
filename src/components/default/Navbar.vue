@@ -23,9 +23,9 @@
 
 <template>
   <nav
-    class="fixed start-0 top-0 z-20 w-full border-b border-slate-800 bg-slate-950/95 backdrop-blur"
+    class="fixed inset-s-0 top-0 z-20 w-full border-b border-slate-800 bg-slate-950/95 backdrop-blur"
   >
-    <div class="mx-auto flex max-w-screen-xl flex-wrap items-center justify-between p-4">
+    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between p-4">
       <RouterLink to="/" class="flex items-center space-x-3" @click="closeMenu">
         <img src="/favicon.ico" class="h-8 w-8" alt="Naming Countries Game logo" />
 
