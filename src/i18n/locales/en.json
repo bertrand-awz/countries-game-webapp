@@ -1,25 +1,35 @@
 {
-  "app": {
-    "name": "Naming Countries Game",
-    "home": "Home",
-    "play": "Play"
+  "APP": {
+    "NAME": "Naming Countries Game",
+    "HOME": "Home",
+    "START_GAME": "Play",
+    "SUPPORTED_LANGUAGES": "Supported languages",
+    "COMPONENTS": {
+      "NAVBAR": {}
+    }
   },
-  "home": {
-    "title": "Name the countries of the world",
-    "description": "Find country names, improve your geography memory, and beat your best score.",
-    "start": "Start"
+  "VIEWS": {
+    "HOME":{
+      "WELCOME_TEXT":"",
+      "GAME_TEASING_TEXT": ""
+    }
   },
-  "game": {
-    "classicMode": "Classic mode",
-    "score": "Score: {score} / {total}",
-    "inputPlaceholder": "Name a country...",
-    "submit": "Submit",
-    "correct": "Correct answer: {country}",
-    "wrong": "Wrong answer",
-    "alreadyFound": "Country already found: {country}"
+  "HOME": {
+    "TITLE": "Name the countries of the world",
+    "DESCRIPTION": "Find country names, improve your geography memory, and beat your best score.",
+    "START": "Start"
   },
-  "language": {
-    "fr": "French",
-    "en": "English"
+  "GAME": {
+    "CLASSIC_MODE": "Classic mode",
+    "SCORE": "Score: {score} / {total}",
+    "INPUT_PLACEHOLDER": "Name a country...",
+    "SUBMIT": "Submit",
+    "CORRECT": "Correct answer: {country}",
+    "WRONG": "Wrong answer",
+    "ALREADY_FOUND": "Country already found: {country}"
+  },
+  "LANGUAGES": {
+    "FR": "French",
+    "EN": "English"
   }
 }

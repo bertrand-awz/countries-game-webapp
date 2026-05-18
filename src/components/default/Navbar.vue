@@ -1,148 +1,163 @@
 <script setup lang="ts">
-  import { ref } from "vue";
-  import { RouterLink } from "vue-router";
-  import { useI18n } from "vue-i18n";
+  import {
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuItems,
+  } from "@headlessui/vue";
 
-  const { t, locale } = useI18n();
+  import {
+  MenuIcon,
+  XIcon,
+  Gamepad2Icon,
+  LanguagesIcon,
+} from "@lucide/vue";
 
-  const isMenuOpen = ref(false);
+import GameIcon from "@/assets/icons/gameIcon.svg";
+import { type SupportedLocale, LOCALES_OPTIONS } from "@/i18n";
+import { useI18n } from "vue-i18n";
 
-  function toggleMenu() {
-    isMenuOpen.value = !isMenuOpen.value;
-  }
+const {t, locale} = useI18n();
 
-  function closeMenu() {
-    isMenuOpen.value = false;
-  }
+function changeLocale(newLocale: SupportedLocale){
+  locale.value = newLocale;
+  localStorage.setItem("locale", newLocale);
+}
 
-  function changeLanguage(newLocale: "fr" | "en") {
-    locale.value = newLocale;
-    localStorage.setItem("locale", newLocale);
-  }
+  type NavigationItem = {
+    name: string;
+    href: string;
+    current?: boolean;
+  };
+
+
+  const navigation: NavigationItem[] = [
+    { name: "Home", href: "#",current: true },
+    { name: "About", href: "#", },
+    { name: "Projects", href: "#" },
+    { name: "Calendar", href: "#" },
+  ];
 </script>
 
+
 <template>
-  <nav
-    class="fixed inset-s-0 top-0 z-20 w-full border-b border-slate-800 bg-slate-950/95 backdrop-blur"
-  >
-    <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between p-4">
-      <RouterLink to="/" class="flex items-center space-x-3" @click="closeMenu">
-        <img src="/favicon.ico" class="h-8 w-8" alt="Naming Countries Game logo" />
-
-        <span class="self-center text-xl font-semibold whitespace-nowrap text-white">
-          {{ t("app.name") }}
-        </span>
-      </RouterLink>
-
-      <div class="flex items-center gap-3 md:order-2">
-        <RouterLink
-          to="/play"
-          class="rounded-lg border border-transparent bg-emerald-500 px-4 py-2 text-sm leading-5 font-medium text-white shadow-sm transition hover:bg-emerald-400 focus:ring-4 focus:ring-emerald-500/30 focus:outline-none"
-          @click="closeMenu"
-        >
-          {{ t("app.play") }}
-        </RouterLink>
-
-        <select
-          :value="locale"
-          class="hidden rounded-lg border border-slate-700 bg-slate-900 px-3 py-2 text-sm text-white transition outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/30 sm:block"
-          @change="changeLanguage(($event.target as HTMLSelectElement).value as 'fr' | 'en')"
-        >
-          <option value="fr">{{ t("language.fr") }}</option>
-          <option value="en">{{ t("language.en") }}</option>
-        </select>
-
-        <button
-          type="button"
-          class="inline-flex h-10 w-10 items-center justify-center rounded-lg p-2 text-sm text-slate-300 transition hover:bg-slate-800 hover:text-white focus:ring-2 focus:ring-slate-600 focus:outline-none md:hidden"
-          aria-controls="navbar-menu"
-          :aria-expanded="isMenuOpen"
-          @click="toggleMenu"
-        >
-          <span class="sr-only">Open main menu</span>
-
-          <svg
-            v-if="!isMenuOpen"
-            class="h-6 w-6"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="2"
-              d="M5 7h14M5 12h14M5 17h14"
+  <Disclosure  v-slot="{ open }" as="nav" class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-content">
+        <div class="flex">
+          <!-- Logo -->
+          <div class="flex shrink-0 items-center">
+            <GameIcon
+              class="size-9"
+              alt="Name countries game logo"
+              aria-hidden="true"
             />
-          </svg>
+          </div>
 
-          <svg
-            v-else
-            class="h-6 w-6"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="2"
-              d="M6 18 18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
-
-      <div
-        id="navbar-menu"
-        class="w-full items-center justify-between md:order-1 md:flex md:w-auto"
-        :class="isMenuOpen ? 'block' : 'hidden'"
-      >
-        <ul
-          class="mt-4 flex flex-col rounded-lg border border-slate-800 bg-slate-900 p-4 font-medium md:mt-0 md:flex-row md:space-x-8 md:border-0 md:bg-transparent md:p-0"
-        >
-          <li>
-            <RouterLink
-              to="/"
-              class="block rounded px-3 py-2 text-slate-200 transition hover:bg-slate-800 hover:text-emerald-400 md:p-0 md:hover:bg-transparent"
-              active-class="bg-emerald-500 text-white md:bg-transparent md:text-emerald-400"
-              @click="closeMenu"
+          <!-- Desktop navigation -->
+          <div class="hidden md:ml-6 md:flex md:items-center md:space-x-4">
+            <a
+              v-for="item in navigation"
+              :key="item.name"
+              :href="item.href"
+              :class="['navbar-link navbar-link-desktop', item.current && 'navbar-link-active']"
+              :aria-current="item.current ? 'page' : undefined"
             >
-              {{ t("app.home") }}
-            </RouterLink>
-          </li>
+              {{ item.name }}
+            </a>
+          </div>
+        </div>
 
-          <li>
-            <RouterLink
-              to="/help"
-              class="block rounded px-3 py-2 text-slate-200 transition hover:bg-slate-800 hover:text-emerald-400 md:p-0 md:hover:bg-transparent"
-              active-class="bg-emerald-500 text-white md:bg-transparent md:text-emerald-400"
-              @click="closeMenu"
-            >
-              {{ t("app.help") }}
-            </RouterLink>
-          </li>
+        <div class="flex items-center gap-2 md:gap-4">
+          <!-- Action button -->
+          <div class="shrink-0 flex">
+            <button type="button" class="navbar-action-button">
+              <Gamepad2Icon class="size-5" aria-hidden="true" />
+              {{t("APP.START_GAME")}}
+            </button>
+          </div>
 
-          <li class="sm:hidden">
-            <label class="mt-2 block px-3 text-sm text-slate-400"> Langue </label>
+          <!-- Mobile menu button -->
+          <div class="flex items-center md:hidden">
+            <DisclosureButton class="navbar-mobile-button">
+              <span class="absolute -inset-0.5"></span>
+              <MenuIcon v-if="!open" class="block size-6" aria-hidden="true" />
+              <XIcon v-else class="block size-6" aria-hidden="true" />
+            </DisclosureButton>
+          </div>
 
-            <select
-              :value="locale"
-              class="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-500/30"
-              @change="changeLanguage(($event.target as HTMLSelectElement).value as 'fr' | 'en')"
-            >
-              <option value="fr">{{ t("language.fr") }}</option>
-              <option value="en">{{ t("language.en") }}</option>
-            </select>
-          </li>
-        </ul>
+          <div class="md:flex md:shrink-0 md:items-center">
+            
+            <!-- Languages dropdown -->
+            <Menu as="div" class="relative">
+              <MenuButton class="navbar-change-language-button">
+                <span class="absolute -inset-1.5"></span>
+                <LanguagesIcon class="block size-6"/>
+              </MenuButton>
+
+              <transition
+                enter-active-class="transition ease-out duration-200"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform scale-100"
+                leave-active-class="transition ease-in duration-75"
+                leave-from-class="transform scale-100"
+                leave-to-class="transform opacity-0 scale-95"
+              >
+                <MenuItems class="dropdown-menu">
+                  <MenuItem v-for="language in LOCALES_OPTIONS" :key="language.code" v-slot="{ active }">
+                    <button
+                      type="button"
+                      :class="['dropdown-item', active && 'dropdown-item-active']"
+                      @click="changeLocale(language.code)"
+                    >
+                      {{ t(language.labelKey) }}
+                    </button>
+                  </MenuItem>
+                </MenuItems>
+              </transition>
+            </Menu>
+          </div>
+        </div>
       </div>
     </div>
-  </nav>
+
+    <!-- Mobile panel -->
+    <DisclosurePanel class="mobile-panel">
+      <div class="mobile-panel-section">
+        <DisclosureButton
+          v-for="item in navigation"
+          :key="item.name"
+          as="a"
+          :href="item.href"
+          :class="['navbar-link navbar-link-mobile', item.current && 'navbar-link-active']"
+          :aria-current="item.current ? 'page' : undefined"
+        >
+          {{ item.name }}
+        </DisclosureButton>
+      </div>
+
+      <div class="border-t border-white/10 pt-4 pb-3">
+        <div class="flex items-center px-5 sm:px-6">
+          <div class="text-base font-medium text-white">
+              {{ t("APP.SUPPORTED_LANGUAGES") }}
+          </div>
+        </div>
+
+        <div class="mt-3 space-y-1 px-2 sm:px-3">
+          <DisclosureButton
+            v-for="language in LOCALES_OPTIONS"
+            :key="language.code"
+            as="button"
+            class="mobile-menu-item"
+            @click="changeLocale(language.code)"
+          >
+            {{ t(language.labelKey) }}
+          </DisclosureButton>
+        </div>
+      </div>
+    </DisclosurePanel>
+  </Disclosure>
 </template>

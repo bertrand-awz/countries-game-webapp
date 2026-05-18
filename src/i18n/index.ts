@@ -5,6 +5,17 @@ import fr from "./locales/fr.json";
 
 export const SUPPORT_LOCALES = ["fr", "en"] as const;
 export type SupportedLocale = (typeof SUPPORT_LOCALES)[number];
+export const LOCALES_OPTIONS: {code: SupportedLocale, labelKey: string}[]=[
+  {
+    code: "fr",
+    labelKey: "LANGUAGES.FR"
+  },
+  {
+    code: "en",
+    labelKey: "LANGUAGES.EN"
+  }
+];
+
 type MessageSchema = typeof en;
 
 const savedLocale = localStorage.getItem("locale");

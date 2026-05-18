@@ -1,25 +1,35 @@
 {
-  "app": {
-    "name": "Naming Countries Game",
-    "home": "Accueil",
-    "play": "Jouer"
+  "APP": {
+    "NAME": "Naming Countries Game",
+    "HOME": "Accueil",
+    "START_GAME": "Jouer",
+    "SUPPORTED_LANGUAGES": "Langues supportées",
+    "COMPONENTS": {
+      "NAVBAR": {}
+    }
   },
-  "home": {
-    "title": "Nomme les pays du monde",
-    "description": "Trouve le nom des pays, améliore ta mémoire géographique et bats ton meilleur score.",
-    "start": "Commencer"
+  "VIEWS": {
+    "HOME":{
+      "WELCOME_TEXT":"",
+      "GAME_TEASING_TEXT": ""
+    }
   },
-  "game": {
-    "classicMode": "Mode classique",
-    "score": "Score : {score} / {total}",
-    "inputPlaceholder": "Nommer un pays...",
-    "submit": "Valider",
-    "correct": "Bonne réponse : {country}",
-    "wrong": "Mauvaise réponse",
-    "alreadyFound": "Pays déjà trouvé : {country}"
+  "HOME": {
+    "TITLE": "Nomme les pays du monde",
+    "DESCRIPTION": "Trouve le nom des pays, améliore ta mémoire géographique et bats ton meilleur score.",
+    "START": "Commencer"
   },
-  "language": {
-    "fr": "Français",
-    "en": "Anglais"
+  "GAME": {
+    "CLASSIC_MODE": "Mode classique",
+    "SCORE": "Score : {score} / {total}",
+    "INPUT_PLACEHOLDER": "Nommer un pays...",
+    "SUBMIT": "Valider",
+    "CORRECT": "Bonne réponse : {country}",
+    "WRONG": "Mauvaise réponse",
+    "ALREADY_FOUND": "Pays déjà trouvé : {country}"
+  },
+  "LANGUAGES": {
+    "FR": "Français",
+    "EN": "Anglais"
   }
 }

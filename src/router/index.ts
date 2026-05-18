@@ -11,17 +11,17 @@ const router = createRouter({
       name: "home",
       component: HomeView,
       meta: {
-        layout:layoutTypes.DEFAULT
-      }
+        layout: layoutTypes.DEFAULT,
+      },
     },
     {
-      path:"/play",
-      name:"game",
+      path: "/play",
+      name: "game",
       component: GameView,
       meta: {
-        layout: layoutTypes.GAME
-      }
-    }
+        layout: layoutTypes.GAME,
+      },
+    },
   ],
 });
 

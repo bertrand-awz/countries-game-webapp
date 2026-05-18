@@ -4,7 +4,7 @@
 
   import DefaultLayout from "./layouts/DefaultLayout.vue";
   import GameLayout from "./layouts/GameLayout.vue";
-  import {layoutTypes } from "./layouts/types/layoutTypes";
+  import { layoutTypes } from "./layouts/types/layoutTypes";
 
   const route = useRoute();
   const layout = computed(() => {
