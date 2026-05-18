@@ -1,7 +1,9 @@
 <script setup lang="ts">
-  import { RouterView } from "vue-router";
+  import GameBoard from "@/components/game/GameBoard.vue";
 </script>
 
 <template>
-  <RouterView />
+  <div class="app-page">
+    <GameBoard />
+  </div>
 </template>

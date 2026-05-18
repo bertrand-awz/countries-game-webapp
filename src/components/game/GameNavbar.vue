@@ -1,12 +1,19 @@
 <script setup lang="ts">
-  import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
+  import {
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuItems,
+  } from "@headlessui/vue";
 
-  import { MenuIcon, XIcon, Gamepad2Icon } from "@lucide/vue";
+  import { MenuIcon, XIcon, Gamepad2Icon, LanguagesIcon } from "@lucide/vue";
 
   import GameIcon from "@/assets/icons/gameIcon.svg";
   import { type SupportedLocale, LOCALES_OPTIONS } from "@/i18n";
   import { useI18n } from "vue-i18n";
-  import LanguagesMenu from "@/components/common/NavbarLanguagesMenu.vue";
 
   const { t, locale } = useI18n();
 
@@ -70,7 +77,41 @@
               <XIcon v-else class="block size-6" aria-hidden="true" />
             </DisclosureButton>
           </div>
-          <LanguagesMenu />
+
+          <div class="md:flex md:shrink-0 md:items-center">
+            <!-- Languages dropdown -->
+            <Menu as="div" class="relative">
+              <MenuButton class="navbar-change-language-button">
+                <span class="absolute -inset-1.5"></span>
+                <LanguagesIcon class="block size-6" />
+              </MenuButton>
+
+              <transition
+                enter-active-class="transition ease-out duration-200"
+                enter-from-class="transform opacity-0 scale-95"
+                enter-to-class="transform scale-100"
+                leave-active-class="transition ease-in duration-75"
+                leave-from-class="transform scale-100"
+                leave-to-class="transform opacity-0 scale-95"
+              >
+                <MenuItems class="dropdown-menu">
+                  <MenuItem
+                    v-for="language in LOCALES_OPTIONS"
+                    :key="language.code"
+                    v-slot="{ active }"
+                  >
+                    <button
+                      type="button"
+                      :class="['dropdown-item', active && 'dropdown-item-active']"
+                      @click="changeLocale(language.code)"
+                    >
+                      {{ t(language.labelKey) }}
+                    </button>
+                  </MenuItem>
+                </MenuItems>
+              </transition>
+            </Menu>
+          </div>
         </div>
       </div>
     </div>
