@@ -9,8 +9,8 @@
     }
   },
   "VIEWS": {
-    "HOME":{
-      "WELCOME_TEXT":"",
+    "HOME": {
+      "WELCOME_TEXT": "",
       "GAME_TEASING_TEXT": ""
     }
   },

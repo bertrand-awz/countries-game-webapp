@@ -26,7 +26,7 @@
   }
 
   .navbar-content {
-    @apply flex h-16 justify-between w-full;
+    @apply flex h-16 w-full justify-between;
   }
 
   .navbar-mobile-button {
@@ -54,11 +54,11 @@
   }
 
   .navbar-action-button {
-    @apply relative inline-flex items-center gap-x-1.5 rounded-md bg-emerald-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:shadow-none hover:cursor-pointer;
+    @apply relative inline-flex items-center gap-x-1.5 rounded-md bg-emerald-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:cursor-pointer hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:shadow-none;
   }
 
   .navbar-change-language-button {
-    @apply relative ml-auto shrink-0 rounded-full p-1 text-gray-400 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-emerald-500 hover:cursor-pointer;
+    @apply relative ml-auto shrink-0 rounded-full p-1 text-gray-400 hover:cursor-pointer hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-emerald-500;
   }
 
   .navbar-avatar {
@@ -66,11 +66,11 @@
   }
 
   .dropdown-menu {
-    @apply absolute right-0 z-10 mt-2 flex-1 items-center origin-top-right rounded-md bg-white py-1 shadow-lg outline-1 outline-black/5 dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10;
+    @apply absolute right-0 z-10 mt-2 flex-1 origin-top-right items-center rounded-md bg-white py-1 shadow-lg outline-1 outline-black/5 dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10;
   }
 
   .dropdown-item {
-    @apply flex w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 ;
+    @apply flex w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200;
   }
 
   .dropdown-item-active {

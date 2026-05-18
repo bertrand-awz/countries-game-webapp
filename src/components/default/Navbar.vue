@@ -9,23 +9,18 @@
     MenuItems,
   } from "@headlessui/vue";
 
-  import {
-  MenuIcon,
-  XIcon,
-  Gamepad2Icon,
-  LanguagesIcon,
-} from "@lucide/vue";
+  import { MenuIcon, XIcon, Gamepad2Icon, LanguagesIcon } from "@lucide/vue";
 
-import GameIcon from "@/assets/icons/gameIcon.svg";
-import { type SupportedLocale, LOCALES_OPTIONS } from "@/i18n";
-import { useI18n } from "vue-i18n";
+  import GameIcon from "@/assets/icons/gameIcon.svg";
+  import { type SupportedLocale, LOCALES_OPTIONS } from "@/i18n";
+  import { useI18n } from "vue-i18n";
 
-const {t, locale} = useI18n();
+  const { t, locale } = useI18n();
 
-function changeLocale(newLocale: SupportedLocale){
-  locale.value = newLocale;
-  localStorage.setItem("locale", newLocale);
-}
+  function changeLocale(newLocale: SupportedLocale) {
+    locale.value = newLocale;
+    localStorage.setItem("locale", newLocale);
+  }
 
   type NavigationItem = {
     name: string;
@@ -33,28 +28,22 @@ function changeLocale(newLocale: SupportedLocale){
     current?: boolean;
   };
 
-
   const navigation: NavigationItem[] = [
-    { name: "Home", href: "#",current: true },
-    { name: "About", href: "#", },
+    { name: "Home", href: "#", current: true },
+    { name: "About", href: "#" },
     { name: "Projects", href: "#" },
     { name: "Calendar", href: "#" },
   ];
 </script>
 
-
 <template>
-  <Disclosure  v-slot="{ open }" as="nav" class="navbar">
+  <Disclosure v-slot="{ open }" as="nav" class="navbar">
     <div class="navbar-container">
       <div class="navbar-content">
         <div class="flex">
           <!-- Logo -->
           <div class="flex shrink-0 items-center">
-            <GameIcon
-              class="size-9"
-              alt="Name countries game logo"
-              aria-hidden="true"
-            />
+            <GameIcon class="size-9" alt="Name countries game logo" aria-hidden="true" />
           </div>
 
           <!-- Desktop navigation -->
@@ -73,10 +62,10 @@ function changeLocale(newLocale: SupportedLocale){
 
         <div class="flex items-center gap-2 md:gap-4">
           <!-- Action button -->
-          <div class="shrink-0 flex">
+          <div class="flex shrink-0">
             <button type="button" class="navbar-action-button">
               <Gamepad2Icon class="size-5" aria-hidden="true" />
-              {{t("APP.START_GAME")}}
+              {{ t("APP.START_GAME") }}
             </button>
           </div>
 
@@ -90,12 +79,11 @@ function changeLocale(newLocale: SupportedLocale){
           </div>
 
           <div class="md:flex md:shrink-0 md:items-center">
-            
             <!-- Languages dropdown -->
             <Menu as="div" class="relative">
               <MenuButton class="navbar-change-language-button">
                 <span class="absolute -inset-1.5"></span>
-                <LanguagesIcon class="block size-6"/>
+                <LanguagesIcon class="block size-6" />
               </MenuButton>
 
               <transition
@@ -107,7 +95,11 @@ function changeLocale(newLocale: SupportedLocale){
                 leave-to-class="transform opacity-0 scale-95"
               >
                 <MenuItems class="dropdown-menu">
-                  <MenuItem v-for="language in LOCALES_OPTIONS" :key="language.code" v-slot="{ active }">
+                  <MenuItem
+                    v-for="language in LOCALES_OPTIONS"
+                    :key="language.code"
+                    v-slot="{ active }"
+                  >
                     <button
                       type="button"
                       :class="['dropdown-item', active && 'dropdown-item-active']"
@@ -142,7 +134,7 @@ function changeLocale(newLocale: SupportedLocale){
       <div class="border-t border-white/10 pt-4 pb-3">
         <div class="flex items-center px-5 sm:px-6">
           <div class="text-base font-medium text-white">
-              {{ t("APP.SUPPORTED_LANGUAGES") }}
+            {{ t("APP.SUPPORTED_LANGUAGES") }}
           </div>
         </div>
 
