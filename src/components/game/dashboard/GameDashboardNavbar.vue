@@ -1,10 +1,7 @@
 <script setup lang="ts">
-  import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
-
-  import { ChevronDownIcon, MenuIcon, SearchIcon } from "@lucide/vue";
-
-  import GameIcon from "@/assets/icons/gameIcon.svg";
+  import { MenuIcon, SearchIcon, DoorOpenIcon, RotateCcwIcon } from "@lucide/vue";
   import LanguagesMenu from "@/components/common/NavbarLanguagesMenu.vue";
+  import { useI18n } from "vue-i18n";
 
   defineProps<{
     userNavigation: {
@@ -16,6 +13,8 @@
   defineEmits<{
     "open-sidebar": [];
   }>();
+
+  const {t} = useI18n();
 </script>
 
 <template>
@@ -49,6 +48,20 @@
               aria-hidden="true"
             />
           </form>
+
+          <div class="flex shrink-0">
+            <button type="button" class="navbar-restart-button">
+              <RotateCcwIcon class="size-5" aria-hidden="true" />
+              {{ t("APP.RESTART") }}
+            </button>
+          </div>
+
+          <div class="flex shrink-0">
+            <button type="button" class="navbar-exit-button">
+              <DoorOpenIcon class="size-5" aria-hidden="true" />
+              {{ t("APP.EXIT") }}
+            </button>
+          </div>
 
           <!-- User dropdown -->
           <LanguagesMenu />

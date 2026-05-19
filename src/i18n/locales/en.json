@@ -1,5 +1,7 @@
 {
   "APP": {
+    "RESTART": "Restart",
+    "EXIT": "Exit",
     "NAME": "Countries Game",
     "HOME": "Home",
     "START_GAME": "Play",

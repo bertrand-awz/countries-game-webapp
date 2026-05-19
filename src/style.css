@@ -57,8 +57,16 @@
     @apply relative inline-flex items-center gap-x-1.5 rounded-md bg-emerald-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:cursor-pointer hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 dark:shadow-none;
   }
 
+  .navbar-exit-button {
+    @apply relative inline-flex items-center gap-x-1.5 rounded-md bg-red-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:cursor-pointer hover:bg-red-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500 dark:shadow-none;
+  }
+
+  .navbar-restart-button {
+    @apply relative inline-flex items-center gap-x-1.5 rounded-md bg-cyan-500 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:cursor-pointer hover:bg-cyan-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-500 dark:shadow-none;
+  }
+
   .navbar-change-language-button {
-    @apply relative ml-auto shrink-0 rounded-full p-1 text-gray-400 hover:cursor-pointer hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-emerald-500;
+    @apply relative ml-auto shrink-0 border rounded-full p-2 text-gray-400 hover:cursor-pointer hover:text-white;
   }
 
   .navbar-avatar {
@@ -70,7 +78,7 @@
   }
 
   .dropdown-item {
-    @apply flex w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200;
+    @apply flex w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 cursor-pointer;
   }
 
   .dropdown-item-active {

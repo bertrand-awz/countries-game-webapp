@@ -36,7 +36,6 @@
             >
               <div class="absolute top-0 left-full flex w-16 justify-center pt-5">
                 <button type="button" class="-m-2.5 p-2.5" @click="closeSidebar">
-                  <span class="sr-only">Close sidebar</span>
                   <XMarkIcon class="size-6 text-white" aria-hidden="true" />
                 </button>
               </div>
@@ -45,7 +44,7 @@
             <GameDashboardSidebarContent
               :navigation="navigation"
               :teams="teams"
-              class="relative bg-white dark:bg-gray-900 dark:ring dark:ring-white/10 dark:before:pointer-events-none dark:before:absolute dark:before:inset-0 dark:before:bg-black/10"
+              class="navbar border-r"
             />
           </DialogPanel>
         </TransitionChild>
