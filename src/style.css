@@ -66,7 +66,7 @@
   }
 
   .navbar-change-language-button {
-    @apply relative ml-auto shrink-0 border rounded-full p-2 text-gray-400 hover:cursor-pointer hover:text-white;
+    @apply relative ml-auto shrink-0 rounded-full border p-2 text-gray-400 hover:cursor-pointer hover:text-white;
   }
 
   .navbar-avatar {
@@ -78,7 +78,7 @@
   }
 
   .dropdown-item {
-    @apply flex w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-200 cursor-pointer;
+    @apply flex w-full cursor-pointer px-4 py-2 text-sm text-gray-700 dark:text-gray-200;
   }
 
   .dropdown-item-active {

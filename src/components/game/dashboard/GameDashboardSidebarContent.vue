@@ -54,7 +54,7 @@
     <div class="flex h-16 shrink-0 items-center gap-2">
       <GameIcon class="size-10" />
       <div>
-        <h1 class="text-white text-l font-bold">
+        <h1 class="text-l font-bold text-white">
           {{ t("APP.NAME") }}
         </h1>
       </div>
