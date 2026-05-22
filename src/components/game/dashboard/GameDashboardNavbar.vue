@@ -1,7 +1,8 @@
 <script setup lang="ts">
-  import { MenuIcon, SearchIcon, DoorOpenIcon, RotateCcwIcon } from "@lucide/vue";
+  import { MenuIcon } from "@lucide/vue";
   import LanguagesMenu from "@/components/common/NavbarLanguagesMenu.vue";
   import { useI18n } from "vue-i18n";
+  import RestartAndExitButtons from "./navbarContents/RestartAndExitButtons.vue";
 
   defineProps<{
     userNavigation: {
@@ -34,36 +35,7 @@
         </div>
 
         <div class="flex flex-1 items-center justify-end gap-3 md:gap-4">
-          <!-- Search -->
-          <form class="hidden max-w-md flex-1 md:grid md:grid-cols-1" action="#" method="GET">
-            <input
-              name="search"
-              aria-label="Search"
-              class="col-start-1 row-start-1 block size-full rounded-md border border-white/10 bg-white/10 py-2 pr-3 pl-9 text-sm text-white outline-none placeholder:text-gray-400 focus:border-indigo-400 focus:ring-1 focus:ring-indigo-400"
-              placeholder="Search"
-            />
-
-            <SearchIcon
-              class="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400"
-              aria-hidden="true"
-            />
-          </form>
-
-          <div class="flex shrink-0">
-            <button type="button" class="navbar-restart-button">
-              <RotateCcwIcon class="size-5" aria-hidden="true" />
-              {{ t("APP.RESTART") }}
-            </button>
-          </div>
-
-          <div class="flex shrink-0">
-            <button type="button" class="navbar-exit-button">
-              <DoorOpenIcon class="size-5" aria-hidden="true" />
-              {{ t("APP.EXIT") }}
-            </button>
-          </div>
-
-          <!-- User dropdown -->
+          <RestartAndExitButtons :i18n-translator="t" />
           <LanguagesMenu />
         </div>
       </div>

@@ -1,17 +1,3 @@
-<template>
-  <div>
-    <Sidebar v-model:open="sidebarOpen" :navigation="navigation" :teams="teams" />
-
-    <div class="lg:pl-72">
-      <Navbar :user-navigation="userNavigation" @open-sidebar="sidebarOpen = true" />
-
-      <DashboardContent>
-        <!-- Ton contenu ici -->
-      </DashboardContent>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
   import { ref } from "vue";
 
@@ -50,3 +36,17 @@
     { name: "Sign out", href: "#" },
   ];
 </script>
+
+<template>
+  <div>
+    <Sidebar v-model:open="sidebarOpen" :navigation="navigation" :teams="teams" />
+
+    <div class="lg:pl-72">
+      <Navbar :user-navigation="userNavigation" @open-sidebar="sidebarOpen = true" />
+
+      <DashboardContent>
+        <!-- Ton contenu ici -->
+      </DashboardContent>
+    </div>
+  </div>
+</template>

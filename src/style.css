@@ -96,4 +96,12 @@
   .mobile-menu-item {
     @apply block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white;
   }
+
+  .sidebar-section-icon {
+    @apply size-5 text-gray-400;
+  }
+
+  .sidebar-section-title {
+    @apply text-gray-400;
+  }
 }

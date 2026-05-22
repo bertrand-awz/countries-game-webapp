@@ -1,7 +1,39 @@
+<script setup lang="ts">
+  import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
+
+  import { XMarkIcon } from "@heroicons/vue/24/outline";
+  import GameDashboardSidebarContent from "./GameDashboardSidebarContent.vue";
+
+  defineProps<{
+    open: boolean;
+    navigation: {
+      name: string;
+      href: string;
+      icon: unknown;
+      current: boolean;
+    }[];
+    teams: {
+      id: number;
+      name: string;
+      href: string;
+      initial: string;
+      current: boolean;
+    }[];
+  }>();
+
+  const emit = defineEmits<{
+    "update:open": [value: boolean];
+  }>();
+
+  function closeSidebar() {
+    emit("update:open", false);
+  }
+</script>
+
 <template>
   <!-- Mobile sidebar -->
   <TransitionRoot as="template" :show="open">
-    <Dialog class="relative z-50 lg:hidden" @close="closeSidebar">
+    <Dialog class="relative z-40 lg:hidden" @close="closeSidebar">
       <TransitionChild
         as="template"
         enter="transition-opacity ease-linear duration-300"
@@ -57,35 +89,3 @@
     <GameDashboardSidebarContent :navigation="navigation" :teams="teams" class="navbar border-r" />
   </div>
 </template>
-
-<script setup lang="ts">
-  import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
-
-  import { XMarkIcon } from "@heroicons/vue/24/outline";
-  import GameDashboardSidebarContent from "./GameDashboardSidebarContent.vue";
-
-  defineProps<{
-    open: boolean;
-    navigation: {
-      name: string;
-      href: string;
-      icon: unknown;
-      current: boolean;
-    }[];
-    teams: {
-      id: number;
-      name: string;
-      href: string;
-      initial: string;
-      current: boolean;
-    }[];
-  }>();
-
-  const emit = defineEmits<{
-    "update:open": [value: boolean];
-  }>();
-
-  function closeSidebar() {
-    emit("update:open", false);
-  }
-</script>
