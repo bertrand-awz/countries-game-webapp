@@ -67,9 +67,7 @@
               leave-to="opacity-0"
             >
               <div class="absolute top-0 left-full flex w-16 justify-center pt-5">
-                <button type="button" class="-m-2.5 p-2.5" @click="closeSidebar">
-                  <XMarkIcon class="size-6 text-white" aria-hidden="true" />
-                </button>
+                
               </div>
             </TransitionChild>
 

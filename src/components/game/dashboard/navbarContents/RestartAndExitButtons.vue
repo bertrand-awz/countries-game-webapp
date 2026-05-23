@@ -1,23 +1,30 @@
 <script setup lang="ts">
   import { RotateCcwIcon, DoorOpenIcon } from "@lucide/vue";
+  import ClickableSoundButton from "./ClickableSoundButton.vue";
 
   defineProps<{
     i18nTranslator: (translationKey: string) => string;
   }>();
+
+  function recommencer() {}
+
+  function quitter() {}
 </script>
 
 <template>
-  <div class="flex shrink-0">
-    <button type="button" class="navbar-restart-button">
-      <RotateCcwIcon class="size-5" aria-hidden="true" />
-      {{ i18nTranslator("APP.RESTART") }}
-    </button>
-  </div>
+  <div class="flex shrink-0 gap-4">
+    <ClickableSoundButton
+      button-class="navbar-restart-button"
+      :icon="RotateCcwIcon"
+      :label="i18nTranslator('APP.RESTART')"
+      :on-click="recommencer"
+    />
 
-  <div class="flex shrink-0">
-    <button type="button" class="navbar-exit-button">
-      <DoorOpenIcon class="size-5" aria-hidden="true" />
-      {{ i18nTranslator("APP.EXIT") }}
-    </button>
+    <ClickableSoundButton
+      button-class="navbar-exit-button"
+      :icon="DoorOpenIcon"
+      :label="i18nTranslator('APP.EXIT')"
+      :on-click="quitter"
+    />
   </div>
 </template>

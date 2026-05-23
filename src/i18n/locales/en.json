@@ -1,5 +1,7 @@
 {
   "APP": {
+    "PLAY": "Play",
+    "PAUSE": "Pause",
     "RESTART": "Restart",
     "EXIT": "Exit",
     "NAME": "Countries Game",

@@ -1,5 +1,7 @@
 {
   "APP": {
+    "PLAY": "Reprendre",
+    "PAUSE": "Pause",
     "RESTART": "Récommencer",
     "EXIT": "Quitter",
     "NAME": "Countries Game",

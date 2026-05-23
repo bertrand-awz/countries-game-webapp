@@ -1,10 +1,26 @@
-// src/services/sound/SoundManager.ts
-
 import { Howl, Howler } from "howler";
+import countdownSound from "@/assets/sounds/countdown.mp3";
+import gameOverSound from "@/assets/sounds/game-over.mp3";
+import impactSound from "@/assets/sounds/impact.mp3";
+import mainThemeSound from "@/assets/sounds/main-theme.mp3";
+import mouseClickSound from "@/assets/sounds/mouse-click.mp3";
 
-type SoundEffectName = "click" | "correct" | "wrong" | "success" | "celebration";
+export const SoundEffects = {
+  CLICK: "click",
+  CORRECT_ANSWER: "correct",
+  WRONG_ANSWER: "wrong",
+  SUCCESS: "success",
+  CELEBRATION: "celebration",
+} as const;
 
-type BackgroundMusicName = "main" | "game";
+export type SoundEffectName = (typeof SoundEffects)[keyof typeof SoundEffects];
+
+export const BackgroundMusics = {
+  MAIN: "main",
+  GAME: "game",
+} as const;
+
+export type BackgroundMusicName = (typeof BackgroundMusics)[keyof typeof BackgroundMusics];
 
 class SoundManager {
   private effects: Record<SoundEffectName, Howl>;
@@ -16,42 +32,44 @@ class SoundManager {
   private effectsVolume = 0.7;
   private musicVolume = 0.4;
 
+  private muted = false;
+
   constructor() {
     this.effects = {
-      click: new Howl({
-        src: ["/sounds/effects/click.mp3"],
+      [SoundEffects.CLICK]: new Howl({
+        src: [mouseClickSound],
         volume: this.effectsVolume,
       }),
 
-      correct: new Howl({
+      [SoundEffects.CORRECT_ANSWER]: new Howl({
         src: ["/sounds/effects/correct.mp3"],
         volume: this.effectsVolume,
       }),
 
-      wrong: new Howl({
+      [SoundEffects.WRONG_ANSWER]: new Howl({
         src: ["/sounds/effects/wrong.mp3"],
         volume: this.effectsVolume,
       }),
 
-      success: new Howl({
+      [SoundEffects.SUCCESS]: new Howl({
         src: ["/sounds/effects/success.mp3"],
         volume: this.effectsVolume,
       }),
 
-      celebration: new Howl({
+      [SoundEffects.CELEBRATION]: new Howl({
         src: ["/sounds/effects/celebration.mp3"],
         volume: this.effectsVolume,
       }),
     };
 
     this.musics = {
-      main: new Howl({
+      [BackgroundMusics.MAIN]: new Howl({
         src: ["/sounds/music/main-theme.mp3"],
         volume: this.musicVolume,
         loop: true,
       }),
 
-      game: new Howl({
+      [BackgroundMusics.GAME]: new Howl({
         src: ["/sounds/music/game-theme.mp3"],
         volume: this.musicVolume,
         loop: true,
@@ -117,15 +135,22 @@ class SoundManager {
   }
 
   mute(): void {
+    this.muted = true;
     Howler.mute(true);
   }
 
   unmute(): void {
+    this.muted = false;
     Howler.mute(false);
   }
 
   toggleMute(): void {
-    Howler.mute(!Howler._muted);
+    this.muted = !this.muted;
+    Howler.mute(this.muted);
+  }
+
+  isMuted(): boolean {
+    return this.muted;
   }
 
   private normalizeVolume(volume: number): number {

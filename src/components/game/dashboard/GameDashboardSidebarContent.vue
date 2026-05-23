@@ -4,7 +4,7 @@
 
   import GameIconAndTitle from "./sidebarContents/GameIconAndTitle.vue";
   import ScoresDisplayer from "./sidebarContents/ScoresDisplayer.vue";
-  import SoundControl from "./sidebarContents/SoundControl.vue";
+  import SoundControl from "./sidebarContents/SoundController.vue";
   import GameSettings from "./sidebarContents/GameSettings.vue";
 
   const { t } = useI18n();

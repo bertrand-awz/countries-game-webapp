@@ -39,10 +39,19 @@
 
 <template>
   <div>
-    <Sidebar v-model:open="sidebarOpen" :navigation="navigation" :teams="teams" />
+    <Sidebar
+      v-model:open="sidebarOpen"
+      :navigation="navigation"
+      :teams="teams"
+      @update:open="sidebarOpen = false"
+    />
 
     <div class="lg:pl-72">
-      <Navbar :user-navigation="userNavigation" @open-sidebar="sidebarOpen = true" />
+      <Navbar
+        :user-navigation="userNavigation"
+        :sidebar-opened="sidebarOpen"
+        @open-sidebar="sidebarOpen = true"
+      />
 
       <DashboardContent>
         <!-- Ton contenu ici -->

@@ -3,12 +3,14 @@
   import LanguagesMenu from "@/components/common/NavbarLanguagesMenu.vue";
   import { useI18n } from "vue-i18n";
   import RestartAndExitButtons from "./navbarContents/RestartAndExitButtons.vue";
+  import Timer from "./navbarContents/TimerDisplayer.vue";
 
-  defineProps<{
+  const props = defineProps<{
     userNavigation: {
       name: string;
       href: string;
     }[];
+    sidebarOpened: boolean;
   }>();
 
   defineEmits<{
@@ -22,11 +24,11 @@
   <nav class="navbar sticky top-0 z-40">
     <div class="navbar-container">
       <div class="navbar-content">
-        <div class="flex items-center gap-4">
+        <div class="mr-4 items-center lg:hidden" :class="props.sidebarOpened ? 'hidden' : 'flex'">
           <!-- Mobile sidebar button -->
           <button
             type="button"
-            class="navbar-mobile-button lg:hidden"
+            class="navbar-change-language-button"
             @click="$emit('open-sidebar')"
           >
             <span class="sr-only">Open sidebar</span>
@@ -34,9 +36,22 @@
           </button>
         </div>
 
-        <div class="flex flex-1 items-center justify-end gap-3 md:gap-4">
-          <RestartAndExitButtons :i18n-translator="t" />
-          <LanguagesMenu />
+        <div class="flex flex-1 items-center justify-between gap-3 md:gap-4">
+          <!-- Left side-->
+          <div class="flex flex-1 items-center justify-start gap-3 md:gap-4">
+            <Timer
+              :time-left-in-seconds="100"
+              :i18n-translator="t"
+              :show-timer="!props.sidebarOpened"
+            />
+          </div>
+          <!-- Center -->
+          <div></div>
+          <!-- Right size-->
+          <div class="flex flex-1 items-center justify-end gap-3 md:gap-4">
+            <RestartAndExitButtons :i18n-translator="t" />
+            <LanguagesMenu />
+          </div>
         </div>
       </div>
     </div>
