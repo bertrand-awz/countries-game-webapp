@@ -64,9 +64,7 @@
               leave-from=""
               leave-to="opacity-0"
             >
-              <div class="absolute top-0 left-full flex w-16 justify-center pt-5">
-                
-              </div>
+              <div class="absolute top-0 left-full flex w-16 justify-center pt-5"></div>
             </TransitionChild>
 
             <GameDashboardSidebarContent

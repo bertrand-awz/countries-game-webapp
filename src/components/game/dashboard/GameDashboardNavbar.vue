@@ -4,6 +4,7 @@
   import { useI18n } from "vue-i18n";
   import RestartAndExitButtons from "./navbarContents/RestartAndExitButtons.vue";
   import Timer from "./navbarContents/TimerDisplayer.vue";
+  import ScoreDisplayer from "./navbarContents/ScoreDisplayer.vue";
 
   const props = defineProps<{
     userNavigation: {
@@ -36,8 +37,8 @@
           </button>
         </div>
 
-        <div class="flex flex-1 items-center justify-between gap-3 md:gap-4">
-          <!-- Left side-->
+        <div class="flex flex-1 items-center gap-3 md:gap-4">
+          <!-- Left side -->
           <div class="flex flex-1 items-center justify-start gap-3 md:gap-4">
             <Timer
               :time-left-in-seconds="100"
@@ -45,9 +46,13 @@
               :show-timer="!props.sidebarOpened"
             />
           </div>
+
           <!-- Center -->
-          <div></div>
-          <!-- Right size-->
+          <div class="flex flex-1 items-center justify-center">
+            <ScoreDisplayer :score="5" />
+          </div>
+
+          <!-- Right side -->
           <div class="flex flex-1 items-center justify-end gap-3 md:gap-4">
             <RestartAndExitButtons :i18n-translator="t" />
             <LanguagesMenu />

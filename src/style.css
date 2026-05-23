@@ -18,7 +18,7 @@
   }
 
   .navbar {
-    @apply relative border-white/10 bg-gray-800 dark:bg-gray-800/50 dark:after:pointer-events-none dark:after:absolute dark:after:inset-x-0 dark:after:bottom-0 dark:after:h-px dark:after:bg-white/10;
+    @apply relative border-b border-white/10 bg-neutral-950;
   }
 
   .navbar-container {
@@ -84,6 +84,9 @@
     @apply bg-red-500/20 text-red-200 ring-red-600/30;
   }
 
+  .navbar-score-displayer {
+    @apply flex items-center rounded-md bg-white/10 px-3 py-2 text-center text-sm font-bold text-gray-500;
+  }
   .navbar-change-language-button {
     @apply relative ml-auto shrink-0 rounded-full border p-2 text-gray-400 hover:cursor-pointer hover:text-white;
   }
