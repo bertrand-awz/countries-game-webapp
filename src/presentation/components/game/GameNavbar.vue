@@ -12,7 +12,7 @@
   import { MenuIcon, XIcon, Gamepad2Icon, LanguagesIcon } from "@lucide/vue";
 
   import GameIcon from "@/assets/icons/gameIcon.svg";
-  import { type SupportedLocale, LOCALES_OPTIONS } from "@/i18n";
+  import { type SupportedLocale, LOCALES_OPTIONS } from "@/app/i18n";
   import { useI18n } from "vue-i18n";
 
   const { t, locale } = useI18n();

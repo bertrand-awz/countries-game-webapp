@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { Component } from "vue";
-  import { SoundEffects, soundManager } from "@/services/sound/SoundManager";
+  import { SoundEffects, soundManager } from "@/infrastructure/sound/SoundManager";
 
   const props = withDefaults(
     defineProps<{

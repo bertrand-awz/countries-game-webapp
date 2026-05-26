@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { type SupportedLocale, LOCALES_OPTIONS } from "@/i18n";
+  import { type SupportedLocale, LOCALES_OPTIONS } from "@/app/i18n";
   import { useI18n } from "vue-i18n";
   import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 

@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import GameView from "../views/GameView.vue";
-import { layoutTypes } from "../layouts/types/layoutTypes";
+import HomeView from "../../presentation/views/HomeView.vue";
+import GameView from "../../presentation/views/GameView.vue";
+import { layoutTypes } from "../layouts/types/layoutTypes.ts";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),

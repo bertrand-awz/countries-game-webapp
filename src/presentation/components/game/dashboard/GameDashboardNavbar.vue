@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MenuIcon } from "@lucide/vue";
-  import LanguagesMenu from "@/components/common/NavbarLanguagesMenu.vue";
+  import LanguagesMenu from "@/presentation/components/common/NavbarLanguagesMenu.vue";
   import { useI18n } from "vue-i18n";
   import RestartAndExitButtons from "./navbarContents/RestartAndExitButtons.vue";
   import Timer from "./navbarContents/TimerDisplayer.vue";

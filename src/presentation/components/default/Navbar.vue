@@ -4,9 +4,9 @@
   import { MenuIcon, XIcon, Gamepad2Icon } from "@lucide/vue";
 
   import GameIcon from "@/assets/icons/gameIcon.svg";
-  import { type SupportedLocale, LOCALES_OPTIONS } from "@/i18n";
+  import { type SupportedLocale, LOCALES_OPTIONS } from "@/app/i18n";
   import { useI18n } from "vue-i18n";
-  import LanguagesMenu from "@/components/common/NavbarLanguagesMenu.vue";
+  import LanguagesMenu from "@/presentation/components/common/NavbarLanguagesMenu.vue";
 
   const { t, locale } = useI18n();
 
