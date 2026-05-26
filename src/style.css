@@ -126,4 +126,8 @@
   .sidebar-section-title {
     @apply text-gray-400;
   }
+
+  .input-sound-range {
+    @apply h-2 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-indigo-400;
+  }
 }

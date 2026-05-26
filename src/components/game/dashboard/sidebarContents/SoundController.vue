@@ -15,7 +15,6 @@
     <!-- Titre principal -->
     <div class="text-md/6 flex items-center gap-x-2 font-semibold">
       <Volume2Icon class="sidebar-section-icon" />
-
       <h2 class="sidebar-section-title">Sons</h2>
     </div>
 
@@ -26,7 +25,6 @@
         <div class="mb-2 flex items-center justify-between">
           <div class="flex items-center gap-x-2">
             <MusicIcon class="size-4 text-sky-300" />
-
             <span class="text-sm font-medium text-gray-200"> Musique principale </span>
           </div>
 
@@ -45,7 +43,10 @@
 
       <!-- Effets sonores -->
       <div class="rounded-lg bg-white/5 px-3 py-3">
-        <div class="mb-2 flex items-center justify-between">
+        <label
+          for="sound-effects-range"
+          class="text-heading mb-2 flex items-center justify-between"
+        >
           <div class="flex items-center gap-x-2">
             <WandSparklesIcon class="size-4 text-amber-300" />
 
@@ -53,15 +54,15 @@
           </div>
 
           <span class="text-sm font-bold text-white"> {{ effectsVolume }}% </span>
-        </div>
-
+        </label>
         <input
+          id="sound-effects-range"
           v-model.number="effectsVolume"
           type="range"
           min="0"
           max="100"
           step="1"
-          class="h-2 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-indigo-400"
+          class="input-sound-range"
         />
       </div>
     </div>
