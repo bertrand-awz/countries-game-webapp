@@ -1,6 +1,6 @@
-import type { CountryFoundEvent } from "@/domain/game/events/CountryFoundEvent";
-import type { CountryRejectedEvent } from "@/domain/game/events/CountryRejectedEvent";
-import type { TurnChangedEvent } from "@/domain/game/events/TurnChangedEvent";
+import type { CountryFoundEvent } from "@/domain/game/events/CountryFoundEvent.ts";
+import type { CountryRejectedEvent } from "@/domain/game/events/CountryRejectedEvent.ts";
+import type { TurnChangedEvent } from "@/domain/game/events/TurnChangedEvent.ts";
 
 export type GameSession = {
   roomId: string;
@@ -23,8 +23,6 @@ export interface GameServer {
   createRoom(options: CreateRoomOptions): Promise<GameSession>;
 
   joinRoom(options: JoinRoomOptions): Promise<GameSession>;
-
-  joinOrCreateRoom(options: CreateRoomOptions & { username: string }): Promise<GameSession>;
 
   leaveRoom(): Promise<void>;
 

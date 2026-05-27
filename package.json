@@ -13,6 +13,7 @@
     "list:fix": "eslint . --fix"
   },
   "dependencies": {
+    "@colyseus/sdk": "^0.17.42",
     "@headlessui/vue": "^1.7.23",
     "@heroicons/vue": "^2.2.0",
     "@lucide/vue": "^1.16.0",
