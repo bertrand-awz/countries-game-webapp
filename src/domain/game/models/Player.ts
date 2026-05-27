@@ -30,7 +30,7 @@ export class Player {
     this.totalCountriesFound = countriesFound;
   }
 
-  getCountriesFoundNumber():number {
+  getCountriesFoundNumber(): number {
     return this.totalCountriesFound;
   }
 }
