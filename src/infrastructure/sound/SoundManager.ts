@@ -1,8 +1,4 @@
 import { Howl, Howler } from "howler";
-import countdownSound from "@/assets/sounds/countdown.mp3";
-import gameOverSound from "@/assets/sounds/game-over.mp3";
-import impactSound from "@/assets/sounds/impact.mp3";
-import mainThemeSound from "@/assets/sounds/main-theme.mp3";
 import mouseClickSound from "@/assets/sounds/mouse-click.mp3";
 
 export const SoundEffects = {

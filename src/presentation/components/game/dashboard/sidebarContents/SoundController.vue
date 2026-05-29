@@ -25,10 +25,10 @@
         <div class="mb-2 flex items-center justify-between">
           <div class="flex items-center gap-x-2">
             <MusicIcon class="size-4 text-sky-300" />
-            <span class="text-sm font-medium text-gray-200"> Musique principale </span>
+            <span class="text-xs font-semibold text-white"> Musique principale </span>
           </div>
 
-          <span class="text-sm font-bold text-white"> {{ mainVolume }}% </span>
+          <span class="text-sm text-white"> {{ mainVolume }} % </span>
         </div>
 
         <input
@@ -37,7 +37,7 @@
           min="0"
           max="100"
           step="1"
-          class="h-2 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-indigo-400"
+          class="input-sound-range"
         />
       </div>
 
@@ -47,13 +47,12 @@
           for="sound-effects-range"
           class="text-heading mb-2 flex items-center justify-between"
         >
-          <div class="flex items-center gap-x-2">
+          <span class="flex items-center gap-x-2">
             <WandSparklesIcon class="size-4 text-amber-300" />
+            <span class="text-xs font-semibold text-gray-200"> Effets spéciaux </span>
+          </span>
 
-            <span class="text-sm font-medium text-gray-200"> Effets spéciaux </span>
-          </div>
-
-          <span class="text-sm font-bold text-white"> {{ effectsVolume }}% </span>
+          <span class="text-sm text-white"> {{ effectsVolume }} % </span>
         </label>
         <input
           id="sound-effects-range"

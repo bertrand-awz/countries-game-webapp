@@ -11,17 +11,17 @@
     <!-- Titre principal -->
     <div class="text-md/6 flex items-center gap-x-2 font-semibold">
       <BadgeCheckIcon class="size-5 text-indigo-400" />
-      <h2 class="font-bold text-white">Scores</h2>
+      <h2 class="font-bold">Scores</h2>
     </div>
     <!-- Scores personnels -->
     <div class="ml-2 gap-6 space-y-3 border-l border-white/10 pl-4">
       <div class="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2">
         <div class="flex items-center gap-x-2">
           <User2Icon class="size-4 text-amber-300" />
-          <h3 class="text-sm font-medium text-gray-200">Biscuits</h3>
+          <h3 class="font-medium">Biscuits</h3>
         </div>
 
-        <span class="text-sm font-bold text-white"> 0 </span>
+        <span class="font-bold"> 0 </span>
       </div>
 
       <!-- Liste des pays cités -->

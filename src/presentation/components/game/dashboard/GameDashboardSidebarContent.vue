@@ -31,7 +31,7 @@
 </script>
 
 <template>
-  <div class="flex h-full grow flex-col gap-y-10 overflow-y-auto px-6 pb-4 text-gray-400">
+  <div class="sidebar-content">
     <GameIconAndTitle :translate="t" />
 
     <nav class="flex flex-1 flex-col gap-8">
