@@ -6,13 +6,14 @@
   import { useI18n } from "vue-i18n";
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
   import { Player } from "@/domain/game/models/Player.ts";
+  import { howlerSoundManager } from "@/infrastructure/sound/HowlerSoundManager.ts";
 
   const { t } = useI18n();
   const sidebarOpen = ref(false);
   //const gameState = defineModel<GameState>("gameState", { required: true });
 
   const gameStatus = ref(GameStatus.WAITING);
-  const player = ref<Player>(new Player("Rat", "Bis"));
+  const player = new Player("Rat", "Bis");
 
   //TODO: delete this code when connected to the backend (and review lines 65 - 68)
   function start() {
@@ -30,16 +31,21 @@
 <template>
   <div class="app-page">
     <GameNavbar
+      v-model:player="player"
       :sidebar-opened="sidebarOpen"
       :translator="t"
       :game-status="gameStatus"
       :request-pause="pause"
       :request-resume="resume"
       :start-game="start"
-      :player="player"
       @open-sidebar="sidebarOpen = true"
     />
-    <GameSidebar v-model:open="sidebarOpen" :translator="t" @update:open="sidebarOpen = false" />
+    <GameSidebar
+      v-model:open="sidebarOpen"
+      :translator="t"
+      :sound-manager="howlerSoundManager"
+      @update:open="sidebarOpen = false"
+    />
     <GameBoard />
   </div>
 </template>

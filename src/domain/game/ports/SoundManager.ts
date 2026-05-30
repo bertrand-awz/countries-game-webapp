@@ -17,4 +17,6 @@ export interface SoundManager {
   stopLoopableEffect(effectName: LoopableSoundEffectName): void;
   setMainThemeVolume(newVolume: number): void;
   setSoundEffectVolume(newVolume: number): void;
+  getMainVolume(): number;
+  getSoundEffectVolume(): number;
 }

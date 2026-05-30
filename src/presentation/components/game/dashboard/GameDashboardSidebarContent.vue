@@ -5,6 +5,11 @@
   import GameIconAndTitle from "./sidebarContents/GameIconAndTitle.vue";
   import SoundController from "./sidebarContents/soundController/SoundController.vue";
   import GameSettings from "./sidebarContents/gameSettings/GameSettings.vue";
+  import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
+
+  defineProps<{
+    soundManager: SoundManager;
+  }>();
 
   const { t } = useI18n();
 
@@ -17,7 +22,7 @@
     <GameIconAndTitle :translate="t" />
 
     <nav class="flex flex-1 flex-col gap-8">
-      <SoundController :translator="t" />
+      <SoundController :translator="t" :sound-manager="soundManager" />
 
       <GameSettings v-model:players-count="playersCount" v-model:timer-minutes="timerMinutes" />
     </nav>

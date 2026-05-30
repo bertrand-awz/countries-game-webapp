@@ -3,7 +3,7 @@
   import { PauseIcon, PlayIcon, TimerIcon } from "@lucide/vue";
   import ClickableSoundButton from "./ClickableSoundButton.vue";
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
-  import { soundManager } from "@/infrastructure/sound/HowlerSoundManager.ts";
+  import { howlerSoundManager } from "@/infrastructure/sound/HowlerSoundManager.ts";
   import { LoopableSoundEffectName } from "@/domain/game/ports/SoundManager.ts";
 
   const emit = defineEmits<{
@@ -90,11 +90,11 @@
     () => props.timeLeftInSeconds,
     (timeLeftInSeconds) => {
       if (timeLeftInSeconds > 0 && timeLeftInSeconds <= 180) {
-        soundManager.playEffectInLoop(LoopableSoundEffectName.TIMER_COUNTDOWN);
+        howlerSoundManager.playEffectInLoop(LoopableSoundEffectName.TIMER_COUNTDOWN);
         return;
       }
 
-      soundManager.stopLoopableEffect(LoopableSoundEffectName.TIMER_COUNTDOWN);
+      howlerSoundManager.stopLoopableEffect(LoopableSoundEffectName.TIMER_COUNTDOWN);
     },
     { immediate: true },
   );

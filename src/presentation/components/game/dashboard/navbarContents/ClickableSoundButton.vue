@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import type { Component } from "vue";
-  import { soundManager } from "@/infrastructure/sound/HowlerSoundManager";
+  import { howlerSoundManager } from "@/infrastructure/sound/HowlerSoundManager";
   import { SoundEffectName } from "@/domain/game/ports/SoundManager.ts";
 
   const props = withDefaults(
@@ -24,7 +24,7 @@
     if (props.disabled) {
       return;
     }
-    soundManager.playEffect(props.soundEffect);
+    howlerSoundManager.playEffect(props.soundEffect);
     props.actionOnClick();
   }
 </script>

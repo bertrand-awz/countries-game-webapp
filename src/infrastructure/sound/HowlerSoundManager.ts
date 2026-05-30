@@ -61,6 +61,14 @@ class HowlerSoundManager implements SoundManager {
     });
   }
 
+  getMainVolume(): number {
+    return Math.round(this.mainThemeVolume * 100);
+  }
+
+  getSoundEffectVolume(): number {
+    return Math.round(this.soundEffectVolume * 100);
+  }
+
   playEffect(effectName: SoundEffectName): void {
     this.effects[effectName].play();
   }
@@ -100,8 +108,10 @@ class HowlerSoundManager implements SoundManager {
   }
 
   private normalizeVolume(volume: number): number {
-    return Math.max(0, Math.min(1, volume));
+    const normalizedVolume = volume / 100;
+
+    return Math.max(0, Math.min(1, normalizedVolume));
   }
 }
 
-export const soundManager = new HowlerSoundManager();
+export const howlerSoundManager = new HowlerSoundManager();

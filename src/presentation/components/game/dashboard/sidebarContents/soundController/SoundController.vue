@@ -1,17 +1,24 @@
 <script setup lang="ts">
   import { MusicIcon, Volume2Icon, WandSparklesIcon } from "@lucide/vue";
   import InputRangeSlider from "./InputRangeSlider.vue";
+  import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
+  import { ref, watch } from "vue";
 
-  defineProps<{
+  const props = defineProps<{
     translator: (translationKey: string) => string;
+    soundManager: SoundManager;
   }>();
 
-  const mainVolume = defineModel<number>("mainVolume", {
-    default: 50,
+  const mainVolume = ref(props.soundManager.getMainVolume());
+
+  const effectsVolume = ref(props.soundManager.getSoundEffectVolume());
+
+  watch(mainVolume, (value: number) => {
+    props.soundManager.setMainThemeVolume(value);
   });
 
-  const effectsVolume = defineModel<number>("effectsVolume", {
-    default: 50,
+  watch(effectsVolume, (value: number) => {
+    props.soundManager.setSoundEffectVolume(value);
   });
 </script>
 
@@ -26,16 +33,17 @@
 
     <div class="ml-2 space-y-4 border-l border-white/10 pl-4">
       <InputRangeSlider
+        v-model:volume="mainVolume"
         :label="translator('GAME.SIDEBAR.SOUND_CONTROLLER.BACKGROUND_SOUND')"
         :icon-component="MusicIcon"
         icon-color-class="text-sky-300"
-        :volume="mainVolume"
       />
+
       <InputRangeSlider
+        v-model:volume="effectsVolume"
         :label="translator('GAME.SIDEBAR.SOUND_CONTROLLER.SOUND_EFFECTS')"
         :icon-component="WandSparklesIcon"
         icon-color-class="text-yellow-300"
-        :volume="effectsVolume"
       />
     </div>
   </section>
