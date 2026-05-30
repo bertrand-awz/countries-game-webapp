@@ -9,7 +9,7 @@
   }>();
 
   const props = defineProps<{
-    i18nTranslator: (translationKey: string) => string;
+    translator: (translationKey: string) => string;
     timeLeftInSeconds: number;
     showTimer: boolean;
   }>();
@@ -67,7 +67,7 @@
     <ClickableSoundButton
       :button-class="isPaused ? 'navbar-continue-button' : 'navbar-pause-button'"
       :icon="isPaused ? PlayIcon : PauseIcon"
-      :label="isPaused ? i18nTranslator('APP.PLAY') : i18nTranslator('APP.PAUSE')"
+      :label="isPaused ? translator('APP.PLAY') : translator('APP.PAUSE')"
       :on-click="togglePause"
     />
   </div>

@@ -3,7 +3,7 @@
   import ClickableSoundButton from "./ClickableSoundButton.vue";
 
   defineProps<{
-    i18nTranslator: (translationKey: string) => string;
+    translator: (translationKey: string) => string;
   }>();
 
   function recommencer() {}
@@ -16,14 +16,14 @@
     <ClickableSoundButton
       button-class="navbar-restart-button"
       :icon="RotateCcwIcon"
-      :label="i18nTranslator('APP.RESTART')"
+      :label="translator('APP.RESTART')"
       :on-click="recommencer"
     />
 
     <ClickableSoundButton
       button-class="navbar-exit-button"
       :icon="DoorOpenIcon"
-      :label="i18nTranslator('APP.EXIT')"
+      :label="translator('APP.EXIT')"
       :on-click="quitter"
     />
   </div>

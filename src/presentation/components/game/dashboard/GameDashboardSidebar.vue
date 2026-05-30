@@ -4,6 +4,7 @@
 
   defineProps<{
     open: boolean;
+    translator: (translationKey: string) => string;
   }>();
 
   const emit = defineEmits<{

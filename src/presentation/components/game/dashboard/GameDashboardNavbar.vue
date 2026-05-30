@@ -1,20 +1,19 @@
 <script setup lang="ts">
   import { MenuIcon } from "@lucide/vue";
   import LanguagesMenu from "@/presentation/components/common/NavbarLanguagesMenu.vue";
-  import { useI18n } from "vue-i18n";
+
   import RestartAndExitButtons from "./navbarContents/RestartAndExitButtons.vue";
   import Timer from "./navbarContents/TimerDisplayer.vue";
   import ScoreDisplayer from "./navbarContents/ScoreDisplayer.vue";
 
-  const props = defineProps<{
+  defineProps<{
     sidebarOpened: boolean;
+    translator: (translationKey: string) => string;
   }>();
 
   defineEmits<{
     "open-sidebar": [];
   }>();
-
-  const { t } = useI18n();
 </script>
 
 <template>
@@ -22,7 +21,7 @@
     <nav class="navbar sticky top-0 z-40">
       <div class="navbar-container">
         <div class="navbar-content">
-          <div class="mr-4 items-center lg:hidden" :class="props.sidebarOpened ? 'hidden' : 'flex'">
+          <div class="mr-4 items-center lg:hidden" :class="sidebarOpened ? 'hidden' : 'flex'">
             <!-- Mobile sidebar button -->
             <button
               type="button"
@@ -39,8 +38,8 @@
             <div class="flex flex-1 items-center justify-start gap-3 md:gap-4">
               <Timer
                 :time-left-in-seconds="100"
-                :i18n-translator="t"
-                :show-timer="!props.sidebarOpened"
+                :translator="translator"
+                :show-timer="!sidebarOpened"
               />
             </div>
 
@@ -51,7 +50,7 @@
 
             <!-- Right side -->
             <div class="flex flex-1 items-center justify-end gap-3 md:gap-4">
-              <RestartAndExitButtons :i18n-translator="t" />
+              <RestartAndExitButtons :translator="translator" />
               <LanguagesMenu />
             </div>
           </div>
