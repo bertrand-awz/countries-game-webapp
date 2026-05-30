@@ -6,6 +6,7 @@
   import Timer from "./navbarContents/TimerDisplayer.vue";
   import ScoreDisplayer from "./navbarContents/ScoreDisplayer.vue";
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
+  import type { Player } from "@/domain/game/models/Player.ts";
 
   defineProps<{
     sidebarOpened: boolean;
@@ -21,21 +22,9 @@
 
   const gameStatus = defineModel<GameStatus>("gameStatus", {
     required: true,
-    default: () => GameStatus.WAITING,
   });
 
-  //TODO: delete this code when connected to the backend (and review lines 65 - 68)
-  function start() {
-    gameStatus.value = GameStatus.PLAYING;
-  }
-  function pause() {
-    gameStatus.value = GameStatus.PAUSED;
-  }
-  function resume() {
-    gameStatus.value = GameStatus.PLAYING;
-  }
-  //
-
+  const player = defineModel<Player>("player", { required: true });
 </script>
 
 <template>
@@ -63,15 +52,15 @@
                 :translator="translator"
                 :show-timer="!sidebarOpened"
                 :game-status="gameStatus"
-                @resume-game="resume"
-                @pause-game="pause"
-                @start-game="start"
+                @resume-game="requestResume"
+                @pause-game="requestPause"
+                @start-game="startGame"
               />
             </div>
 
             <!-- Center -->
             <div class="flex flex-1 items-center justify-center">
-              <ScoreDisplayer :score="5" />
+              <ScoreDisplayer :score="player.getScore()" />
             </div>
 
             <!-- Right side -->

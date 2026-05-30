@@ -1,11 +1,9 @@
 <script setup lang="ts">
-  const props = defineProps<{
-    score: number;
-  }>();
+  const score = defineModel<number>("score", { required: true });
 </script>
 
 <template>
   <div class="navbar-score-displayer">
-    {{ props.score }}
+    {{ score }}
   </div>
 </template>
