@@ -3,31 +3,13 @@
   import { useI18n } from "vue-i18n";
 
   import GameIconAndTitle from "./sidebarContents/GameIconAndTitle.vue";
-  import ScoresDisplayer from "./sidebarContents/ScoresDisplayer.vue";
-  import SoundControl from "./sidebarContents/SoundController.vue";
-  import GameSettings from "./sidebarContents/GameSettings.vue";
+  import SoundController from "./sidebarContents/soundController/SoundController.vue";
+  import GameSettings from "./sidebarContents/gameSettings/GameSettings.vue";
 
   const { t } = useI18n();
 
   const playersCount = ref(2);
   const timerMinutes = ref(5);
-  let gameMode = "classic";
-
-  defineProps<{
-    navigation: {
-      name: string;
-      href: string;
-      icon: unknown;
-      current: boolean;
-    }[];
-    teams: {
-      id: number;
-      name: string;
-      href: string;
-      initial: string;
-      current: boolean;
-    }[];
-  }>();
 </script>
 
 <template>
@@ -35,14 +17,9 @@
     <GameIconAndTitle :translate="t" />
 
     <nav class="flex flex-1 flex-col gap-8">
-      <ScoresDisplayer />
-      <SoundControl />
+      <SoundController :translator="t" />
 
-      <GameSettings
-        v-model:players-count="playersCount"
-        v-model:timer-minutes="timerMinutes"
-        v-model:game-mode="gameMode"
-      />
+      <GameSettings v-model:players-count="playersCount" v-model:timer-minutes="timerMinutes" />
     </nav>
   </div>
 </template>

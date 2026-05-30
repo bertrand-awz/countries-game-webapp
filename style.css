@@ -135,14 +135,11 @@
   }
 
   .input-sound-range {
-    @apply h-1 w-full cursor-pointer rounded-full bg-neutral-500;
-    background: linear-gradient(
-      to right,
-      #6366f1 0%,
-      #6366f1 var(--value, 100%),
-      #374151 var(--value, 70%),
-      #374151 100%
-    );
+    @apply h-0.5 w-full cursor-pointer rounded-full bg-neutral-600;
+  }
+
+  .score-displayer {
+    @apply font-mono-app space-y-4 text-center;
   }
 
   .input-sound-range::-webkit-slider-thumb {
@@ -154,9 +151,9 @@
   }
 
   .input-sound-range::-moz-range-thumb {
-    width: 1rem;
-    height: 1rem;
+    width: 0.75rem;
+    height: 0.75rem;
     cursor: pointer;
-    @apply rounded-full border-2 border-indigo-900;
+    @apply rounded-full border-1 bg-slate-400;
   }
 }

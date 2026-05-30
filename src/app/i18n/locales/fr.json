@@ -30,7 +30,20 @@
     "SUBMIT": "Valider",
     "CORRECT": "Bonne réponse : {country}",
     "WRONG": "Mauvaise réponse",
-    "ALREADY_FOUND": "Pays déjà trouvé : {country}"
+    "ALREADY_FOUND": "Pays déjà trouvé : {country}",
+    "SIDEBAR": {
+      "SOUND_CONTROLLER": {
+        "TITLE": "Gestion sonore",
+        "BACKGROUND_SOUND": "Musique de fonds",
+        "SOUND_EFFECTS": "Effets sonores"
+      },
+      "SCORE_DISPLAYER": {
+        "TITLE": "Pointage",
+        "YOUR_SCORE": "Votre score",
+        "OPPONENTS_SCORES": "Scores adverses",
+        "COUNTRIES_BY_CONTINENT": "Pays trouvés par continent"
+      }
+    }
   },
   "LANGUAGES": {
     "FR": "Français",

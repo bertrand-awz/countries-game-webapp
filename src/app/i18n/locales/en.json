@@ -30,7 +30,20 @@
     "SUBMIT": "Submit",
     "CORRECT": "Correct answer: {country}",
     "WRONG": "Wrong answer",
-    "ALREADY_FOUND": "Country already found: {country}"
+    "ALREADY_FOUND": "Country already found: {country}",
+    "SIDEBAR": {
+      "SOUND_CONTROLLER": {
+        "TITLE": "Sound Management",
+        "BACKGROUND_SOUND": "Background music",
+        "SOUND_EFFECTS": "Sound effects"
+      },
+      "SCORE_DISPLAYER": {
+        "TITLE": "Scoreboard",
+        "YOUR_SCORE": "Your score",
+        "OPPONENTS_SCORES": "Opponents' scores",
+        "COUNTRIES_BY_CONTINENT": "Countries by continent"
+      }
+    }
   },
   "LANGUAGES": {
     "FR": "French",

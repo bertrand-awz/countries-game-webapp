@@ -54,7 +54,7 @@
           leave-from="translate-x-0"
           leave-to="-translate-x-full"
         >
-          <DialogPanel class="relative mr-16 flex w-full max-w-xs flex-1">
+          <DialogPanel class="relative flex w-full max-w-xs flex-1">
             <TransitionChild
               as="template"
               enter="ease-in-out duration-300"
@@ -79,7 +79,7 @@
   </TransitionRoot>
 
   <!-- Desktop sidebar -->
-  <div class="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
+  <div class="hidden max-w-xs lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col">
     <GameDashboardSidebarContent :navigation="navigation" :teams="teams" class="navbar border-r" />
   </div>
 </template>
