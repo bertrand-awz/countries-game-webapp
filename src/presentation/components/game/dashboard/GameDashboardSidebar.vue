@@ -4,19 +4,6 @@
 
   defineProps<{
     open: boolean;
-    navigation: {
-      name: string;
-      href: string;
-      icon: unknown;
-      current: boolean;
-    }[];
-    teams: {
-      id: number;
-      name: string;
-      href: string;
-      initial: string;
-      current: boolean;
-    }[];
   }>();
 
   const emit = defineEmits<{
@@ -67,11 +54,7 @@
               <div class="absolute top-0 left-full flex w-16 justify-center pt-5"></div>
             </TransitionChild>
 
-            <GameDashboardSidebarContent
-              :navigation="navigation"
-              :teams="teams"
-              class="navbar border-r"
-            />
+            <GameDashboardSidebarContent class="navbar border-r" />
           </DialogPanel>
         </TransitionChild>
       </div>
@@ -80,6 +63,6 @@
 
   <!-- Desktop sidebar -->
   <div class="hidden max-w-xs lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col">
-    <GameDashboardSidebarContent :navigation="navigation" :teams="teams" class="navbar border-r" />
+    <GameDashboardSidebarContent class="navbar border-r" />
   </div>
 </template>

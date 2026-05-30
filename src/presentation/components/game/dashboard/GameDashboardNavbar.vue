@@ -7,10 +7,6 @@
   import ScoreDisplayer from "./navbarContents/ScoreDisplayer.vue";
 
   const props = defineProps<{
-    userNavigation: {
-      name: string;
-      href: string;
-    }[];
     sidebarOpened: boolean;
   }>();
 
