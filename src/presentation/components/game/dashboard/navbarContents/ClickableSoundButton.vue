@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import type { Component } from "vue";
-  import { SoundEffect, soundManager } from "@/infrastructure/sound/SoundManager";
+  import { soundManager } from "@/infrastructure/sound/HowlerSoundManager";
+  import { SoundEffectName } from "@/domain/game/ports/SoundManager.ts";
 
   const props = withDefaults(
     defineProps<{
@@ -9,12 +10,12 @@
       label: string;
       actionOnClick: () => void;
       type?: "button" | "submit" | "reset";
-      soundEffect?: SoundEffect;
+      soundEffect?: SoundEffectName;
       disabled?: boolean;
     }>(),
     {
       type: "button",
-      soundEffect: SoundEffect.CLICK,
+      soundEffect: SoundEffectName.CLICK,
       disabled: false,
     },
   );

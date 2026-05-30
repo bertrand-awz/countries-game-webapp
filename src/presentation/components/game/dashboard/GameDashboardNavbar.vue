@@ -3,7 +3,7 @@
   import LanguagesMenu from "@/presentation/components/common/NavbarLanguagesMenu.vue";
 
   import RestartAndExitButtons from "./navbarContents/RestartAndExitButtons.vue";
-  import Timer from "./navbarContents/TimerDisplayer.vue";
+  import TimeDisplayer from "./navbarContents/TimeDisplayer.vue";
   import ScoreDisplayer from "./navbarContents/ScoreDisplayer.vue";
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
   import type { Player } from "@/domain/game/models/Player.ts";
@@ -47,8 +47,8 @@
           <div class="flex flex-1 items-center gap-3 md:gap-4">
             <!-- Left side -->
             <div class="flex flex-1 items-center justify-start gap-3 md:gap-4">
-              <Timer
-                :time-left-in-seconds="100"
+              <TimeDisplayer
+                :time-left-in-seconds="1500"
                 :translator="translator"
                 :show-timer="!sidebarOpened"
                 :game-status="gameStatus"

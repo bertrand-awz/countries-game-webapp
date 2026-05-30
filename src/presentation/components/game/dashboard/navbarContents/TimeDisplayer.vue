@@ -1,8 +1,10 @@
 <script setup lang="ts">
-  import { computed, ref } from "vue";
-  import { TimerIcon, PlayIcon, PauseIcon } from "@lucide/vue";
+  import { computed, ref, watch } from "vue";
+  import { PauseIcon, PlayIcon, TimerIcon } from "@lucide/vue";
   import ClickableSoundButton from "./ClickableSoundButton.vue";
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
+  import { soundManager } from "@/infrastructure/sound/HowlerSoundManager.ts";
+  import { LoopableSoundEffectName } from "@/domain/game/ports/SoundManager.ts";
 
   const emit = defineEmits<{
     "pause-game": [];
@@ -84,6 +86,18 @@
       gameStatus.value === GameStatus.FINISHED
     );
   });
+  watch(
+    () => props.timeLeftInSeconds,
+    (timeLeftInSeconds) => {
+      if (timeLeftInSeconds > 0 && timeLeftInSeconds <= 180) {
+        soundManager.playEffectInLoop(LoopableSoundEffectName.TIMER_COUNTDOWN);
+        return;
+      }
+
+      soundManager.stopLoopableEffect(LoopableSoundEffectName.TIMER_COUNTDOWN);
+    },
+    { immediate: true },
+  );
 </script>
 
 <template>
@@ -97,7 +111,7 @@
       :button-class="buttonContinue ? 'navbar-continue-button' : 'navbar-pause-button'"
       :icon="buttonContinue ? PlayIcon : PauseIcon"
       :label="translator(clickableButtonTranslationKey)"
-      :on-click="toggleClickableButton"
+      :action-on-click="toggleClickableButton"
     />
   </div>
 </template>
