@@ -43,6 +43,13 @@
         "OPPONENTS_SCORES": "Opponents' scores",
         "COUNTRIES_BY_CONTINENT": "Countries by continent"
       }
+    },
+    "NAVBAR": {
+      "BUTTON_ACTION": {
+        "START": "Start",
+        "CONTINUE": "Continue",
+        "PAUSE": "Pause"
+      }
     }
   },
   "LANGUAGES": {

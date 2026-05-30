@@ -2,10 +2,12 @@
   import { computed, ref } from "vue";
   import { TimerIcon, PlayIcon, PauseIcon } from "@lucide/vue";
   import ClickableSoundButton from "./ClickableSoundButton.vue";
+  import { GameStatus } from "@/domain/game/models/state/GameState.ts";
 
   const emit = defineEmits<{
     "pause-game": [];
     "resume-game": [];
+    "start-game": [];
   }>();
 
   const props = defineProps<{
@@ -13,8 +15,6 @@
     timeLeftInSeconds: number;
     showTimer: boolean;
   }>();
-
-  const isPaused = ref(false);
 
   const formattedTime = computed(() => {
     const minutes = Math.floor(props.timeLeftInSeconds / 60);
@@ -29,6 +29,20 @@
     }
     return "hidden";
   });
+
+  const clickableButtonTranslationKey = computed(() => {
+    if (gameStatus.value === GameStatus.WAITING || gameStatus.value === GameStatus.FINISHED) {
+      return "GAME.NAVBAR.BUTTON_ACTION.START";
+    } else if (gameStatus.value === GameStatus.PAUSED) {
+      return "GAME.NAVBAR.BUTTON_ACTION.CONTINUE";
+    } else {
+      return "GAME.NAVBAR.BUTTON_ACTION.PAUSE";
+    }
+  });
+
+  const gameStatus = defineModel<GameStatus>("gameStatus", { required: true });
+
+  const isPaused = ref(gameStatus.value === GameStatus.PAUSED);
 
   const timerStateClass = computed(() => {
     const classes: string[] = [];
@@ -46,15 +60,30 @@
     return classes.join(" ");
   });
 
-  function togglePause() {
+  function toggleClickableButton() {
+    if (gameStatus.value === GameStatus.WAITING || gameStatus.value === GameStatus.FINISHED) {
+      emit("start-game");
+      return;
+    }
+
     isPaused.value = !isPaused.value;
 
     if (isPaused.value) {
       emit("pause-game");
+      return;
     } else {
       emit("resume-game");
+      return;
     }
   }
+
+  const buttonContinue = computed(() => {
+    return (
+      isPaused.value ||
+      gameStatus.value === GameStatus.WAITING ||
+      gameStatus.value === GameStatus.FINISHED
+    );
+  });
 </script>
 
 <template>
@@ -65,10 +94,10 @@
     </div>
 
     <ClickableSoundButton
-      :button-class="isPaused ? 'navbar-continue-button' : 'navbar-pause-button'"
-      :icon="isPaused ? PlayIcon : PauseIcon"
-      :label="isPaused ? translator('APP.PLAY') : translator('APP.PAUSE')"
-      :on-click="togglePause"
+      :button-class="buttonContinue ? 'navbar-continue-button' : 'navbar-pause-button'"
+      :icon="buttonContinue ? PlayIcon : PauseIcon"
+      :label="translator(clickableButtonTranslationKey)"
+      :on-click="toggleClickableButton"
     />
   </div>
 </template>

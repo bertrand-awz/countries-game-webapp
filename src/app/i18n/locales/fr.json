@@ -43,6 +43,13 @@
         "OPPONENTS_SCORES": "Scores adverses",
         "COUNTRIES_BY_CONTINENT": "Pays trouvés par continent"
       }
+    },
+    "NAVBAR": {
+      "BUTTON_ACTION": {
+        "START": "Commencer",
+        "CONTINUE": "Reprendre",
+        "PAUSE": "Pause"
+      }
     }
   },
   "LANGUAGES": {
