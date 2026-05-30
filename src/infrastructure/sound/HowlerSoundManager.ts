@@ -10,13 +10,15 @@ import {
   type SoundManager,
 } from "@/domain/game/ports/SoundManager.ts";
 
+const SOUND_SCALE: number = 100;
+
 class HowlerSoundManager implements SoundManager {
   private effects: Record<SoundEffectName, Howl>;
   private loopableEffects: Record<LoopableSoundEffectName, Howl>;
   private backgroundMusic: Howl;
 
-  private soundEffectVolume = 0.7;
-  private mainThemeVolume = 0.4;
+  private soundEffectVolume = 0.1;
+  private mainThemeVolume = 0.2;
 
   constructor() {
     this.effects = {
@@ -62,11 +64,11 @@ class HowlerSoundManager implements SoundManager {
   }
 
   getMainVolume(): number {
-    return Math.round(this.mainThemeVolume * 100);
+    return Math.round(this.mainThemeVolume * SOUND_SCALE);
   }
 
   getSoundEffectVolume(): number {
-    return Math.round(this.soundEffectVolume * 100);
+    return Math.round(this.soundEffectVolume * SOUND_SCALE);
   }
 
   playEffect(effectName: SoundEffectName): void {
@@ -108,7 +110,7 @@ class HowlerSoundManager implements SoundManager {
   }
 
   private normalizeVolume(volume: number): number {
-    const normalizedVolume = volume / 100;
+    const normalizedVolume = volume / SOUND_SCALE;
 
     return Math.max(0, Math.min(1, normalizedVolume));
   }
