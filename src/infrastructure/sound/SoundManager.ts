@@ -1,15 +1,14 @@
 import { Howl, Howler } from "howler";
+
 import mouseClickSound from "@/assets/sounds/mouse-click.mp3";
 
-export const SoundEffects = {
-  CLICK: "click",
-  CORRECT_ANSWER: "correct",
-  WRONG_ANSWER: "wrong",
-  SUCCESS: "success",
-  CELEBRATION: "celebration",
-} as const;
-
-export type SoundEffectName = (typeof SoundEffects)[keyof typeof SoundEffects];
+export enum SoundEffect {
+  CLICK = "click",
+  CORRECT_ANSWER = "correct",
+  WRONG_ANSWER = "wrong",
+  SUCCESS = "success",
+  CELEBRATION = "celebration",
+}
 
 export const BackgroundMusics = {
   MAIN: "main",
@@ -19,7 +18,7 @@ export const BackgroundMusics = {
 export type BackgroundMusicName = (typeof BackgroundMusics)[keyof typeof BackgroundMusics];
 
 class SoundManager {
-  private effects: Record<SoundEffectName, Howl>;
+  private effects: Record<SoundEffect, Howl>;
   private musics: Record<BackgroundMusicName, Howl>;
 
   private currentMusic: Howl | null = null;
@@ -32,27 +31,27 @@ class SoundManager {
 
   constructor() {
     this.effects = {
-      [SoundEffects.CLICK]: new Howl({
+      [SoundEffect.CLICK]: new Howl({
         src: [mouseClickSound],
         volume: this.effectsVolume,
       }),
 
-      [SoundEffects.CORRECT_ANSWER]: new Howl({
+      [SoundEffect.CORRECT_ANSWER]: new Howl({
         src: ["/sounds/effects/correct.mp3"],
         volume: this.effectsVolume,
       }),
 
-      [SoundEffects.WRONG_ANSWER]: new Howl({
+      [SoundEffect.WRONG_ANSWER]: new Howl({
         src: ["/sounds/effects/wrong.mp3"],
         volume: this.effectsVolume,
       }),
 
-      [SoundEffects.SUCCESS]: new Howl({
+      [SoundEffect.SUCCESS]: new Howl({
         src: ["/sounds/effects/success.mp3"],
         volume: this.effectsVolume,
       }),
 
-      [SoundEffects.CELEBRATION]: new Howl({
+      [SoundEffect.CELEBRATION]: new Howl({
         src: ["/sounds/effects/celebration.mp3"],
         volume: this.effectsVolume,
       }),
@@ -75,7 +74,7 @@ class SoundManager {
     Howler.volume(this.masterVolume);
   }
 
-  playEffect(name: SoundEffectName): void {
+  playEffect(name: SoundEffect): void {
     this.effects[name].play();
   }
 

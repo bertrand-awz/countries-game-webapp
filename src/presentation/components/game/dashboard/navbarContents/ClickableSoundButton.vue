@@ -1,20 +1,20 @@
 <script setup lang="ts">
   import type { Component } from "vue";
-  import { SoundEffects, soundManager } from "@/infrastructure/sound/SoundManager";
+  import { SoundEffect, soundManager } from "@/infrastructure/sound/SoundManager";
 
   const props = withDefaults(
     defineProps<{
       buttonClass: string;
       icon: Component;
       label: string;
-      onClick: () => void;
+      actionOnClick: () => void;
       type?: "button" | "submit" | "reset";
-      soundEffect?: SoundEffects;
+      soundEffect?: SoundEffect;
       disabled?: boolean;
     }>(),
     {
       type: "button",
-      soundEffect: SoundEffects.CLICK,
+      soundEffect: SoundEffect.CLICK,
       disabled: false,
     },
   );
@@ -23,9 +23,8 @@
     if (props.disabled) {
       return;
     }
-
     soundManager.playEffect(props.soundEffect);
-    props.onClick();
+    props.actionOnClick();
   }
 </script>
 
