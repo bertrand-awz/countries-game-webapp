@@ -1,9 +1,11 @@
 <script setup lang="ts">
-  import Scoreboard from "./Scoreboard.vue";
-  import CountriesByContinent from "./CountriesByContinent.vue";
-  import type { FoundingContinentProgressionState } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
-  import type { Player } from "@/domain/game/models/Player.ts";
   import { TrophyIcon } from "@lucide/vue";
+
+  import type { Player } from "@/domain/game/models/Player.ts";
+  import type { FoundingContinentProgressionState } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
+
+  import CountriesByContinent from "./CountriesByContinent.vue";
+  import Scoreboard from "./Scoreboard.vue";
 
   defineProps<{
     translator: (translationKey: string) => string;

@@ -1,6 +1,6 @@
-import type { SupportedLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
 import type { Player } from "@/domain/game/models/Player.ts";
 import type { FoundingContinentProgressionState } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
+import type { SupportedLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
 
 export enum GameStatus {
   WAITING = "waiting",

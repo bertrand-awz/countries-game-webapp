@@ -1,5 +1,3 @@
-import type { SupportedLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
-
 type ContinentId =
   | "AFRICA"
   | "ASIA"
@@ -12,9 +10,4 @@ type ContinentId =
 export type Continent = {
   id: ContinentId;
   countriesNumber: number;
-};
-
-export type Continents = {
-  continents: Continent[];
-  namesTranslations: Record<SupportedLanguage, string>;
 };

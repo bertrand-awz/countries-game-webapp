@@ -2,12 +2,13 @@
   import { ref } from "vue";
   import { useI18n } from "vue-i18n";
 
-  import GameIconAndTitle from "./sidebarContents/GameIconAndTitle.vue";
-  import SoundController from "./sidebarContents/soundController/SoundController.vue";
-  import GameSettings from "./sidebarContents/gameSettings/GameSettings.vue";
-  import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
-  import ScoresDisplayer from "./sidebarContents/scoreDisplayer/ScoresDisplayer.vue";
   import type { GameState } from "@/domain/game/models/state/GameState.ts";
+  import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
+
+  import GameIconAndTitle from "./sidebarContents/GameIconAndTitle.vue";
+  import GameSettings from "./sidebarContents/gameSettings/GameSettings.vue";
+  import ScoresDisplayer from "./sidebarContents/scoreDisplayer/ScoresDisplayer.vue";
+  import SoundController from "./sidebarContents/soundController/SoundController.vue";
 
   defineProps<{
     soundManager: SoundManager;

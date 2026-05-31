@@ -1,8 +1,10 @@
 <script setup lang="ts">
   import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
-  import GameDashboardSidebarContent from "./GameDashboardSidebarContent.vue";
-  import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
+
   import type { GameState } from "@/domain/game/models/state/GameState.ts";
+  import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
+
+  import GameDashboardSidebarContent from "./GameDashboardSidebarContent.vue";
 
   defineProps<{
     open: boolean;

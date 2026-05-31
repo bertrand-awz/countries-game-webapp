@@ -1,10 +1,10 @@
 import axios, { type AxiosInstance } from "axios";
 
-import type { GameMapApi } from "@/domain/game/ports/GameMapApi.ts";
-import type { Continents } from "@/domain/game/models/Continent.ts";
+import type { Continent } from "@/domain/game/models/Continent.ts";
 import type { Countries } from "@/domain/game/models/Country.ts";
+import type { GameMapApi } from "@/domain/game/ports/GameMapApi.ts";
 
-export class AxiosCountriesGameMapApi implements GameMapApi {
+class AxiosGameMapApi implements GameMapApi {
   private readonly apiClient: AxiosInstance;
 
   constructor() {
@@ -13,8 +13,8 @@ export class AxiosCountriesGameMapApi implements GameMapApi {
     });
   }
 
-  async getContinents(): Promise<Continents> {
-    const response = await this.apiClient.get<Continents>("/api/continents");
+  async getContinents(): Promise<Continent[]> {
+    const response = await this.apiClient.get<Continent[]>("/api/continents");
     return response.data;
   }
 
@@ -23,3 +23,5 @@ export class AxiosCountriesGameMapApi implements GameMapApi {
     return response.data;
   }
 }
+
+export const axiosGameMapApi = new AxiosGameMapApi();

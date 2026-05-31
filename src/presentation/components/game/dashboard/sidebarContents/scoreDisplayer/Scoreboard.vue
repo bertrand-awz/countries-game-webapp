@@ -1,6 +1,7 @@
 <script setup lang="ts">
-  import type { Player } from "@/domain/game/models/Player.ts";
   import { User2Icon, Users2Icon } from "@lucide/vue";
+
+  import type { Player } from "@/domain/game/models/Player.ts";
   defineProps<{
     translator: (translationKey: string) => string;
   }>();

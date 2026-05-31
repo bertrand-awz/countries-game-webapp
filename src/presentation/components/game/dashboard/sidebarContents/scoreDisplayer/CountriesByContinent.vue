@@ -1,6 +1,7 @@
 <script setup lang="ts">
-  import type { FoundingContinentProgressionState } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
   import { Globe2Icon } from "@lucide/vue";
+
+  import type { FoundingContinentProgressionState } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
 
   defineProps<{
     translator: (translationKey: string) => string;

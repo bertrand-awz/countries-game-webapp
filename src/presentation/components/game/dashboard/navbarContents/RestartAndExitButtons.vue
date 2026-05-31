@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import { RotateCcwIcon, DoorOpenIcon } from "@lucide/vue";
+  import { DoorOpenIcon,RotateCcwIcon } from "@lucide/vue";
+
   import ClickableSoundButton from "./ClickableSoundButton.vue";
 
   defineProps<{

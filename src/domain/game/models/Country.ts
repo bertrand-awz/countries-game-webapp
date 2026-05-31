@@ -1,4 +1,4 @@
-import type { Polygon, MultiPolygon } from "geojson";
+import type { MultiPolygon,Polygon } from "geojson";
 
 export type Country = {
   type: "Feature";

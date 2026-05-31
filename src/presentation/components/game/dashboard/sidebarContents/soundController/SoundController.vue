@@ -1,8 +1,10 @@
 <script setup lang="ts">
   import { MusicIcon, Volume2Icon, WandSparklesIcon } from "@lucide/vue";
-  import InputRangeSlider from "./InputRangeSlider.vue";
-  import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
   import { ref, watch } from "vue";
+
+  import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
+
+  import InputRangeSlider from "./InputRangeSlider.vue";
 
   const props = defineProps<{
     translator: (translationKey: string) => string;

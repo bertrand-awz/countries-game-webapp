@@ -1,9 +1,9 @@
 <script setup lang="ts">
-  import { type SupportedLocale, LOCALES_OPTIONS } from "@/app/i18n";
-  import { useI18n } from "vue-i18n";
   import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
-
   import { LanguagesIcon } from "@lucide/vue";
+  import { useI18n } from "vue-i18n";
+
+  import { LOCALES_OPTIONS,type SupportedLocale } from "@/app/i18n";
 
   const { t, locale } = useI18n();
 

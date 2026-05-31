@@ -1,6 +1,6 @@
 <script setup lang="ts">
+  import { Gamepad2Icon, SettingsIcon, TimerIcon, UsersIcon, XIcon } from "@lucide/vue";
   import { ref } from "vue";
-  import { SettingsIcon, UsersIcon, TimerIcon, Gamepad2Icon, XIcon } from "@lucide/vue";
 
   type GameMode = "classic" | "timer" | "versus";
 

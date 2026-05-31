@@ -1,9 +1,8 @@
 import { Howl } from "howler";
 
-import mouseClickSound from "@/assets/sounds/mouse-click.mp3";
-import backgroundMusicSound from "@/assets/sounds/main-theme.mp3";
 import countdownSound from "@/assets/sounds/countdown.mp3";
-
+import backgroundMusicSound from "@/assets/sounds/main-theme.mp3";
+import mouseClickSound from "@/assets/sounds/mouse-click.mp3";
 import {
   LoopableSoundEffectName,
   SoundEffectName,

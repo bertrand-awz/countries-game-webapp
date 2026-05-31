@@ -1,6 +1,7 @@
 import type { CountryFoundEvent } from "@/domain/game/events/CountryFoundEvent.ts";
 import type { CountryRejectedEvent } from "@/domain/game/events/CountryRejectedEvent.ts";
 import type { TurnChangedEvent } from "@/domain/game/events/TurnChangedEvent.ts";
+import type { GameState } from "@/domain/game/models/state/GameState.ts";
 
 export type GameSession = {
   roomId: string;

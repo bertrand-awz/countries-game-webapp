@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import type { Component } from "vue";
-  import { howlerSoundManager } from "@/infrastructure/sound/HowlerSoundManager";
+
   import { SoundEffectName } from "@/domain/game/ports/SoundManager.ts";
+  import { howlerSoundManager } from "@/infrastructure/sound/HowlerSoundManager";
 
   const props = withDefaults(
     defineProps<{

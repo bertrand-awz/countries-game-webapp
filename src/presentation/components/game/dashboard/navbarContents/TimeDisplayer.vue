@@ -1,10 +1,12 @@
 <script setup lang="ts">
-  import { computed, ref, watch } from "vue";
   import { PauseIcon, PlayIcon, TimerIcon } from "@lucide/vue";
-  import ClickableSoundButton from "./ClickableSoundButton.vue";
+  import { computed, ref, watch } from "vue";
+
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
-  import { howlerSoundManager } from "@/infrastructure/sound/HowlerSoundManager.ts";
   import { LoopableSoundEffectName } from "@/domain/game/ports/SoundManager.ts";
+  import { howlerSoundManager } from "@/infrastructure/sound/HowlerSoundManager.ts";
+
+  import ClickableSoundButton from "./ClickableSoundButton.vue";
 
   const emit = defineEmits<{
     "pause-game": [];

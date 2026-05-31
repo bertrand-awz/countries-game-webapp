@@ -1,33 +1,21 @@
 <script setup lang="ts">
-  import GameSidebar from "@/presentation/components/game/dashboard/GameDashboardSidebar.vue";
-  import GameNavbar from "@/presentation/components/game/dashboard/GameDashboardNavbar.vue";
   import { ref } from "vue";
-  import GameBoard from "@/presentation/components/game/GameBoard.vue";
   import { useI18n } from "vue-i18n";
-  import { GameState, GameStatus } from "@/domain/game/models/state/GameState.ts";
+
+  import { loadContinentsUseCase } from "@/application/use-cases";
   import { Player } from "@/domain/game/models/Player.ts";
+  import { GameState, GameStatus } from "@/domain/game/models/state/GameState.ts";
   import { howlerSoundManager } from "@/infrastructure/sound/HowlerSoundManager.ts";
-  import type { Continent } from "@/domain/game/models/Continent.ts";
+  import GameNavbar from "@/presentation/components/game/dashboard/GameDashboardNavbar.vue";
+  import GameSidebar from "@/presentation/components/game/dashboard/GameDashboardSidebar.vue";
+  import GameBoard from "@/presentation/components/game/GameBoard.vue";
 
   const { t } = useI18n();
   const sidebarOpen = ref(false);
   //const gameState = defineModel<GameState>("gameState", { required: true });
 
   const gameStatus = ref(GameStatus.WAITING);
-  const continents: Continent[] = [
-    {
-      id: "AFRICA",
-      countriesNumber: 54
-    },
-    {
-      id: "EUROPE",
-      countriesNumber: 44
-    },
-    {
-      id: "ASIA",
-      countriesNumber: 48
-    },
-  ];
+  const continents = loadContinentsUseCase.execute();
 
   const players = [new Player("player-1", "Bertrand"), new Player("player-2", "Alice")];
 

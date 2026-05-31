@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
-import HomeView from "../../presentation/views/HomeView.vue";
+
 import GameView from "../../presentation/views/GameView.vue";
+import HomeView from "../../presentation/views/HomeView.vue";
 import { layoutTypes } from "../layouts/types/layoutTypes.ts";
 
 const router = createRouter({

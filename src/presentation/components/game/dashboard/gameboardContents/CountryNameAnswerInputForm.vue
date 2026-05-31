@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ref } from "vue";
+
   import { GameInputConstraints } from "@/domain/game/constraints/gameInputConstraints.ts";
 
   const props = defineProps<{
