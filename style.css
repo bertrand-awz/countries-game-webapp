@@ -158,9 +158,34 @@
   }
 
   .answer-input-container {
-    @apply mt-6 flex items-center justify-center;
+    @apply mt-6 flex items-center justify-center bg-transparent text-slate-300;
   }
   .answer-input {
-    @apply w-2/3 bg-white/5 px-3 py-2 text-center text-slate-300 focus:shadow focus:outline-none;
+    @apply w-2/3 bg-transparent px-3 py-2 text-center focus:shadow focus:outline-none;
+  }
+
+  .answer-input-hidden {
+    @apply absolute h-0 w-0 opacity-0;
+  }
+
+  .answer-input-taker {
+    @apply flex min-h-7 items-center text-center tracking-wider;
+  }
+
+  .cyber-cursor {
+    @apply ml-1 inline-block font-extrabold text-neutral-300;
+    animation: cyber-cursor 0.28s steps(1, end) infinite;
+  }
+
+  @keyframes cyber-cursor {
+    0%,
+    45% {
+      opacity: 1;
+    }
+
+    46%,
+    100% {
+      opacity: 0;
+    }
   }
 }

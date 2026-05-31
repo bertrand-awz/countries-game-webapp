@@ -2,8 +2,10 @@
   import { ref } from "vue";
   import { useI18n } from "vue-i18n";
 
-  import { loadContinentsUseCase } from "@/application/use-cases";
+  import { useGameMapStore } from "@/application/stores/gameMapStore.ts";
+  import { submitCountryNameAnswerUseCase } from "@/application/use-cases";
   import { Player } from "@/domain/game/models/Player.ts";
+  import { createFoundingContinentProgressiveStatesForContinents } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
   import { GameState, GameStatus } from "@/domain/game/models/state/GameState.ts";
   import { howlerSoundManager } from "@/infrastructure/sound/HowlerSoundManager.ts";
   import GameNavbar from "@/presentation/components/game/dashboard/GameDashboardNavbar.vue";
@@ -11,11 +13,11 @@
   import GameBoard from "@/presentation/components/game/GameBoard.vue";
 
   const { t } = useI18n();
+  const gameMapStore = useGameMapStore();
+  await gameMapStore.preload();
   const sidebarOpen = ref(false);
-  //const gameState = defineModel<GameState>("gameState", { required: true });
 
   const gameStatus = ref(GameStatus.WAITING);
-  const continents = loadContinentsUseCase.execute();
 
   const players = [new Player("player-1", "Bertrand"), new Player("player-2", "Alice")];
 
@@ -25,15 +27,12 @@
 
   const gameState = new GameState(
     players.length,
-    "fr",
+    "en",
     durationInSeconds,
     startAt,
     endAt,
     GameStatus.WAITING,
-    continents.map((continent) => ({
-      continent,
-      countriesFoundNumber: 0,
-    })),
+    createFoundingContinentProgressiveStatesForContinents(gameMapStore.getContinents),
     true,
     players,
   );
@@ -48,7 +47,10 @@
   function resume() {
     gameStatus.value = GameStatus.PLAYING;
   }
-  //
+
+  function submitCountryNameAnswer(playerAnswer: string) {
+    submitCountryNameAnswerUseCase.setOptions({ countryName: playerAnswer }).execute();
+  }
 </script>
 
 <template>
@@ -70,6 +72,9 @@
       :sound-manager="howlerSoundManager"
       @update:open="sidebarOpen = false"
     />
-    <GameBoard />
+    <GameBoard
+      :country-name-answer-submitter="submitCountryNameAnswer"
+      :countries-features="gameMapStore.getCountriesFeatures"
+    />
   </div>
 </template>

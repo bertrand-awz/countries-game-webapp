@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-  import { Gamepad2Icon,MenuIcon, XIcon } from "@lucide/vue";
+  import { Gamepad2Icon, MenuIcon, XIcon } from "@lucide/vue";
   import { useI18n } from "vue-i18n";
 
-  import { LOCALES_OPTIONS,type SupportedLocale } from "@/app/i18n";
+  import { LOCALES_OPTIONS, type SupportedLocale } from "@/app/i18n";
   import GameIcon from "@/assets/icons/gameIcon.svg";
   import LanguagesMenu from "@/presentation/components/common/NavbarLanguagesMenu.vue";
 

@@ -7,14 +7,24 @@
   import { layoutTypes } from "@/app/layouts/types/layoutTypes";
 
   const route = useRoute();
+
   const layout = computed(() => {
     if (route.meta.layout === layoutTypes.GAME) {
       return GameDashboardLayout;
     }
+
     return DefaultLayout;
   });
 </script>
 
 <template>
-  <component :is="layout" />
+  <Suspense>
+    <component :is="layout" />
+
+    <template #fallback>
+      <div class="flex min-h-screen items-center justify-center bg-slate-950 text-white">
+        Loading...
+      </div>
+    </template>
+  </Suspense>
 </template>

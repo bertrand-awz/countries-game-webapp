@@ -14,12 +14,12 @@ class AxiosGameMapApi implements GameMapApi {
   }
 
   async getContinents(): Promise<Continent[]> {
-    const response = await this.apiClient.get<Continent[]>("/api/continents");
+    const response = await this.apiClient.get<Continent[]>("/api/map/continents");
     return response.data;
   }
 
   async getCountries(): Promise<Countries> {
-    const response = await this.apiClient.get<Countries>("/api/countries");
+    const response = await this.apiClient.get<Countries>("/api/map/countries");
     return response.data;
   }
 }

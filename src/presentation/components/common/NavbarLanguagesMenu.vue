@@ -3,7 +3,7 @@
   import { LanguagesIcon } from "@lucide/vue";
   import { useI18n } from "vue-i18n";
 
-  import { LOCALES_OPTIONS,type SupportedLocale } from "@/app/i18n";
+  import { LOCALES_OPTIONS, type SupportedLocale } from "@/app/i18n";
 
   const { t, locale } = useI18n();
 
