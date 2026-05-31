@@ -2,12 +2,15 @@
   import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
   import GameDashboardSidebarContent from "./GameDashboardSidebarContent.vue";
   import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
+  import type { GameState } from "@/domain/game/models/state/GameState.ts";
 
   defineProps<{
     open: boolean;
     translator: (translationKey: string) => string;
     soundManager: SoundManager;
   }>();
+
+  const gameState = defineModel<GameState>("gameState", { required: true });
 
   const emit = defineEmits<{
     "update:open": [value: boolean];
@@ -57,7 +60,11 @@
               <div class="absolute top-0 left-full flex w-16 justify-center pt-5"></div>
             </TransitionChild>
 
-            <GameDashboardSidebarContent class="navbar border-r" :sound-manager="soundManager" />
+            <GameDashboardSidebarContent
+              class="navbar border-r"
+              :game-state="gameState"
+              :sound-manager="soundManager"
+            />
           </DialogPanel>
         </TransitionChild>
       </div>
@@ -66,6 +73,10 @@
 
   <!-- Desktop sidebar -->
   <div class="hidden max-w-xs lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:flex-col">
-    <GameDashboardSidebarContent class="navbar border-r" :sound-manager="soundManager" />
+    <GameDashboardSidebarContent
+      class="navbar border-r"
+      :game-state="gameState"
+      :sound-manager="soundManager"
+    />
   </div>
 </template>

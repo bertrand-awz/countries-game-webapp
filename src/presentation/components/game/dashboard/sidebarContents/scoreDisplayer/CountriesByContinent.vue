@@ -15,21 +15,19 @@
 <template>
   <div class="flex items-center gap-x-2">
     <Globe2Icon class="size-4 text-emerald-300" />
-    <span class="text-sm font-medium text-gray-200">
-      {{ translator("GAME.SCORE_DISPLAYER.TITLE") }}
-    </span>
+    <h3 class="text-sm font-semibold">
+      {{ translator("GAME.SIDEBAR.SCORE_DISPLAYER.COUNTRIES_BY_CONTINENT") }}
+    </h3>
   </div>
   <div class="rounded-lg bg-white/5 px-3 py-2">
-    <ul class="mt-2 space-y-1 pl-6 text-sm text-gray-300">
+    <ul class="mt-2 space-y-1 text-sm">
       <li
         v-for="fcps in foundingContinentProgressionStates"
         :key="fcps.continent.id"
-        class="flex justify-between"
+        class="mb-2 flex justify-between last:mb-0"
       >
-        <span>{{ translator(fcps.continent.nameTranslationKey) }}</span>
-        <span class="font-semibold text-white">
-          {{ fcps.countriesFoundNumber }}
-        </span>
+        <span>{{ translator(`GAME.CONTINENT_NAME.${fcps.continent.id}`) }}</span>
+        <span> {{ fcps.countriesFoundNumber }} / {{ fcps.continent.countriesNumber }} </span>
       </li>
     </ul>
   </div>

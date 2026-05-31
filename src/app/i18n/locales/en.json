@@ -50,6 +50,15 @@
         "CONTINUE": "Continue",
         "PAUSE": "Pause"
       }
+    },
+    "CONTINENT_NAME": {
+      "AFRICA": "Africa",
+      "NORTH_AMERICA": "North America",
+      "SOUTH_AMERICA": "South America",
+      "ASIA": "Asia",
+      "EUROPE": "Europe",
+      "SEVEN_SEAS": "Seven Seas",
+      "OCEANIA": "Oceania"
     }
   },
   "LANGUAGES": {

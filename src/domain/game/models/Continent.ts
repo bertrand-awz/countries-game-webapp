@@ -12,7 +12,6 @@ type ContinentId =
 export type Continent = {
   id: ContinentId;
   countriesNumber: number;
-  nameTranslationKey: `CONTINENT.${ContinentId}`;
 };
 
 export type Continents = {

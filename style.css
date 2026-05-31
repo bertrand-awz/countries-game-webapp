@@ -139,7 +139,7 @@
   }
 
   .score-displayer {
-    @apply font-mono-app space-y-4 text-center;
+    @apply font-mono-app flex-row space-y-4 text-center;
   }
 
   .input-sound-range::-webkit-slider-thumb {
