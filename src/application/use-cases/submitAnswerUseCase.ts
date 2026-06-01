@@ -4,11 +4,12 @@ export type CountryNameAnswer = {
 };
 export class SubmitAnswerUseCase extends UseCase<CountryNameAnswer> {
   setOptions(options: CountryNameAnswer): this {
-    return super.setOptions(options);
+    this.options = options;
+    return this;
   }
 
   execute(): void {
     // TODO: ajouter quoi executer ici à la soumission de la reponse
-    console.log(this.options);
+    this.gameServer.submitCountry(this.options?.countryName ?? "");
   }
 }

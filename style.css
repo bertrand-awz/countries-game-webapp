@@ -18,9 +18,12 @@
   }
 
   .game-board {
-    @apply w-full bg-black lg:pl-72;
+    @apply h-full w-full flex-row justify-between bg-black lg:pl-72;
   }
 
+  .game-board-map {
+    @apply flex items-center justify-center;
+  }
   .navbar {
     @apply relative border-b border-white/10 bg-neutral-950;
   }
@@ -158,7 +161,7 @@
   }
 
   .answer-input-container {
-    @apply mt-6 flex items-center justify-center bg-transparent text-slate-300;
+    @apply mt-6 mb-6 flex items-center justify-center bg-transparent text-slate-300;
   }
   .answer-input {
     @apply w-2/3 bg-transparent px-3 py-2 text-center focus:shadow focus:outline-none;

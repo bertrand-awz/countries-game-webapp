@@ -3,7 +3,7 @@
   import { useI18n } from "vue-i18n";
 
   import { useGameMapStore } from "@/application/stores/gameMapStore.ts";
-  import { submitCountryNameAnswerUseCase } from "@/application/use-cases";
+  import { startGameUseCase, submitCountryNameAnswerUseCase } from "@/application/use-cases";
   import { Player } from "@/domain/game/models/Player.ts";
   import { createFoundingContinentProgressiveStatesForContinents } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
   import { GameState, GameStatus } from "@/domain/game/models/state/GameState.ts";
@@ -40,6 +40,7 @@
   //TODO: delete this code when connected to the backend (and review lines 65 - 68)
   function start() {
     gameStatus.value = GameStatus.PLAYING;
+    startGameUseCase.execute();
   }
   function pause() {
     gameStatus.value = GameStatus.PAUSED;
