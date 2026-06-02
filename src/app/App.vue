@@ -18,13 +18,5 @@
 </script>
 
 <template>
-  <Suspense>
-    <component :is="layout" />
-
-    <template #fallback>
-      <div class="flex min-h-screen items-center justify-center bg-slate-950 text-white">
-        Loading...
-      </div>
-    </template>
-  </Suspense>
+  <component :is="layout" />
 </template>

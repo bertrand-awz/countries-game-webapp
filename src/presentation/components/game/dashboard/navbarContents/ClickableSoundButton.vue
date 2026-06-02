@@ -1,22 +1,17 @@
 <script setup lang="ts">
   import type { Component } from "vue";
 
-  import { SoundEffectName } from "@/domain/game/ports/SoundManager.ts";
-  import { howlerSoundManager } from "@/infrastructure/sound/HowlerSoundManager";
-
   const props = withDefaults(
     defineProps<{
       buttonClass: string;
       icon: Component;
       label: string;
-      actionOnClick: () => void;
+      onClickCallback: () => void;
       type?: "button" | "submit" | "reset";
-      soundEffect?: SoundEffectName;
       disabled?: boolean;
     }>(),
     {
       type: "button",
-      soundEffect: SoundEffectName.CLICK,
       disabled: false,
     },
   );
@@ -25,8 +20,8 @@
     if (props.disabled) {
       return;
     }
-    howlerSoundManager.playEffect(props.soundEffect);
-    props.actionOnClick();
+
+    props.onClickCallback();
   }
 </script>
 

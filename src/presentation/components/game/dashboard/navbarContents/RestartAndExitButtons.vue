@@ -18,14 +18,14 @@
       button-class="navbar-restart-button"
       :icon="RotateCcwIcon"
       :label="translator('APP.RESTART')"
-      :on-click="recommencer"
+      :on-click-callback="recommencer"
     />
 
     <ClickableSoundButton
       button-class="navbar-exit-button"
       :icon="DoorOpenIcon"
       :label="translator('APP.EXIT')"
-      :on-click="quitter"
+      :on-click-callback="quitter"
     />
   </div>
 </template>

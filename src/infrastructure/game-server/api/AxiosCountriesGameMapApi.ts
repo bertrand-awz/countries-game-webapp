@@ -4,7 +4,7 @@ import type { Continent } from "@/domain/game/models/Continent.ts";
 import type { Countries } from "@/domain/game/models/Country.ts";
 import type { GameMapApi } from "@/domain/game/ports/GameMapApi.ts";
 
-class AxiosGameMapApi implements GameMapApi {
+export class AxiosGameMapApi implements GameMapApi {
   private readonly apiClient: AxiosInstance;
 
   constructor() {
@@ -23,5 +23,3 @@ class AxiosGameMapApi implements GameMapApi {
     return response.data;
   }
 }
-
-export const axiosGameMapApi = new AxiosGameMapApi();

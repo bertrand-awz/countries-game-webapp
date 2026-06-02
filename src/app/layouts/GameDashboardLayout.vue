@@ -2,15 +2,17 @@
   import { ref } from "vue";
   import { useI18n } from "vue-i18n";
 
+  import { useAppDependencies } from "@/app/composables/useAppDependencies.ts";
   import { useGameMapStore } from "@/application/stores/gameMapStore.ts";
   import { startGameUseCase, submitCountryNameAnswerUseCase } from "@/application/use-cases";
   import { Player } from "@/domain/game/models/Player.ts";
   import { createFoundingContinentProgressiveStatesForContinents } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
   import { GameState, GameStatus } from "@/domain/game/models/state/GameState.ts";
-  import { howlerSoundManager } from "@/infrastructure/sound/HowlerSoundManager.ts";
   import GameNavbar from "@/presentation/components/game/dashboard/GameDashboardNavbar.vue";
   import GameSidebar from "@/presentation/components/game/dashboard/GameDashboardSidebar.vue";
   import GameBoard from "@/presentation/components/game/GameBoard.vue";
+
+  const {  soundManager } = useAppDependencies();
 
   const { t } = useI18n();
   const gameMapStore = useGameMapStore();
@@ -70,7 +72,7 @@
       v-model:open="sidebarOpen"
       v-model:game-state="gameState"
       :translator="t"
-      :sound-manager="howlerSoundManager"
+      :sound-manager="soundManager"
       @update:open="sidebarOpen = false"
     />
     <GameBoard

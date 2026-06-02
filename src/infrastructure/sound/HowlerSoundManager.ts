@@ -11,7 +11,7 @@ import {
 
 const SOUND_SCALE: number = 100;
 
-class HowlerSoundManager implements SoundManager {
+export class HowlerSoundManager implements SoundManager {
   private effects: Record<SoundEffectName, Howl>;
   private loopableEffects: Record<LoopableSoundEffectName, Howl>;
   private backgroundMusic: Howl;
@@ -114,5 +114,3 @@ class HowlerSoundManager implements SoundManager {
     return Math.max(0, Math.min(1, normalizedVolume));
   }
 }
-
-export const howlerSoundManager = new HowlerSoundManager();

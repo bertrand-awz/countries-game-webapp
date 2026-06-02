@@ -3,8 +3,6 @@
   import { computed, ref, watch } from "vue";
 
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
-  import { LoopableSoundEffectName } from "@/domain/game/ports/SoundManager.ts";
-  import { howlerSoundManager } from "@/infrastructure/sound/HowlerSoundManager.ts";
 
   import ClickableSoundButton from "./ClickableSoundButton.vue";
 
@@ -92,11 +90,9 @@
     () => props.timeLeftInSeconds,
     (timeLeftInSeconds) => {
       if (timeLeftInSeconds > 0 && timeLeftInSeconds <= 180) {
-        howlerSoundManager.playEffectInLoop(LoopableSoundEffectName.TIMER_COUNTDOWN);
         return;
       }
 
-      howlerSoundManager.stopLoopableEffect(LoopableSoundEffectName.TIMER_COUNTDOWN);
     },
     { immediate: true },
   );
@@ -113,7 +109,7 @@
       :button-class="buttonContinue ? 'navbar-continue-button' : 'navbar-pause-button'"
       :icon="buttonContinue ? PlayIcon : PauseIcon"
       :label="translator(clickableButtonTranslationKey)"
-      :action-on-click="toggleClickableButton"
+      :on-click-callback="toggleClickableButton"
     />
   </div>
 </template>

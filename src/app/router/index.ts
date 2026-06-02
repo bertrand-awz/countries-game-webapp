@@ -1,8 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import GameView from "../../presentation/views/GameView.vue";
-import HomeView from "../../presentation/views/HomeView.vue";
-import { layoutTypes } from "../layouts/types/layoutTypes.ts";
+import { appDependencies } from "@/app";
+import { layoutTypes } from "@/app/layouts/types/layoutTypes.ts";
+import GameView from "@/presentation/views/GameView.vue";
+import HomeView from "@/presentation/views/HomeView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,4 +27,9 @@ const router = createRouter({
   ],
 });
 
+router.beforeEach((to) => {
+  if (to.meta.requiresRoom && !appDependencies.gameServer.hasActiveRoom()) {
+    return { name: "home" };
+  }
+});
 export default router;

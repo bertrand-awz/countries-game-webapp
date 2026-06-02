@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 
+import { useAppDependencies } from "@/app/composables/useAppDependencies.ts";
 import type { Continent } from "@/domain/game/models/Continent.ts";
 import type { Countries, Country } from "@/domain/game/models/Country.ts";
-import { axiosGameMapApi } from "@/infrastructure/game-server/api/AxiosCountriesGameMapApi.ts";
 
 type GameMapStoreState = {
   continents: Continent[];
@@ -50,6 +50,7 @@ export const useGameMapStore = defineStore("gameMap", {
 
   actions: {
     async preload(): Promise<void> {
+      const { gameMapApi } = useAppDependencies();
       if (this.isLoaded || this.isLoading) {
         return;
       }
@@ -59,8 +60,8 @@ export const useGameMapStore = defineStore("gameMap", {
 
       try {
         const [continents, countries] = await Promise.all([
-          axiosGameMapApi.getContinents(),
-          axiosGameMapApi.getCountries(),
+          gameMapApi.getContinents(),
+          gameMapApi.getCountries(),
         ]);
 
         this.continents = continents;
