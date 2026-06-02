@@ -43,6 +43,10 @@ export class ColyseusGameServer implements GameServer {
     return this.toGameSession(this.room);
   }
 
+  hasActiveRoom(): boolean {
+    return this.room !== null;
+  }
+
   async leaveRoom(): Promise<void> {
     if (!this.room) {
       return;

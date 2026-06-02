@@ -25,6 +25,8 @@ export interface GameServer {
 
   joinRoom(options: JoinRoomOptions): Promise<GameSession>;
 
+  hasActiveRoom(): boolean;
+
   leaveRoom(): Promise<void>;
 
   submitCountry(countryName: string): void;
