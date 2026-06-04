@@ -92,7 +92,6 @@
       if (timeLeftInSeconds > 0 && timeLeftInSeconds <= 180) {
         return;
       }
-
     },
     { immediate: true },
   );

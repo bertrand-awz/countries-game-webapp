@@ -3,8 +3,7 @@
   import { ref, watch } from "vue";
 
   import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
-
-  import InputRangeSlider from "./InputRangeSlider.vue";
+  import InputRangeSlider from "@/presentation/components/common/InputRangeSlider.vue";
 
   const props = defineProps<{
     translator: (translationKey: string) => string;
@@ -35,17 +34,23 @@
 
     <div class="ml-2 space-y-4 border-l border-white/10 pl-4">
       <InputRangeSlider
-        v-model:volume="mainVolume"
+        v-model:input-value="mainVolume"
         :label="translator('GAME.SIDEBAR.SOUND_CONTROLLER.BACKGROUND_SOUND')"
         :icon-component="MusicIcon"
         icon-color-class="text-sky-300"
+        :minimum="0"
+        :maximum="100"
+        unit="%"
       />
 
       <InputRangeSlider
-        v-model:volume="effectsVolume"
+        v-model:input-value="effectsVolume"
         :label="translator('GAME.SIDEBAR.SOUND_CONTROLLER.SOUND_EFFECTS')"
         :icon-component="WandSparklesIcon"
         icon-color-class="text-yellow-300"
+        :minimum="0"
+        :maximum="100"
+        unit="%"
       />
     </div>
   </section>

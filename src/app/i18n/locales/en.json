@@ -10,6 +10,20 @@
     "SUPPORTED_LANGUAGES": "Supported languages",
     "COMPONENTS": {
       "NAVBAR": {}
+    },
+    "PAGES": {
+      "ABOUT": {
+        "PAGE_NAME": "About"
+      },
+      "HOME": {
+        "PAGE_NAME": "Home"
+      },
+      "HOW_TO_PLAY": {
+        "PAGE_NAME": "How to play"
+      },
+      "CREDITS": {
+        "PAGE_NAME": "Credits"
+      }
     }
   },
   "VIEWS": {
@@ -42,6 +56,15 @@
         "YOUR_SCORE": "Your score",
         "OPPONENTS_SCORES": "Opponents' scores",
         "COUNTRIES_BY_CONTINENT": "Countries by continent"
+      },
+      "SETTINGS": {
+        "TITLE": "Room Settings",
+        "MODAL": {
+          "MAX_PLAYERS_ALLOWED": "Maximum players in the room",
+          "GAME_DURATION": "Game duration",
+          "GAME_DURATION_UNIT": "min",
+          "BUTTON_APPLY": "Apply"
+        }
       }
     },
     "NAVBAR": {

@@ -20,12 +20,7 @@
     current?: boolean;
   };
 
-  const navigation: NavigationItem[] = [
-    { name: "Home", href: "#", current: true },
-    { name: "About", href: "#" },
-    { name: "Projects", href: "#" },
-    { name: "Calendar", href: "#" },
-  ];
+  const navigation: NavigationItem[] = [];
 </script>
 
 <template>

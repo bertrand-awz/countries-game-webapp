@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ref } from "vue";
 
-  import { GameInputConstraints } from "@/domain/game/constraints/gameInputConstraints.ts";
+  import { GameConstraints } from "@/domain/game/constraints/gameConstraints.js";
 
   const props = defineProps<{
     onSubmitCallback: (inputValue: string) => void;
@@ -36,7 +36,7 @@
         class="answer-input-hidden"
         autocomplete="off"
         spellcheck="false"
-        :maxlength="GameInputConstraints.COUNTRY_NAME_MAX_LENGTH"
+        :maxlength="GameConstraints.COUNTRY_NAME_MAX_LENGTH"
         @paste.prevent
         @drop.prevent
       />

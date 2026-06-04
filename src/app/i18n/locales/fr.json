@@ -10,6 +10,20 @@
     "SUPPORTED_LANGUAGES": "Langues supportées",
     "COMPONENTS": {
       "NAVBAR": {}
+    },
+    "PAGES": {
+      "ABOUT": {
+        "PAGE_NAME": "À propos"
+      },
+      "HOME": {
+        "PAGE_NAME": "Accueil"
+      },
+      "HOW_TO_PLAY": {
+        "PAGE_NAME": "Comment jouer"
+      },
+      "CREDITS": {
+        "PAGE_NAME": "Crédits"
+      }
     }
   },
   "VIEWS": {
@@ -42,6 +56,15 @@
         "YOUR_SCORE": "Votre score",
         "OPPONENTS_SCORES": "Scores adverses",
         "COUNTRIES_BY_CONTINENT": "Pays trouvés par continent"
+      },
+      "SETTINGS": {
+        "TITLE": "Paramètres de la salle",
+        "MODAL": {
+          "MAX_PLAYERS_ALLOWED": "Maximum de joueurs permis",
+          "GAME_DURATION": "Durée de la partie",
+          "GAME_DURATION_UNIT": "min",
+          "BUTTON_APPLY": "Appliquer"
+        }
       }
     },
     "NAVBAR": {

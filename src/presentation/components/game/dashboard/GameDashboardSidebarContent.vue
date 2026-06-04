@@ -1,9 +1,7 @@
 <script setup lang="ts">
-  import { ref } from "vue";
-  import { useI18n } from "vue-i18n";
-
   import type { GameState } from "@/domain/game/models/state/GameState.ts";
   import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
+  import type { GameSetting } from "@/domain/game/settings";
 
   import GameIconAndTitle from "./sidebarContents/GameIconAndTitle.vue";
   import GameSettings from "./sidebarContents/gameSettings/GameSettings.vue";
@@ -13,27 +11,24 @@
   defineProps<{
     soundManager: SoundManager;
     gameState: GameState;
+    translator: (translationKey: string) => string;
+    applySettingCallback: (newSetting: GameSetting) => void;
   }>();
-
-  const { t } = useI18n();
-
-  const playersCount = ref(2);
-  const timerMinutes = ref(5);
 </script>
 
 <template>
   <div class="sidebar-content">
-    <GameIconAndTitle :translate="t" />
+    <GameIconAndTitle :translate="translator" />
 
     <nav class="flex flex-1 flex-col gap-8">
       <ScoresDisplayer
-        :translator="t"
+        :translator="translator"
         :opponents="gameState.players"
         :player="gameState.players[0]"
         :found-countries-by-continent-progressions="gameState.continents"
       />
-      <SoundController :translator="t" :sound-manager="soundManager" />
-      <GameSettings v-model:players-count="playersCount" v-model:timer-minutes="timerMinutes" />
+      <SoundController :translator="translator" :sound-manager="soundManager" />
+      <GameSettings :translator="translator" :apply-setting-callback="applySettingCallback" />
     </nav>
   </div>
 </template>

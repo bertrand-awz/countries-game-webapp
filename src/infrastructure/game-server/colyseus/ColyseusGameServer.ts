@@ -121,5 +121,3 @@ export class ColyseusGameServer implements GameServer {
     };
   }
 }
-
-export const colyseusGameServer = new ColyseusGameServer();

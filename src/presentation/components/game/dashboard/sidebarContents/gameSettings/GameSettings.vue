@@ -1,35 +1,37 @@
 <script setup lang="ts">
-  import { Gamepad2Icon, SettingsIcon, TimerIcon, UsersIcon, XIcon } from "@lucide/vue";
+  import { SettingsIcon, TimerIcon, UsersRoundIcon, XIcon } from "@lucide/vue";
   import { ref } from "vue";
 
-  type GameMode = "classic" | "timer" | "versus";
+  import { GameConstraints } from "@/domain/game/constraints/gameConstraints.ts";
+  import type { GameSetting } from "@/domain/game/settings";
+  import InputRangeSlider from "@/presentation/components/common/InputRangeSlider.vue";
 
+  const props = defineProps<{
+    translator: (translationKey: string) => string;
+    applySettingCallback: (newSettings: GameSetting) => void;
+  }>();
   const isSettingsOpen = ref(false);
 
   const playersCount = defineModel<number>("playersCount", {
-    default: 2,
+    default: GameConstraints.MIN_MAX_ALLOWED_PLAYERS.min,
   });
 
   const timerMinutes = defineModel<number>("timerMinutes", {
-    default: 5,
+    default: GameConstraints.TIME_MIN_MAX_MINUTES.min,
   });
 
-  const gameMode = defineModel<GameMode>("gameMode", {
-    default: "classic",
-  });
-
-  const gameModes: { label: string; value: GameMode }[] = [
-    { label: "Classique", value: "classic" },
-    { label: "Chronomètre", value: "timer" },
-    { label: "Contre un adversaire", value: "versus" },
-  ];
-
-  function openSettings() {
+  function openSettingsModal() {
     isSettingsOpen.value = true;
   }
 
-  function closeSettings() {
+  function closeSettingsModal() {
     isSettingsOpen.value = false;
+  }
+
+  function applySettings() {
+    const newSettings = { numPlayers: playersCount.value, durationInMinutes: timerMinutes.value };
+    props.applySettingCallback(newSettings);
+    closeSettingsModal();
   }
 </script>
 
@@ -38,34 +40,33 @@
     <button
       type="button"
       class="flex w-full items-center gap-x-2 rounded-lg px-2 py-2 text-sm font-semibold text-gray-200 transition hover:bg-white/5 hover:text-white"
-      @click="openSettings"
+      @click="openSettingsModal"
     >
       <SettingsIcon class="size-5 text-gray-400" />
-      <span>Settings</span>
+      <span>{{ translator("GAME.SIDEBAR.SETTINGS.TITLE") }}</span>
     </button>
   </div>
 
   <Teleport to="body">
-    <div v-if="isSettingsOpen" class="fixed inset-0 z-50 flex items-center justify-center px-4">
+    <div
+      v-if="isSettingsOpen"
+      class="font-mono-app fixed inset-0 z-50 flex items-center justify-center px-4 text-white"
+    >
       <!-- Overlay -->
-      <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" @click="closeSettings" />
+      <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" @click="closeSettingsModal" />
 
       <!-- Modal -->
-      <section
-        class="relative z-10 w-full max-w-md rounded-2xl border border-white/10 bg-slate-950 p-5 text-white shadow-2xl"
-      >
-        <!-- Header -->
+      <section class="modal relative z-10">
         <div class="mb-5 flex items-center justify-between">
           <div class="flex items-center gap-x-2">
-            <SettingsIcon class="size-5 text-indigo-400" />
-
-            <h2 class="text-lg font-bold">Paramètres de la partie</h2>
+            <SettingsIcon class="size-5 text-gray-500" />
+            <h2 class="text-lg font-bold">{{ translator("GAME.SIDEBAR.SETTINGS.TITLE") }}</h2>
           </div>
 
           <button
             type="button"
             class="rounded-lg p-1.5 text-gray-400 transition hover:bg-white/10 hover:text-white"
-            @click="closeSettings"
+            @click="closeSettingsModal"
           >
             <XIcon class="size-5" />
           </button>
@@ -73,74 +74,27 @@
 
         <!-- Content -->
         <div class="space-y-4">
-          <!-- Nombre de joueurs -->
-          <label class="block rounded-xl bg-white/5 px-4 py-3">
-            <div class="mb-3 flex items-center justify-between">
-              <div class="flex items-center gap-x-2">
-                <UsersIcon class="size-4 text-emerald-300" />
+          <InputRangeSlider
+            v-model:input-value="playersCount"
+            :label="translator('GAME.SIDEBAR.SETTINGS.MODAL.MAX_PLAYERS_ALLOWED')"
+            label-class="text-sm font-normal"
+            :icon-component="UsersRoundIcon"
+            :icon-color-class="'size-4 text-emerald-300'"
+            :minimum="GameConstraints.MIN_MAX_ALLOWED_PLAYERS.min"
+            :maximum="GameConstraints.MIN_MAX_ALLOWED_PLAYERS.max"
+            unit=""
+          />
 
-                <span class="text-sm font-medium text-gray-200"> Nombre de joueurs </span>
-              </div>
-
-              <span class="text-sm font-bold text-white">
-                {{ playersCount }}
-              </span>
-            </div>
-
-            <input
-              v-model.number="playersCount"
-              type="range"
-              min="1"
-              max="8"
-              step="1"
-              class="h-2 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-indigo-400"
-            />
-          </label>
-
-          <!-- TimeDisplayer -->
-          <label class="block rounded-xl bg-white/5 px-4 py-3">
-            <div class="mb-3 flex items-center justify-between">
-              <div class="flex items-center gap-x-2">
-                <TimerIcon class="size-4 text-amber-300" />
-
-                <span class="text-sm font-medium text-gray-200"> Durée du timer </span>
-              </div>
-
-              <span class="text-sm font-bold text-white"> {{ timerMinutes }} min </span>
-            </div>
-
-            <input
-              v-model.number="timerMinutes"
-              type="range"
-              min="1"
-              max="30"
-              step="1"
-              class="h-2 w-full cursor-pointer appearance-none rounded-full bg-white/10 accent-indigo-400"
-            />
-          </label>
-
-          <!-- Mode de jeu -->
-          <label class="block rounded-xl bg-white/5 px-4 py-3">
-            <div class="mb-3 flex items-center gap-x-2">
-              <Gamepad2Icon class="size-4 text-sky-300" />
-
-              <span class="text-sm font-medium text-gray-200"> Mode de jeu </span>
-            </div>
-
-            <select
-              v-model="gameMode"
-              class="w-full rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm text-white transition outline-none focus:border-indigo-400"
-            >
-              <option
-                v-for="mode in gameModes"
-                :key="mode.value"
-                :value="mode.value"
-                class="bg-slate-900 text-white"
-              >
-                {{ mode.label }}
-              </option>
-            </select>
-          </label>
+          <InputRangeSlider
+            v-model:input-value="timerMinutes"
+            :label="translator('GAME.SIDEBAR.SETTINGS.MODAL.GAME_DURATION')"
+            label-class="text-sm font-normal"
+            :icon-component="TimerIcon"
+            :icon-color-class="'size-4 text-emerald-300'"
+            :minimum="GameConstraints.TIME_MIN_MAX_MINUTES.min"
+            :maximum="GameConstraints.TIME_MIN_MAX_MINUTES.max"
+            :unit="translator('GAME.SIDEBAR.SETTINGS.MODAL.GAME_DURATION_UNIT')"
+          />
         </div>
 
         <!-- Footer -->
@@ -148,9 +102,9 @@
           <button
             type="button"
             class="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400"
-            @click="closeSettings"
+            @click="applySettings"
           >
-            Appliquer
+            {{ translator("GAME.SIDEBAR.SETTINGS.MODAL.BUTTON_APPLY") }}
           </button>
         </div>
       </section>

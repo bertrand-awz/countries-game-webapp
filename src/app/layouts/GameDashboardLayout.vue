@@ -8,11 +8,12 @@
   import { Player } from "@/domain/game/models/Player.ts";
   import { createFoundingContinentProgressiveStatesForContinents } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
   import { GameState, GameStatus } from "@/domain/game/models/state/GameState.ts";
+  import type { GameSetting } from "@/domain/game/settings";
   import GameNavbar from "@/presentation/components/game/dashboard/GameDashboardNavbar.vue";
   import GameSidebar from "@/presentation/components/game/dashboard/GameDashboardSidebar.vue";
   import GameBoard from "@/presentation/components/game/GameBoard.vue";
 
-  const {  soundManager } = useAppDependencies();
+  const { soundManager } = useAppDependencies();
 
   const { t } = useI18n();
   const gameMapStore = useGameMapStore();
@@ -54,6 +55,9 @@
   function submitCountryNameAnswer(playerAnswer: string) {
     submitCountryNameAnswerUseCase.setOptions({ countryName: playerAnswer }).execute();
   }
+  function applySettingCallback(newSetting: GameSetting) {
+    console.log(newSetting);
+  }
 </script>
 
 <template>
@@ -73,6 +77,7 @@
       v-model:game-state="gameState"
       :translator="t"
       :sound-manager="soundManager"
+      :apply-setting-callback="applySettingCallback"
       @update:open="sidebarOpen = false"
     />
     <GameBoard

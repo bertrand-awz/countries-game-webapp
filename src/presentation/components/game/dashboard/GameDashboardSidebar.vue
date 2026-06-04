@@ -3,6 +3,7 @@
 
   import type { GameState } from "@/domain/game/models/state/GameState.ts";
   import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
+  import type { GameSetting } from "@/domain/game/settings";
 
   import GameDashboardSidebarContent from "./GameDashboardSidebarContent.vue";
 
@@ -10,6 +11,7 @@
     open: boolean;
     translator: (translationKey: string) => string;
     soundManager: SoundManager;
+    applySettingCallback: (newSettings: GameSetting) => void;
   }>();
 
   const gameState = defineModel<GameState>("gameState", { required: true });
@@ -66,6 +68,8 @@
               class="navbar border-r"
               :game-state="gameState"
               :sound-manager="soundManager"
+              :apply-setting-callback="applySettingCallback"
+              :translator="translator"
             />
           </DialogPanel>
         </TransitionChild>
@@ -79,6 +83,8 @@
       class="navbar border-r"
       :game-state="gameState"
       :sound-manager="soundManager"
+      :apply-setting-callback="applySettingCallback"
+      :translator="translator"
     />
   </div>
 </template>
