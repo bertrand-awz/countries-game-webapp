@@ -6,12 +6,14 @@ import GameFormView from "@/presentation/views/GameFormView.vue";
 import GameView from "@/presentation/views/GameView.vue";
 import HomeView from "@/presentation/views/HomeView.vue";
 
+import { RouteName } from "./routeName.ts";
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: "/",
-      name: "home",
+      name: RouteName.HOME,
       component: HomeView,
       meta: {
         layout: layoutTypes.DEFAULT,
@@ -19,7 +21,7 @@ const router = createRouter({
     },
     {
       path: "/play",
-      name: "game",
+      name: RouteName.GAME,
       component: GameView,
       meta: {
         requiresRoom: true,
@@ -27,24 +29,40 @@ const router = createRouter({
       },
     },
     {
-      path: "/lobby",
-      name: "lobby",
+      path: "/create-room",
+      name: RouteName.GAME_ROOM_CREATION,
       component: GameFormView,
       meta: {
         layout: layoutTypes.GAME_FORM,
+        joiningRoom: false,
       },
     },
     {
       path: "/join",
-      redirect: "/lobby",
-    },
-    {
-      path: "/join/:roomId",
-      name: "join-room",
+      name: RouteName.GAME_ROOM_MANUAL_JOINING,
       component: GameFormView,
       meta: {
         layout: layoutTypes.GAME_FORM,
         joiningRoom: true,
+        manualRoomIdInputAllowed: true,
+      },
+    },
+    {
+      path: "/join/:roomId",
+      name: RouteName.GAME_ROOM_AUTOMATIC_JOINING,
+      component: GameFormView,
+      meta: {
+        layout: layoutTypes.GAME_FORM,
+        joiningRoom: true,
+        manualRoomIdInputAllowed: false,
+      },
+    },
+    {
+      path: "/:pathMatch(.*)*",
+      name: RouteName.NOT_FOUND,
+      component: HomeView,
+      meta: {
+        layout: layoutTypes.DEFAULT,
       },
     },
   ],
@@ -52,7 +70,7 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   if (to.meta.requiresRoom && !appDependencies.gameServer.hasActiveRoom()) {
-    return { name: "lobby" };
+    return { name: RouteName.GAME_ROOM_CREATION };
   }
 });
 

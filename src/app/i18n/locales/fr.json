@@ -30,6 +30,30 @@
     "HOME": {
       "WELCOME_TEXT": "",
       "GAME_TEASING_TEXT": ""
+    },
+    "FORMS": {
+      "GAME_ROOM_LOBBYING": {
+        "TITLE": "Créer ou joindre une salle de jeu",
+        "CHOICES": {
+          "CREATE_ROOM": "Créer une salle",
+          "JOIN_ROOM": "Joindre une salle"
+        },
+        "INPUT_LABELS": {
+          "USERNAME": "Nom d'utilisateur",
+          "GAME_LANGUAGE": "Langues du jeu",
+          "MAX_PLAYER": "Nombre maximal de joueurs dans la salle",
+          "GAME_DURATION": "Durée d'une partie",
+          "FREEDOM_OF_LANGUAGE": "Liberté de langue"
+        },
+        "INPUT_HINTS": {
+          "USERNAME": "Nom affiché aux autres joueurs pendant la partie.",
+          "ROOM_ID": "Identifiant de la salle à rejoindre. Il est généralement fourni par le créateur de la salle.",
+          "GAME_LANGUAGE": "Langue principale utilisée pour les noms de pays pendant la partie.",
+          "MAX_PLAYER": "Nombre maximal de joueurs pouvant rejoindre cette salle.",
+          "GAME_DURATION": "Durée totale de la partie en minutes.",
+          "FREEDOM_OF_LANGUAGE": "Permet au serveur d'accepter les réponses dans les langues choisies par les joueurs."
+        }
+      }
     }
   },
   "HOME": {

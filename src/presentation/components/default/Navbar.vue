@@ -5,7 +5,7 @@
 
   import { LOCALES_OPTIONS, type SupportedLocale } from "@/app/i18n";
   import GameIcon from "@/assets/icons/gameIcon.svg";
-  import LanguagesMenu from "@/presentation/components/common/NavbarLanguagesMenu.vue";
+  import LanguagesMenu from "@/presentation/components/partials/NavbarLanguagesMenu.vue";
 
   const { t, locale } = useI18n();
 

@@ -4,7 +4,7 @@
 
   import { GameConstraints } from "@/domain/game/constraints/gameConstraints.ts";
   import type { GameSetting } from "@/domain/game/settings";
-  import InputRangeSlider from "@/presentation/components/common/InputRangeSlider.vue";
+  import InputRangeSlider from "@/presentation/components/partials/inputs/InputRangeSlider.vue";
 
   const props = defineProps<{
     translator: (translationKey: string) => string;

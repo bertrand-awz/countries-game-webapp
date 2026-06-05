@@ -13,6 +13,11 @@
 }
 
 @layer components {
+  body,
+  #app {
+    @apply font-mono-app m-0 bg-black;
+  }
+
   .app-page {
     @apply font-mono-app grid h-screen grid-rows-[auto_1fr] bg-black;
   }
@@ -195,7 +200,7 @@
       opacity: 0;
     }
   }
-  .game-form-page{
-    @apply font-mono-app h-screen flex bg-black items-center justify-center;
+  .game-form-page {
+    @apply font-mono-app flex h-screen items-center justify-center bg-black;
   }
 }

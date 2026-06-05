@@ -3,7 +3,7 @@
   import { ref, watch } from "vue";
 
   import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
-  import InputRangeSlider from "@/presentation/components/common/InputRangeSlider.vue";
+  import InputRangeSlider from "@/presentation/components/partials/inputs/InputRangeSlider.vue";
 
   const props = defineProps<{
     translator: (translationKey: string) => string;

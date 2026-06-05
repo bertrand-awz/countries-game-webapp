@@ -19,21 +19,12 @@
 
     return DefaultLayout;
   });
-  const layoutProps = computed(() => {
-    if (route.meta.layout === layoutTypes.GAME_FORM) {
-      return {
-        isJoiningRoom: route.meta.joiningRoom === true,
-      };
-    }
-
-    return {};
-  });
 </script>
 
 <template>
   <Suspense :timeout="0">
     <template #default>
-      <component :is="layout" v-bind="layoutProps" />
+      <component :is="layout" />
     </template>
 
     <template #fallback>

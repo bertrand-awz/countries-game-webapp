@@ -3,7 +3,7 @@
 
   import type { Player } from "@/domain/game/models/Player.ts";
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
-  import LanguagesMenu from "@/presentation/components/common/NavbarLanguagesMenu.vue";
+  import LanguagesMenu from "@/presentation/components/partials/NavbarLanguagesMenu.vue";
 
   import RestartAndExitButtons from "./navbarContents/RestartAndExitButtons.vue";
   import ScoreDisplayer from "./navbarContents/ScoreDisplayer.vue";

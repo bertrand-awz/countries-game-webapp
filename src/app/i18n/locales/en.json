@@ -30,6 +30,30 @@
     "HOME": {
       "WELCOME_TEXT": "",
       "GAME_TEASING_TEXT": ""
+    },
+    "FORMS": {
+      "GAME_ROOM_LOBBYING": {
+        "TITLE": "Create or Join a Room",
+        "CHOICES": {
+          "CREATE_ROOM": "Create a room",
+          "JOIN_ROOM": "Join a room"
+        },
+        "INPUT_LABELS": {
+          "USERNAME": "Username",
+          "GAME_LANGUAGE": "Game default language",
+          "MAX_PLAYER": "Room's max players",
+          "GAME_DURATION": "Game duration",
+          "FREEDOM_OF_LANGUAGE": "Freedom of language"
+        },
+        "INPUT_HINTS": {
+          "USERNAME": "Name shown to other players during the game.",
+          "ROOM_ID": "Room identifier to join. It is usually provided by the room creator.",
+          "GAME_LANGUAGE": "Main language used for country names during the game.",
+          "MAX_PLAYER": "Maximum number of players allowed to join this room.",
+          "GAME_DURATION": "Total game duration in minutes.",
+          "FREEDOM_OF_LANGUAGE": "Allows the server to accept responses in the languages selected by the players."
+        }
+      }
     }
   },
   "HOME": {
