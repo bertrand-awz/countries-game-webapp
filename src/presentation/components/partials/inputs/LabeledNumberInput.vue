@@ -38,7 +38,8 @@
       :max="max"
       :step="step"
       :disabled="disabled"
-      class="block w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none focus:border-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
+      class="block w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm
+      text-white outline-none focus:border-emerald-400 disabled:cursor-not-allowed disabled:opacity-60"
     />
   </div>
 </template>

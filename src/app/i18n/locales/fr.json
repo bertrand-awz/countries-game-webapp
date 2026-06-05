@@ -33,10 +33,11 @@
     },
     "FORMS": {
       "GAME_ROOM_LOBBYING": {
-        "TITLE": "Créer ou joindre une salle de jeu",
-        "CHOICES": {
-          "CREATE_ROOM": "Créer une salle",
-          "JOIN_ROOM": "Joindre une salle"
+        "ROOM_CREATION_TITLE": "Créer une salle",
+        "ROOM_JOINING_TITLE": "Joindre une salle",
+        "SUBTITLES": {
+          "CREATE_ROOM": "Crée ta salle, invite tes amis et savourez",
+          "JOIN_ROOM": "Entre le code de la salle et rejoins tes amis"
         },
         "INPUT_LABELS": {
           "USERNAME": "Nom d'utilisateur",
@@ -52,6 +53,16 @@
           "MAX_PLAYER": "Nombre maximal de joueurs pouvant rejoindre cette salle.",
           "GAME_DURATION": "Durée totale de la partie en minutes.",
           "FREEDOM_OF_LANGUAGE": "Permet au serveur d'accepter les réponses dans les langues choisies par les joueurs."
+        },
+        "BUTTONS": {
+          "CREATE_ROOM": "Create a room",
+          "JOIN_ROOM": "Join a room"
+        },
+        "BOTTOM_TEXTS": {
+          "JOIN_ROOM_QUESTION": "Souhaitez-vous vous joindre à une partie?",
+          "JOIN_ROOM_LINK_LABEL": "Joindre une partie",
+          "CREATE_ROOM_QUESTION": "Souhaitez-vous créer votre salle?",
+          "CREATE_ROOM_LINK_LABEL": "Créer une salle de jeu"
         }
       }
     }

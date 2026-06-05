@@ -55,11 +55,11 @@
     >
       <div class="text-center">
         <h2 class="text-2xl font-bold tracking-tight">
-          {{ translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.TITLE") }}
+          {{ translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.ROOM_CREATION_TITLE") }}
         </h2>
 
         <p class="mt-2 text-sm text-gray-400">
-          {{ translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.CHOICES.CREATE_ROOM") }}
+          {{ translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.SUBTITLES.CREATE_ROOM") }}
         </p>
       </div>
 
@@ -113,13 +113,13 @@
           type="submit"
           class="flex w-full justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
         >
-          {{ translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.CHOICES.CREATE_ROOM") }}
+          {{ translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.BUTTONS.CREATE_ROOM") }}
         </button>
       </form>
 
       <BottomTextLink
-        main-text="Partir d'ici ?"
-        link-text="Join room instead"
+        :main-text="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.BOTTOM_TEXTS.JOIN_ROOM_QUESTION')"
+        :link-text="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.BOTTOM_TEXTS.JOIN_ROOM_LINK_LABEL')"
         :on-link-click="toJoinRoomRedirection"
       />
     </section>

@@ -33,10 +33,11 @@
     },
     "FORMS": {
       "GAME_ROOM_LOBBYING": {
-        "TITLE": "Create or Join a Room",
-        "CHOICES": {
-          "CREATE_ROOM": "Create a room",
-          "JOIN_ROOM": "Join a room"
+        "ROOM_CREATION_TITLE": "Create room",
+        "ROOM_JOINING_TITLE": "Join room",
+        "SUBTITLES": {
+          "CREATE_ROOM": "Create your room, invite your friends, and enjoy",
+          "JOIN_ROOM": "Enter the room ID and join your friends"
         },
         "INPUT_LABELS": {
           "USERNAME": "Username",
@@ -52,6 +53,16 @@
           "MAX_PLAYER": "Maximum number of players allowed to join this room.",
           "GAME_DURATION": "Total game duration in minutes.",
           "FREEDOM_OF_LANGUAGE": "Allows the server to accept responses in the languages selected by the players."
+        },
+        "BUTTONS": {
+          "CREATE_ROOM": "Create a room",
+          "JOIN_ROOM": "Join a room"
+        },
+        "BOTTOM_TEXTS": {
+          "JOIN_ROOM_QUESTION": "Do you want to join your friends?",
+          "JOIN_ROOM_LINK_LABEL": "Join room instead",
+          "CREATE_ROOM_QUESTION": "Do you want your own room?",
+          "CREATE_ROOM_LINK_LABEL": "Create room instead"
         }
       }
     }
