@@ -1,5 +1,6 @@
 import type { CountryFoundEvent } from "@/domain/game/events/CountryFoundEvent.ts";
 import type { CountryRejectedEvent } from "@/domain/game/events/CountryRejectedEvent.ts";
+import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEvent.ts";
 import type { TurnChangedEvent } from "@/domain/game/events/TurnChangedEvent.ts";
 import type { GameState } from "@/domain/game/models/state/GameState.ts";
 
@@ -36,6 +37,8 @@ export interface GameServer {
   resumeGame(): void;
 
   restartGame(): void;
+
+  onPlayerJoinRoom(callback: (event: PlayerJoinRoomEvent) => void): void;
 
   onStateChange(callback: (state: GameState) => void): void;
 

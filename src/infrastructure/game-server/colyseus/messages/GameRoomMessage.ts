@@ -6,4 +6,5 @@ export enum GameRoomMessage {
   RESUME_GAME = "resume_game",
   RESTART_GAME = "restart_game",
   SUBMIT_COUNTRY = "submit_country",
+  PLAYER_JOIN_ROOM = "player_join_room",
 }

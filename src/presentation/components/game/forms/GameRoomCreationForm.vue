@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
 
+  import type { CreateRoomOptions } from "@/domain/game/ports/GameServer.ts";
   import BottomTextLink from "@/presentation/components/game/forms/BottomTextLink.vue";
   import LabeledCheckboxInput from "@/presentation/components/partials/inputs/LabeledCheckboxInput.vue";
   import LabeledNumberInput from "@/presentation/components/partials/inputs/LabeledNumberInput.vue";
@@ -12,6 +13,7 @@
   const props = defineProps<{
     toJoinRoomRedirection: () => void;
     translator: (translationKey: string) => string;
+    onSubmitRoomCreationFormCallback: (createRoomOptions: CreateRoomOptions) => void;
   }>();
 
   const username = ref("");
@@ -31,20 +33,18 @@
     },
   ]);
 
-  function createRoom(): void {
+  function submit(): void {
     const trimmedUsername = username.value.trim();
 
     if (!trimmedUsername) {
       return;
     }
-
-    // createRoomUseCase.setOptions({
-    //   username: trimmedUsername,
-    //   gameLanguage: gameLanguage.value,
-    //   maxPlayersAllowed: maxPlayers.value,
-    //   gameDurationInMinutes: gameDuration.value,
-    //   freedomOfLanguage: freedomOfLanguage.value,
-    // }).execute();
+    props.onSubmitRoomCreationFormCallback({
+      username: trimmedUsername,
+      gameDurationInSeconds: gameDuration.value * 60,
+      maxPlayersAllowed: maxPlayers.value,
+      gameLanguage: gameLanguage.value,
+    });
   }
 </script>
 
@@ -63,7 +63,7 @@
         </p>
       </div>
 
-      <form class="mt-8 space-y-5" @submit.prevent="createRoom">
+      <form class="mt-8 space-y-5" @submit.prevent="submit">
         <LabeledTextInput
           id="username"
           v-model="username"
@@ -112,6 +112,7 @@
         <button
           type="submit"
           class="flex w-full justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+          @click="submit"
         >
           {{ translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.BUTTONS.CREATE_ROOM") }}
         </button>

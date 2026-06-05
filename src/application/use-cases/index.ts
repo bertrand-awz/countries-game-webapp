@@ -1,3 +1,4 @@
+import { CreateRoomUseCase } from "./createRoomUseCase.ts";
 import { JoinRoomUseCase } from "./joinRoomUseCase.ts";
 import { LoadContinentsUseCase } from "./loadContinentsUseCase.ts";
 import { StartGameUseCase } from "./startGameUseCase.ts";
@@ -7,3 +8,4 @@ export const loadContinentsUseCase = new LoadContinentsUseCase();
 export const joinRoomUseCase = new JoinRoomUseCase();
 export const submitCountryNameAnswerUseCase = new SubmitAnswerUseCase();
 export const startGameUseCase = new StartGameUseCase();
+export const createRoomUseCase = new CreateRoomUseCase();

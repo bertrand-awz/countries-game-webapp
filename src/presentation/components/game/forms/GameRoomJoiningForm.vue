@@ -2,12 +2,14 @@
   import { computed, onBeforeUnmount, ref } from "vue";
   import { useRoute } from "vue-router";
 
+  import type { JoinRoomOptions } from "@/domain/game/ports/GameServer.ts";
   import BottomTextLink from "@/presentation/components/game/forms/BottomTextLink.vue";
   import LabeledTextInput from "@/presentation/components/partials/inputs/LabeledTextInput.vue";
 
-  defineProps<{
+  const props = defineProps<{
     toRoomCreationRedirection: () => void;
     translator: (translationKey: string) => string;
+    onSubmitRoomJoiningForm: (joinRoomOptions: JoinRoomOptions) => void;
   }>();
 
   const route = useRoute();
@@ -33,18 +35,17 @@
     },
   });
 
-  function joinRoom(): void {
+  function submit(): void {
     const trimmedUsername = username.value.trim();
     const trimmedRoomId = roomId.value.trim();
 
     if (!trimmedUsername || !trimmedRoomId) {
       return;
     }
-
-    // joinRoomUseCase.setOptions({
-    //   username: trimmedUsername,
-    //   roomId: trimmedRoomId,
-    // }).execute();
+    props.onSubmitRoomJoiningForm({
+      username: trimmedUsername,
+      roomId: trimmedRoomId,
+    });
   }
 
   onBeforeUnmount(() => {
@@ -67,7 +68,7 @@
         </p>
       </div>
 
-      <form class="mt-8 space-y-5" @submit.prevent="joinRoom">
+      <form class="mt-8 space-y-5" @submit.prevent="submit">
         <LabeledTextInput
           id="username"
           v-model="username"
@@ -97,6 +98,7 @@
         <button
           type="submit"
           class="flex w-full justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+          @click="submit"
         >
           {{ translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.BUTTONS.JOIN_ROOM") }}
         </button>

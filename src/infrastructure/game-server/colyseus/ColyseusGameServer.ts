@@ -13,6 +13,7 @@ import type {
 
 import { GameStateMapper } from "./mappers/GameStateMapper.js";
 import { GameRoomMessage } from "./messages/GameRoomMessage.js";
+import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEvent.ts";
 
 const COUNTRIES_GAME_ROOM_NAME = "countries_game";
 
@@ -20,12 +21,13 @@ export class ColyseusGameServer implements GameServer {
   private readonly client: Client;
   private room: Room | null = null;
 
-  constructor(endpoint: string = "ws://localhost:2567") {
+  constructor(endpoint: string = "http://localhost:2567") {
     this.client = new Client(endpoint);
   }
 
   async createRoom(options: CreateRoomOptions): Promise<GameSession> {
-    this.room = await this.client.create(COUNTRIES_GAME_ROOM_NAME, {
+    try {
+      this.room = await this.client.create(COUNTRIES_GAME_ROOM_NAME, {
       gameLanguage: options.gameLanguage,
       gameDurationInSeconds: options.gameDurationInSeconds,
       maxPlayersAllowed: options.maxPlayersAllowed,
@@ -33,6 +35,10 @@ export class ColyseusGameServer implements GameServer {
     });
 
     return this.toGameSession(this.room);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   async joinRoom(options: JoinRoomOptions): Promise<GameSession> {
@@ -77,6 +83,12 @@ export class ColyseusGameServer implements GameServer {
   onStateChange(callback: (state: GameState) => void): void {
     this.ensureRoom().onStateChange((colyseusState) => {
       callback(GameStateMapper.fromColyseusState(colyseusState));
+    });
+  }
+
+  onPlayerJoinRoom(callback: (event: PlayerJoinRoomEvent) => void): void {
+    this.ensureRoom().onMessage(GameRoomMessage.PLAYER_JOIN_ROOM, (message) => {
+      callback(message.player);
     });
   }
 

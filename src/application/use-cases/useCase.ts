@@ -22,5 +22,5 @@ export abstract class UseCase<TOptions = void, TResult = void> {
     return this;
   }
 
-  abstract execute(): TResult | Promise<TResult>;
+  abstract execute(): TResult | Promise<TResult> | void;
 }

@@ -4,6 +4,8 @@
   import { useRoute, useRouter } from "vue-router";
 
   import { RouteName } from "@/app/router/routeName.ts";
+  import { createRoomUseCase, joinRoomUseCase } from "@/application/use-cases";
+  import type { CreateRoomOptions, JoinRoomOptions } from "@/domain/game/ports/GameServer.ts";
   import GameRoomCreationForm from "@/presentation/components/game/forms/GameRoomCreationForm.vue";
   import GameRoomJoiningForm from "@/presentation/components/game/forms/GameRoomJoiningForm.vue";
 
@@ -26,6 +28,20 @@
       name: RouteName.GAME_ROOM_CREATION,
     });
   }
+
+  function submitRoomCreationForm(roomCreationOptions: CreateRoomOptions): void {
+    createRoomUseCase.setOptions(roomCreationOptions).execute();
+    router.push({
+      name: RouteName.GAME,
+    });
+  }
+
+  function submitJoiningRoomForm(joinRoomOptions: JoinRoomOptions): void {
+    joinRoomUseCase.setOptions(joinRoomOptions).execute();
+    router.push({
+      name: RouteName.GAME,
+    });
+  }
 </script>
 
 <template>
@@ -34,12 +50,14 @@
       v-if="isPlayerJoiningRoom"
       :translator="t"
       :to-room-creation-redirection="redirectToCreateRoomForm"
+      :on-submit-room-joining-form="submitJoiningRoomForm"
     />
 
     <GameRoomCreationForm
       v-else
       :to-join-room-redirection="redirectToManualJoiningRoomForm"
       :translator="t"
+      :on-submit-room-creation-form-callback="submitRoomCreationForm"
     />
   </div>
 </template>

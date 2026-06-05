@@ -2,16 +2,18 @@ import type { GameSession, JoinRoomOptions } from "@/domain/game/ports/GameServe
 
 import { UseCase } from "./useCase.ts";
 
-export class JoinRoomUseCase extends UseCase<JoinRoomOptions, GameSession> {
+export class JoinRoomUseCase extends UseCase<JoinRoomOptions, GameSession | void> {
   constructor() {
     super();
   }
 
   setOptions(options: JoinRoomOptions): this {
-    return super.setOptions(options);
+    this.options = options;
+    return this;
   }
 
-  execute(): GameSession {
-    this.gameServer.joinRoom(this.options);
+  async execute(): Promise<GameSession | void> {
+    if (this.options) return await this.gameServer.joinRoom(this.options);
+    return;
   }
 }
