@@ -13,7 +13,7 @@
   const props = defineProps<{
     toJoinRoomRedirection: () => void;
     translator: (translationKey: string) => string;
-    onSubmitRoomCreationFormCallback: (createRoomOptions: CreateRoomOptions) => void;
+    onSubmitRoomCreationFormCallback: (createRoomOptions: CreateRoomOptions) => Promise<void>;
   }>();
 
   const username = ref("");
@@ -112,7 +112,6 @@
         <button
           type="submit"
           class="flex w-full justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
-          @click="submit"
         >
           {{ translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.BUTTONS.CREATE_ROOM") }}
         </button>

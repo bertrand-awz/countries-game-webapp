@@ -26,30 +26,30 @@ export class ColyseusGameServer implements GameServer {
   }
 
   async createRoom(options: CreateRoomOptions): Promise<GameSession> {
-    try {
-      this.room = await this.client.create(COUNTRIES_GAME_ROOM_NAME, {
+    const room = await this.client.create(COUNTRIES_GAME_ROOM_NAME, {
       gameLanguage: options.gameLanguage,
       gameDurationInSeconds: options.gameDurationInSeconds,
       maxPlayersAllowed: options.maxPlayersAllowed,
       username: options.username,
     });
 
-    return this.toGameSession(this.room);
-    } catch (error) {
-      throw error;
-    }
+    return this.initializeRoom(room);
   }
 
   async joinRoom(options: JoinRoomOptions): Promise<GameSession> {
-    this.room = await this.client.joinById(options.roomId, {
+    const room = await this.client.joinById(options.roomId, {
       username: options.username,
     });
 
-    return this.toGameSession(this.room);
+    return this.initializeRoom(room);
   }
 
   hasActiveRoom(): boolean {
     return this.room !== null;
+  }
+
+  getState(): GameState {
+    return GameStateMapper.fromColyseusState(this.ensureRoom().state);
   }
 
   async leaveRoom(): Promise<void> {
@@ -79,10 +79,15 @@ export class ColyseusGameServer implements GameServer {
     });
   }
 
-  onStateChange(callback: (state: GameState) => void): void {
-    this.ensureRoom().onStateChange((colyseusState) => {
+  onStateChange(callback: (state: GameState) => void): () => void {
+    const room = this.ensureRoom();
+    const stateChangeHandler = (colyseusState: unknown) => {
       callback(GameStateMapper.fromColyseusState(colyseusState));
-    });
+    };
+
+    room.onStateChange(stateChangeHandler);
+
+    return () => room.onStateChange.remove(stateChangeHandler);
   }
 
   onPlayerJoinRoom(callback: (event: PlayerJoinRoomEvent) => void): void {
@@ -123,6 +128,39 @@ export class ColyseusGameServer implements GameServer {
     }
 
     return this.room;
+  }
+
+  private async initializeRoom(room: Room): Promise<GameSession> {
+    await this.waitForInitialState(room);
+    this.room = room;
+
+    return this.toGameSession(room);
+  }
+
+  private waitForInitialState(room: Room): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const cleanup = () => {
+        room.onStateChange.remove(onStateChange);
+        room.onError.remove(onError);
+        room.onLeave.remove(onLeave);
+      };
+      const onStateChange = () => {
+        cleanup();
+        resolve();
+      };
+      const onError = (code: number, message?: string) => {
+        cleanup();
+        reject(new Error(message ?? `Unable to receive the room state (code ${code}).`));
+      };
+      const onLeave = (code: number, reason?: string) => {
+        cleanup();
+        reject(new Error(reason ?? `Room closed before its state was ready (code ${code}).`));
+      };
+
+      room.onStateChange(onStateChange);
+      room.onError(onError);
+      room.onLeave(onLeave);
+    });
   }
 
   private toGameSession(room: Room): GameSession {

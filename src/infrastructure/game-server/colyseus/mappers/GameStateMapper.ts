@@ -1,30 +1,68 @@
-import type { Player } from "@/domain/game/models/Player";
-import type { FoundingContinentProgressionState } from "@/domain/game/models/state/FoundingContinentProgressionState";
+import type { Continent } from "@/domain/game/models/Continent.ts";
+import { Player } from "@/domain/game/models/Player.ts";
+import type { FoundingContinentProgressionState } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
 import { GameState, GameStatus } from "@/domain/game/models/state/GameState.ts";
 import type { SupportedLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
 
+type ColyseusPlayerState = {
+  id: string;
+  username: string;
+  score: number;
+  totalCountriesFound: number;
+};
+
+type ColyseusContinentProgressState = {
+  continent: Continent;
+  countriesFoundNumber: number;
+};
+
+type ColyseusGameState = {
+  numberOfPlayers: number;
+  defaultLanguage: SupportedLanguage;
+  durationInSeconds: number;
+  startAt: number;
+  endAt: number;
+  status: GameStatus;
+  continents: Iterable<ColyseusContinentProgressState>;
+  allowAnswerValidationInPlayerCurrentLanguage: boolean;
+  players: Iterable<ColyseusPlayerState>;
+};
+
 export class GameStateMapper {
-  static fromColyseusState(colyseusGameState: {
-    numberOfPlayers: number;
-    defaultLanguage: SupportedLanguage;
-    durationInSeconds: number;
-    startAt: number;
-    endAt: number;
-    status: GameStatus;
-    continents: FoundingContinentProgressionState[];
-    allowAnswerValidationInPlayerLanguage: boolean;
-    players: Player[];
-  }): GameState {
+  static fromColyseusState(colyseusGameState: unknown): GameState {
+    const state = colyseusGameState as ColyseusGameState;
+
     return new GameState(
-      colyseusGameState.numberOfPlayers,
-      colyseusGameState.defaultLanguage,
-      colyseusGameState.durationInSeconds,
-      colyseusGameState.startAt,
-      colyseusGameState.endAt,
-      colyseusGameState.status,
-      colyseusGameState.continents,
-      colyseusGameState.allowAnswerValidationInPlayerLanguage,
-      colyseusGameState.players,
+      state.numberOfPlayers,
+      state.defaultLanguage,
+      state.durationInSeconds,
+      state.startAt,
+      state.endAt,
+      state.status,
+      this.mapContinents(state.continents),
+      state.allowAnswerValidationInPlayerCurrentLanguage,
+      this.mapPlayers(state.players),
     );
+  }
+
+  private static mapPlayers(colyseusPlayers: Iterable<ColyseusPlayerState>): Player[] {
+    return Array.from(colyseusPlayers, (colyseusPlayer) => {
+      const player = new Player(colyseusPlayer.id, colyseusPlayer.username, colyseusPlayer.score);
+      player.updateTotalCountriesFound(colyseusPlayer.totalCountriesFound);
+
+      return player;
+    });
+  }
+
+  private static mapContinents(
+    colyseusContinents: Iterable<ColyseusContinentProgressState>,
+  ): FoundingContinentProgressionState[] {
+    return Array.from(colyseusContinents, (progression) => ({
+      continent: {
+        id: progression.continent.id,
+        countriesNumber: progression.continent.countriesNumber,
+      },
+      countriesFoundNumber: progression.countriesFoundNumber,
+    }));
   }
 }

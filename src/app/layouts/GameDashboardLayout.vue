@@ -1,13 +1,17 @@
 <script setup lang="ts">
+  import { storeToRefs } from "pinia";
   import { ref } from "vue";
   import { useI18n } from "vue-i18n";
 
   import { useAppDependencies } from "@/app/composables/useAppDependencies.ts";
+  import LoadingLayout from "@/app/layouts/LoadingLayout.vue";
   import { useGameMapStore } from "@/application/stores/gameMapStore.ts";
-  import { startGameUseCase, submitCountryNameAnswerUseCase } from "@/application/use-cases";
-  import { Player } from "@/domain/game/models/Player.ts";
-  import { createFoundingContinentProgressiveStatesForContinents } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
-  import { GameState, GameStatus } from "@/domain/game/models/state/GameState.ts";
+  import { useGameSessionStore } from "@/application/stores/gameSessionStore.ts";
+  import {
+    requestGamePauseUseCase,
+    startGameUseCase,
+    submitCountryNameAnswerUseCase,
+  } from "@/application/use-cases";
   import type { GameSetting } from "@/domain/game/settings";
   import GameNavbar from "@/presentation/components/game/dashboard/GameDashboardNavbar.vue";
   import GameSidebar from "@/presentation/components/game/dashboard/GameDashboardSidebar.vue";
@@ -17,56 +21,39 @@
 
   const { t } = useI18n();
   const gameMapStore = useGameMapStore();
+  const gameSessionStore = useGameSessionStore();
   await gameMapStore.preload();
   const sidebarOpen = ref(false);
 
-  const gameStatus = ref(GameStatus.WAITING);
-
-  const players = [new Player("player-1", "Bertrand"), new Player("player-2", "Alice")];
-
-  const durationInSeconds = 180;
-  const startAt = Date.now();
-  const endAt = startAt + durationInSeconds * 1000;
-
-  const gameState = new GameState(
-    players.length,
-    "en",
-    durationInSeconds,
-    startAt,
-    endAt,
-    GameStatus.WAITING,
-    createFoundingContinentProgressiveStatesForContinents(gameMapStore.getContinents),
-    true,
-    players,
-  );
+  const { currentPlayer, gameState } = storeToRefs(gameSessionStore);
 
   //TODO: delete this code when connected to the backend (and review lines 65 - 68)
   function start() {
-    gameStatus.value = GameStatus.PLAYING;
     startGameUseCase.execute();
   }
+
   function pause() {
-    gameStatus.value = GameStatus.PAUSED;
+    requestGamePauseUseCase.execute();
   }
-  function resume() {
-    gameStatus.value = GameStatus.PLAYING;
-  }
+
+  function resume() {}
 
   function submitCountryNameAnswer(playerAnswer: string) {
     submitCountryNameAnswerUseCase.setOptions({ countryName: playerAnswer }).execute();
   }
-  function applySettingCallback(newSetting: GameSetting) {
 
+  function applySettingCallback(newSetting: GameSetting) {
+    void newSetting;
   }
 </script>
 
 <template>
-  <div class="app-page">
+  <div v-if="gameState && currentPlayer" class="app-page">
     <GameNavbar
-      v-model:player="gameState.players[0]"
+      :player="currentPlayer"
       :sidebar-opened="sidebarOpen"
       :translator="t"
-      :game-status="gameStatus"
+      :game-status="gameState.status"
       :request-pause="pause"
       :request-resume="resume"
       :start-game="start"
@@ -74,7 +61,7 @@
     />
     <GameSidebar
       v-model:open="sidebarOpen"
-      v-model:game-state="gameState"
+      :game-state="gameState"
       :translator="t"
       :sound-manager="soundManager"
       :apply-setting-callback="applySettingCallback"
@@ -85,4 +72,6 @@
       :countries-features="gameMapStore.getCountriesFeatures"
     />
   </div>
+
+  <LoadingLayout v-else />
 </template>

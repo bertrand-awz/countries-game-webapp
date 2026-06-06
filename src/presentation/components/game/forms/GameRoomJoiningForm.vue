@@ -9,7 +9,7 @@
   const props = defineProps<{
     toRoomCreationRedirection: () => void;
     translator: (translationKey: string) => string;
-    onSubmitRoomJoiningForm: (joinRoomOptions: JoinRoomOptions) => void;
+    onSubmitRoomJoiningForm: (joinRoomOptions: JoinRoomOptions) => Promise<void>;
   }>();
 
   const route = useRoute();
@@ -98,7 +98,6 @@
         <button
           type="submit"
           class="flex w-full justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
-          @click="submit"
         >
           {{ translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.BUTTONS.JOIN_ROOM") }}
         </button>

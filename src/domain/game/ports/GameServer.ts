@@ -28,6 +28,8 @@ export interface GameServer {
 
   hasActiveRoom(): boolean;
 
+  getState(): GameState;
+
   leaveRoom(): Promise<void>;
 
   submitCountry(countryName: string): void;
@@ -40,7 +42,7 @@ export interface GameServer {
 
   onPlayerJoinRoom(callback: (event: PlayerJoinRoomEvent) => void): void;
 
-  onStateChange(callback: (state: GameState) => void): void;
+  onStateChange(callback: (state: GameState) => void): () => void;
 
   onCountryFound(callback: (event: CountryFoundEvent) => void): void;
 
