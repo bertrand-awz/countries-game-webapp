@@ -1,15 +1,26 @@
 <script setup lang="ts">
   import { type Component, computed } from "vue";
 
-  const props = defineProps<{
-    label: string | null;
-    labelClass: string | null;
-    iconComponent: Component | null;
-    iconColorClass: string | null;
-    minimum: number;
-    maximum: number;
-    unit: string;
-  }>();
+  const props = withDefaults(
+    defineProps<{
+      label?: string;
+      labelClass?: string;
+      iconComponent?: Component|null;
+      iconColorClass?: string;
+      minimum?: number;
+      maximum?: number;
+      unit?: string;
+    }>(),
+    {
+      label: "",
+      labelClass: "",
+      iconComponent: null,
+      iconColorClass: "",
+      minimum: 0,
+      maximum: 100,
+      unit: "",
+    },
+  );
 
   const inputValue = defineModel<number>("inputValue", { required: true });
 

@@ -2,6 +2,7 @@ import { Client, Room } from "@colyseus/sdk";
 
 import type { CountryFoundEvent } from "@/domain/game/events/CountryFoundEvent.ts";
 import type { CountryRejectedEvent } from "@/domain/game/events/CountryRejectedEvent.ts";
+import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEvent.ts";
 import type { TurnChangedEvent } from "@/domain/game/events/TurnChangedEvent.ts";
 import type { GameState } from "@/domain/game/models/state/GameState.ts";
 import type {
@@ -13,7 +14,6 @@ import type {
 
 import { GameStateMapper } from "./mappers/GameStateMapper.js";
 import { GameRoomMessage } from "./messages/GameRoomMessage.js";
-import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEvent.ts";
 
 const COUNTRIES_GAME_ROOM_NAME = "countries_game";
 
@@ -36,7 +36,6 @@ export class ColyseusGameServer implements GameServer {
 
     return this.toGameSession(this.room);
     } catch (error) {
-      console.error(error);
       throw error;
     }
   }

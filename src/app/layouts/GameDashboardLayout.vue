@@ -56,7 +56,7 @@
     submitCountryNameAnswerUseCase.setOptions({ countryName: playerAnswer }).execute();
   }
   function applySettingCallback(newSetting: GameSetting) {
-    console.log(newSetting);
+
   }
 </script>
 

@@ -68,8 +68,6 @@ export const useGameMapStore = defineStore("gameMap", {
         this.countries = countries;
         this.isLoaded = true;
       } catch (error) {
-        console.error("Unable to preload game map data", error);
-
         this.error = "Unable to load game map data";
         this.continents = [];
         this.countries = {
@@ -77,6 +75,7 @@ export const useGameMapStore = defineStore("gameMap", {
           features: [],
         };
         this.isLoaded = false;
+        throw error;
       } finally {
         this.isLoading = false;
       }
