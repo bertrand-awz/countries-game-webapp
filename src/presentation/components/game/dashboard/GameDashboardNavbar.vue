@@ -15,6 +15,7 @@
     requestPause: () => void;
     requestResume: () => void;
     startGame: () => void;
+    timeLeftInSeconds: number;
   }>();
 
   defineEmits<{
@@ -49,7 +50,7 @@
             <!-- Left side -->
             <div class="flex flex-1 items-center justify-start gap-3 md:gap-4">
               <TimeDisplayer
-                :time-left-in-seconds="1500"
+                :time-left-in-seconds="timeLeftInSeconds"
                 :translator="translator"
                 :show-timer="!sidebarOpened"
                 :game-status="gameStatus"

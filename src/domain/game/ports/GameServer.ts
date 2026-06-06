@@ -40,6 +40,8 @@ export interface GameServer {
 
   restartGame(): void;
 
+  startGame(): void;
+
   onPlayerJoinRoom(callback: (event: PlayerJoinRoomEvent) => void): void;
 
   onStateChange(callback: (state: GameState) => void): () => void;

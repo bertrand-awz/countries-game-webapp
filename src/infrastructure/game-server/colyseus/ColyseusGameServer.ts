@@ -105,7 +105,11 @@ export class ColyseusGameServer implements GameServer {
   }
 
   pauseGame(): void {
-    this.ensureRoom().send(GameRoomMessage.PAUSE_GAME);
+    this.ensureRoom().send(GameRoomMessage.PAUSE_GAME, {});
+  }
+
+  startGame(): void {
+    this.ensureRoom().send(GameRoomMessage.START_GAME, {});
   }
 
   restartGame(): void {
@@ -113,11 +117,11 @@ export class ColyseusGameServer implements GameServer {
   }
 
   resumeGame(): void {
-    this.ensureRoom().send(GameRoomMessage.RESUME_GAME);
+    this.ensureRoom().send(GameRoomMessage.RESUME_GAME, {});
   }
 
   submitCountry(countryName: string): void {
-    this.ensureRoom().send(GameRoomMessage.SUBMIT_COUNTRY, {
+    this.ensureRoom().send(GameRoomMessage.SUBMIT_COUNTRY_NAME, {
       countryName,
     });
   }

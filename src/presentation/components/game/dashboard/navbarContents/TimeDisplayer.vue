@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { PauseIcon, PlayIcon, TimerIcon } from "@lucide/vue";
-  import { computed, ref, watch } from "vue";
+  import { computed } from "vue";
 
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
 
@@ -44,12 +44,10 @@
 
   const gameStatus = defineModel<GameStatus>("gameStatus", { required: true });
 
-  const isPaused = ref(gameStatus.value === GameStatus.PAUSED);
-
   const timerStateClass = computed(() => {
     const classes: string[] = [];
 
-    if (!isPaused.value) {
+    if (gameStatus.value === GameStatus.PLAYING) {
       classes.push("animate-pulse");
     }
 
@@ -68,33 +66,23 @@
       return;
     }
 
-    isPaused.value = !isPaused.value;
-
-    if (isPaused.value) {
+    if (gameStatus.value === GameStatus.PLAYING) {
       emit("pause-game");
       return;
-    } else {
+    }
+
+    if (gameStatus.value === GameStatus.PAUSED) {
       emit("resume-game");
-      return;
     }
   }
 
   const buttonContinue = computed(() => {
     return (
-      isPaused.value ||
+      gameStatus.value === GameStatus.PAUSED ||
       gameStatus.value === GameStatus.WAITING ||
       gameStatus.value === GameStatus.FINISHED
     );
   });
-  watch(
-    () => props.timeLeftInSeconds,
-    (timeLeftInSeconds) => {
-      if (timeLeftInSeconds > 0 && timeLeftInSeconds <= 180) {
-        return;
-      }
-    },
-    { immediate: true },
-  );
 </script>
 
 <template>
