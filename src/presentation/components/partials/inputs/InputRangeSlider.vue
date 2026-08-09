@@ -5,7 +5,7 @@
     defineProps<{
       label?: string;
       labelClass?: string;
-      iconComponent?: Component|null;
+      iconComponent?: Component | null;
       iconColorClass?: string;
       minimum?: number;
       maximum?: number;

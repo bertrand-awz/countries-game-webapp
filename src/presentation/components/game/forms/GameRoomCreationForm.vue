@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { computed, ref } from "vue";
 
+  import { GameConstraints } from "@/domain/game/constraints/gameConstraints.ts";
   import type { CreateRoomOptions } from "@/domain/game/ports/GameServer.ts";
   import BottomTextLink from "@/presentation/components/game/forms/BottomTextLink.vue";
   import LabeledCheckboxInput from "@/presentation/components/partials/inputs/LabeledCheckboxInput.vue";
@@ -69,7 +70,9 @@
           v-model="username"
           :label="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_LABELS.USERNAME')"
           :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.USERNAME')"
-          placeholder="Bertrand"
+          :placeholder="
+            translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.USERNAME_PLACEHOLDER')
+          "
           autocomplete="off"
         />
 
@@ -86,8 +89,8 @@
           v-model="maxPlayers"
           :label="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_LABELS.MAX_PLAYER')"
           :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.MAX_PLAYER')"
-          :min="2"
-          :max="8"
+          :min="GameConstraints.ALLOWED_PLAYERS_NUMBER.min"
+          :max="GameConstraints.ALLOWED_PLAYERS_NUMBER.max"
         />
 
         <LabeledNumberInput
@@ -95,8 +98,8 @@
           v-model="gameDuration"
           :label="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_LABELS.GAME_DURATION')"
           :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.GAME_DURATION')"
-          :min="1"
-          :max="10"
+          :min="GameConstraints.ALLOWED_TIME_IN_MINUTES.min"
+          :max="GameConstraints.ALLOWED_TIME_IN_MINUTES.max"
         />
 
         <LabeledCheckboxInput

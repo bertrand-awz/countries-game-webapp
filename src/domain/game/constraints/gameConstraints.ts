@@ -5,6 +5,6 @@ type MinMaxContraints = {
 
 export class GameConstraints {
   static readonly COUNTRY_NAME_MAX_LENGTH: number = 70;
-  static readonly TIME_MIN_MAX_MINUTES: MinMaxContraints = { min: 10, max: 30 };
-  static readonly MIN_MAX_ALLOWED_PLAYERS: MinMaxContraints = { min: 2, max: 8 };
+  static readonly ALLOWED_TIME_IN_MINUTES: MinMaxContraints = { min: 2, max: 10 };
+  static readonly ALLOWED_PLAYERS_NUMBER: MinMaxContraints = { min: 2, max: 8 };
 }

@@ -48,6 +48,7 @@
         },
         "INPUT_HINTS": {
           "USERNAME": "Name shown to other players during the game.",
+          "USERNAME_PLACEHOLDER": "Enter a username",
           "ROOM_ID": "Room identifier to join. It is usually provided by the room creator.",
           "GAME_LANGUAGE": "Main language used for country names during the game.",
           "MAX_PLAYER": "Maximum number of players allowed to join this room.",

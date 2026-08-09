@@ -31,11 +31,11 @@
   let copiedFeedbackTimeoutId: number | null = null;
 
   const playersCount = defineModel<number>("playersCount", {
-    default: GameConstraints.MIN_MAX_ALLOWED_PLAYERS.min,
+    default: GameConstraints.ALLOWED_PLAYERS_NUMBER.min,
   });
 
   const timerMinutes = defineModel<number>("timerMinutes", {
-    default: GameConstraints.TIME_MIN_MAX_MINUTES.min,
+    default: GameConstraints.ALLOWED_TIME_IN_MINUTES.min,
   });
 
   const invitationLink = computed(() => {
@@ -239,10 +239,7 @@
                 :disabled="!invitationLink"
                 @click="copyInvitationLink"
               >
-                <CheckIcon
-                  v-if="copiedItem === 'invitationLink'"
-                  class="size-4 text-emerald-300"
-                />
+                <CheckIcon v-if="copiedItem === 'invitationLink'" class="size-4 text-emerald-300" />
                 <CopyIcon v-else class="size-4" />
               </button>
             </div>
@@ -254,8 +251,8 @@
             label-class="text-sm font-normal"
             :icon-component="UsersRoundIcon"
             :icon-color-class="'size-4 text-emerald-300'"
-            :minimum="GameConstraints.MIN_MAX_ALLOWED_PLAYERS.min"
-            :maximum="GameConstraints.MIN_MAX_ALLOWED_PLAYERS.max"
+            :minimum="GameConstraints.ALLOWED_PLAYERS_NUMBER.min"
+            :maximum="GameConstraints.ALLOWED_PLAYERS_NUMBER.max"
             unit=""
           />
 
@@ -265,8 +262,8 @@
             label-class="text-sm font-normal"
             :icon-component="TimerIcon"
             :icon-color-class="'size-4 text-emerald-300'"
-            :minimum="GameConstraints.TIME_MIN_MAX_MINUTES.min"
-            :maximum="GameConstraints.TIME_MIN_MAX_MINUTES.max"
+            :minimum="GameConstraints.ALLOWED_TIME_IN_MINUTES.min"
+            :maximum="GameConstraints.ALLOWED_TIME_IN_MINUTES.max"
             :unit="translator('GAME.SIDEBAR.SETTINGS.MODAL.GAME_DURATION_UNIT')"
           />
         </div>

@@ -50,10 +50,10 @@
         <div class="flex items-center gap-2 md:gap-4">
           <!-- Action button -->
           <div class="flex shrink-0">
-            <button type="button" class="navbar-action-button">
+            <RouterLink to="/play" class="navbar-action-button">
               <Gamepad2Icon class="size-5" aria-hidden="true" />
               {{ t("APP.START_GAME") }}
-            </button>
+            </RouterLink>
           </div>
 
           <!-- Mobile menu button -->

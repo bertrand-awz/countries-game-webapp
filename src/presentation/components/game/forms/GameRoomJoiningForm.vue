@@ -74,7 +74,9 @@
           v-model="username"
           :label="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_LABELS.USERNAME')"
           :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.USERNAME')"
-          placeholder="Bertrand"
+          :placeholder="
+            translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.USERNAME_PLACEHOLDER')
+          "
           autocomplete="off"
         />
 
