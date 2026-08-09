@@ -95,9 +95,19 @@
       "SETTINGS": {
         "TITLE": "Paramètres de la salle",
         "MODAL": {
+          "ROOM_ID": "ID de la salle",
+          "ROOM_ID_UNAVAILABLE": "Indisponible",
+          "COPY_ROOM_ID": "Copier l'ID de la salle",
+          "INVITATION_LINK": "Lien d'invitation",
+          "INVITATION_LINK_UNAVAILABLE": "Indisponible",
+          "COPY_INVITATION_LINK": "Copier le lien d'invitation",
+          "INVITATION_LINK_COPIED": "Copié",
+          "INVITE_TITLE": "Invitation Countries Game",
+          "INVITE_MESSAGE": "Rejoins ma salle Countries Game.",
           "MAX_PLAYERS_ALLOWED": "Maximum de joueurs permis",
           "GAME_DURATION": "Durée de la partie",
           "GAME_DURATION_UNIT": "min",
+          "BUTTON_INVITE": "Inviter",
           "BUTTON_APPLY": "Appliquer"
         }
       }

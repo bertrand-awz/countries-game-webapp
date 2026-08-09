@@ -29,7 +29,7 @@
   const now = ref(Date.now());
   const pausedTimeLeftInSeconds = ref<number | null>(null);
 
-  const { currentPlayer, gameState } = storeToRefs(gameSessionStore);
+  const { currentPlayer, gameState, roomId } = storeToRefs(gameSessionStore);
   const timerInterval = window.setInterval(() => {
     if (gameState.value?.status === GameStatus.PLAYING) {
       now.value = Date.now();
@@ -117,6 +117,7 @@
     <GameSidebar
       v-model:open="sidebarOpen"
       :game-state="gameState"
+      :room-id="roomId"
       :translator="t"
       :sound-manager="soundManager"
       :apply-setting-callback="applySettingCallback"

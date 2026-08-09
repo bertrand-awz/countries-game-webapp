@@ -11,6 +11,7 @@
   defineProps<{
     soundManager: SoundManager;
     gameState: GameState;
+    roomId: string | null;
     translator: (translationKey: string) => string;
     applySettingCallback: (newSetting: GameSetting) => void;
   }>();
@@ -28,7 +29,11 @@
         :found-countries-by-continent-progressions="gameState.continents"
       />
       <SoundController :translator="translator" :sound-manager="soundManager" />
-      <GameSettings :translator="translator" :apply-setting-callback="applySettingCallback" />
+      <GameSettings
+        :translator="translator"
+        :room-id="roomId"
+        :apply-setting-callback="applySettingCallback"
+      />
     </nav>
   </div>
 </template>

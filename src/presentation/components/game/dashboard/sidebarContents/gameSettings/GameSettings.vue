@@ -1,16 +1,34 @@
 <script setup lang="ts">
-  import { SettingsIcon, TimerIcon, UsersRoundIcon, XIcon } from "@lucide/vue";
-  import { ref } from "vue";
+  import {
+    CheckIcon,
+    CopyIcon,
+    LinkIcon,
+    SettingsIcon,
+    Share2Icon,
+    TimerIcon,
+    UsersRoundIcon,
+    XIcon,
+  } from "@lucide/vue";
+  import { computed, onBeforeUnmount, ref } from "vue";
+  import { useRouter } from "vue-router";
 
+  import { RouteName } from "@/app/router/routeName.ts";
   import { GameConstraints } from "@/domain/game/constraints/gameConstraints.ts";
   import type { GameSetting } from "@/domain/game/settings";
   import InputRangeSlider from "@/presentation/components/partials/inputs/InputRangeSlider.vue";
 
   const props = defineProps<{
     translator: (translationKey: string) => string;
+    roomId: string | null;
     applySettingCallback: (newSettings: GameSetting) => void;
   }>();
+
+  type CopiedItem = "roomId" | "invitationLink";
+
+  const router = useRouter();
   const isSettingsOpen = ref(false);
+  const copiedItem = ref<CopiedItem | null>(null);
+  let copiedFeedbackTimeoutId: number | null = null;
 
   const playersCount = defineModel<number>("playersCount", {
     default: GameConstraints.MIN_MAX_ALLOWED_PLAYERS.min,
@@ -18,6 +36,19 @@
 
   const timerMinutes = defineModel<number>("timerMinutes", {
     default: GameConstraints.TIME_MIN_MAX_MINUTES.min,
+  });
+
+  const invitationLink = computed(() => {
+    if (!props.roomId) {
+      return "";
+    }
+
+    const route = router.resolve({
+      name: RouteName.GAME_ROOM_AUTOMATIC_JOINING,
+      params: { roomId: props.roomId },
+    });
+
+    return new URL(route.href, window.location.origin).toString();
   });
 
   function openSettingsModal() {
@@ -33,6 +64,87 @@
     props.applySettingCallback(newSettings);
     closeSettingsModal();
   }
+
+  async function copyRoomId() {
+    if (!props.roomId) {
+      return;
+    }
+
+    await copyToClipboard(props.roomId, "roomId");
+  }
+
+  async function invitePlayers() {
+    if (!invitationLink.value) {
+      return;
+    }
+
+    if (typeof navigator.share === "function") {
+      try {
+        await navigator.share({
+          title: props.translator("GAME.SIDEBAR.SETTINGS.MODAL.INVITE_TITLE"),
+          text: props.translator("GAME.SIDEBAR.SETTINGS.MODAL.INVITE_MESSAGE"),
+          url: invitationLink.value,
+        });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") {
+          return;
+        }
+      }
+    }
+
+    await copyInvitationLink();
+  }
+
+  async function copyInvitationLink() {
+    await copyToClipboard(invitationLink.value, "invitationLink");
+  }
+
+  async function copyToClipboard(text: string, item: CopiedItem) {
+    if (!text) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      copyTextWithFallback(text);
+    }
+
+    showCopiedFeedback(item);
+  }
+
+  function copyTextWithFallback(text: string) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.setAttribute("readonly", "");
+    textArea.style.position = "fixed";
+    textArea.style.left = "-9999px";
+    textArea.style.top = "0";
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand("copy");
+    textArea.remove();
+  }
+
+  function showCopiedFeedback(item: CopiedItem) {
+    copiedItem.value = item;
+
+    if (copiedFeedbackTimeoutId !== null) {
+      window.clearTimeout(copiedFeedbackTimeoutId);
+    }
+
+    copiedFeedbackTimeoutId = window.setTimeout(() => {
+      copiedItem.value = null;
+      copiedFeedbackTimeoutId = null;
+    }, 2000);
+  }
+
+  onBeforeUnmount(() => {
+    if (copiedFeedbackTimeoutId !== null) {
+      window.clearTimeout(copiedFeedbackTimeoutId);
+    }
+  });
 </script>
 
 <template>
@@ -74,6 +186,68 @@
 
         <!-- Content -->
         <div class="space-y-4">
+          <div class="rounded-lg bg-white/5 px-3 py-3">
+            <div class="mb-2 flex items-center gap-x-2">
+              <LinkIcon class="size-4 text-emerald-300" />
+              <span class="text-sm font-normal">
+                {{ translator("GAME.SIDEBAR.SETTINGS.MODAL.ROOM_ID") }}
+              </span>
+            </div>
+
+            <div class="flex items-center gap-x-2">
+              <code
+                class="min-w-0 flex-1 truncate rounded-md border border-white/10 bg-black/30 px-3 py-2 text-sm font-semibold text-white"
+              >
+                {{ roomId ?? translator("GAME.SIDEBAR.SETTINGS.MODAL.ROOM_ID_UNAVAILABLE") }}
+              </code>
+
+              <button
+                type="button"
+                class="inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-white/10 text-gray-300 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                :title="translator('GAME.SIDEBAR.SETTINGS.MODAL.COPY_ROOM_ID')"
+                :disabled="!roomId"
+                @click="copyRoomId"
+              >
+                <CheckIcon v-if="copiedItem === 'roomId'" class="size-4 text-emerald-300" />
+                <CopyIcon v-else class="size-4" />
+              </button>
+            </div>
+          </div>
+
+          <div class="rounded-lg bg-white/5 px-3 py-3">
+            <div class="mb-2 flex items-center gap-x-2">
+              <Share2Icon class="size-4 text-emerald-300" />
+              <span class="text-sm font-normal">
+                {{ translator("GAME.SIDEBAR.SETTINGS.MODAL.INVITATION_LINK") }}
+              </span>
+            </div>
+
+            <div class="flex items-center gap-x-2">
+              <p
+                class="min-w-0 flex-1 truncate rounded-md border border-white/10 bg-black/30 px-3 py-2 text-sm text-gray-300"
+              >
+                {{
+                  invitationLink ||
+                  translator("GAME.SIDEBAR.SETTINGS.MODAL.INVITATION_LINK_UNAVAILABLE")
+                }}
+              </p>
+
+              <button
+                type="button"
+                class="inline-flex size-9 shrink-0 items-center justify-center rounded-lg border border-white/10 text-gray-300 transition hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                :title="translator('GAME.SIDEBAR.SETTINGS.MODAL.COPY_INVITATION_LINK')"
+                :disabled="!invitationLink"
+                @click="copyInvitationLink"
+              >
+                <CheckIcon
+                  v-if="copiedItem === 'invitationLink'"
+                  class="size-4 text-emerald-300"
+                />
+                <CopyIcon v-else class="size-4" />
+              </button>
+            </div>
+          </div>
+
           <InputRangeSlider
             v-model:input-value="playersCount"
             :label="translator('GAME.SIDEBAR.SETTINGS.MODAL.MAX_PLAYERS_ALLOWED')"
@@ -98,7 +272,24 @@
         </div>
 
         <!-- Footer -->
-        <div class="mt-5 flex justify-end">
+        <div class="mt-5 flex flex-wrap justify-end gap-3">
+          <button
+            type="button"
+            class="inline-flex items-center gap-x-2 rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-50"
+            :disabled="!invitationLink"
+            @click="invitePlayers"
+          >
+            <CheckIcon v-if="copiedItem === 'invitationLink'" class="size-4" />
+            <Share2Icon v-else class="size-4" />
+            <span>
+              {{
+                copiedItem === "invitationLink"
+                  ? translator("GAME.SIDEBAR.SETTINGS.MODAL.INVITATION_LINK_COPIED")
+                  : translator("GAME.SIDEBAR.SETTINGS.MODAL.BUTTON_INVITE")
+              }}
+            </span>
+          </button>
+
           <button
             type="button"
             class="rounded-lg bg-indigo-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-400"

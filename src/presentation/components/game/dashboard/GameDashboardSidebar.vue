@@ -9,6 +9,7 @@
 
   defineProps<{
     open: boolean;
+    roomId: string | null;
     translator: (translationKey: string) => string;
     soundManager: SoundManager;
     applySettingCallback: (newSettings: GameSetting) => void;
@@ -67,6 +68,7 @@
             <GameDashboardSidebarContent
               class="navbar border-r"
               :game-state="gameState"
+              :room-id="roomId"
               :sound-manager="soundManager"
               :apply-setting-callback="applySettingCallback"
               :translator="translator"
@@ -82,6 +84,7 @@
     <GameDashboardSidebarContent
       class="navbar border-r"
       :game-state="gameState"
+      :room-id="roomId"
       :sound-manager="soundManager"
       :apply-setting-callback="applySettingCallback"
       :translator="translator"

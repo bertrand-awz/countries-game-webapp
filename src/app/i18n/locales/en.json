@@ -95,9 +95,19 @@
       "SETTINGS": {
         "TITLE": "Room Settings",
         "MODAL": {
+          "ROOM_ID": "Room ID",
+          "ROOM_ID_UNAVAILABLE": "Unavailable",
+          "COPY_ROOM_ID": "Copy room ID",
+          "INVITATION_LINK": "Invitation link",
+          "INVITATION_LINK_UNAVAILABLE": "Unavailable",
+          "COPY_INVITATION_LINK": "Copy invitation link",
+          "INVITATION_LINK_COPIED": "Copied",
+          "INVITE_TITLE": "Countries Game invitation",
+          "INVITE_MESSAGE": "Join my Countries Game room.",
           "MAX_PLAYERS_ALLOWED": "Maximum players in the room",
           "GAME_DURATION": "Game duration",
           "GAME_DURATION_UNIT": "min",
+          "BUTTON_INVITE": "Invite",
           "BUTTON_APPLY": "Apply"
         }
       }
