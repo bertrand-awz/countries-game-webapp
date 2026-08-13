@@ -1,4 +1,4 @@
-import { UseCase } from "./useCase.ts";
+import { UseCase } from "../useCase.ts";
 export type CountryNameAnswer = {
   countryName: string;
 };

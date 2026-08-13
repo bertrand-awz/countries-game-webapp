@@ -21,34 +21,29 @@ export type JoinRoomOptions = {
   roomId: string;
 };
 
-export interface GameServer {
+export interface GameRoomGateway {
   createRoom(options: CreateRoomOptions): Promise<GameSession>;
-
   joinRoom(options: JoinRoomOptions): Promise<GameSession>;
-
-  hasActiveRoom(): boolean;
-
-  getState(): GameState;
-
   leaveRoom(): Promise<void>;
+  getState(): GameState;
+}
 
+export interface GameCommandGateway {
   submitCountry(countryName: string): void;
-
   pauseGame(): void;
-
   resumeGame(): void;
-
   restartGame(): void;
-
   startGame(): void;
+}
 
+export interface GameEventGateway {
   onPlayerJoinRoom(callback: (event: PlayerJoinRoomEvent) => void): void;
-
   onStateChange(callback: (state: GameState) => void): () => void;
-
   onCountryFound(callback: (event: CountryFoundEvent) => void): void;
-
   onCountryRejected(callback: (event: CountryRejectedEvent) => void): void;
-
   onTurnChanged(callback: (event: TurnChangedEvent) => void): void;
+}
+
+export interface GameServer extends GameCommandGateway, GameEventGateway, GameRoomGateway {
+   hasActiveRoom(): boolean;
 }

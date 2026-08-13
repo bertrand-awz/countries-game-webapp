@@ -92,7 +92,9 @@ export class ColyseusGameServer implements GameServer {
 
   onPlayerJoinRoom(callback: (event: PlayerJoinRoomEvent) => void): void {
     this.ensureRoom().onMessage(GameRoomMessage.PLAYER_JOIN_ROOM, (message) => {
-      callback(message.player);
+      callback({
+        player: message.player,
+      });
     });
   }
 

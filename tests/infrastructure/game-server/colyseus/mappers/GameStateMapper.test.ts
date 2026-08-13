@@ -1,0 +1,58 @@
+import assert from "node:assert/strict";
+import { describe, it } from "node:test";
+
+import { Player } from "@/domain/game/models/Player.ts";
+import { GameStatus } from "@/domain/game/models/state/GameState.ts";
+import { GameStateMapper } from "@/infrastructure/game-server/colyseus/mappers/GameStateMapper.ts";
+
+describe("GameStateMapper", () => {
+  it("translates a Colyseus state snapshot into domain entities used by the game session", () => {
+    const colyseusPlayer = {
+      id: "player-1",
+      username: "Ada",
+      score: 18,
+      totalCountriesFound: 3,
+    };
+    const colyseusState = {
+      numberOfPlayers: 2,
+      defaultLanguage: "en",
+      durationInSeconds: 600,
+      startAt: 100,
+      endAt: 700,
+      status: GameStatus.PLAYING,
+      continents: [
+        {
+          continent: {
+            id: "EUROPE",
+            countriesNumber: 44,
+          },
+          countriesFoundNumber: 5,
+        },
+      ],
+      allowAnswerValidationInPlayerCurrentLanguage: true,
+      players: [colyseusPlayer],
+    };
+
+    const gameState = GameStateMapper.fromColyseusState(colyseusState);
+
+    assert.equal(gameState.numberOfPlayers, 2);
+    assert.equal(gameState.defaultLanguage, "en");
+    assert.equal(gameState.status, GameStatus.PLAYING);
+    assert.equal(gameState.allowAnswerValidationInPlayerCurrentLanguage, true);
+    assert.deepEqual(gameState.continents, [
+      {
+        continent: {
+          id: "EUROPE",
+          countriesNumber: 44,
+        },
+        countriesFoundNumber: 5,
+      },
+    ]);
+    assert.equal(gameState.players.length, 1);
+    assert.equal(gameState.players[0] instanceof Player, true);
+    assert.equal(gameState.players[0].getId(), "player-1");
+    assert.equal(gameState.players[0].getUsername(), "Ada");
+    assert.equal(gameState.players[0].getScore(), 18);
+    assert.equal(gameState.players[0].getCountriesFoundNumber(), 3);
+  });
+});

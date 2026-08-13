@@ -1,0 +1,26 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "compilerOptions": {
+    "types": ["node", "vite/client"],
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "allowArbitraryExtensions": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/app/index.ts",
+    "src/app/composables/**/*.ts",
+    "src/app/dependencies/**/*.ts",
+    "src/application/**/*.ts",
+    "src/domain/**/*.ts",
+    "src/infrastructure/**/*.ts",
+    "tests/**/*.ts"
+  ]
+}
