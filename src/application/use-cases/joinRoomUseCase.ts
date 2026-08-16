@@ -1,9 +1,12 @@
 import type { GameSession, JoinRoomOptions } from "@/domain/game/ports/GameServer.ts";
 
+import { RegisterGameEventReactionsUseCase } from "./registerGameEventReactionsUseCase.ts";
 import { UseCase } from "./useCase.ts";
 
 export class JoinRoomUseCase extends UseCase<JoinRoomOptions, GameSession> {
-  constructor() {
+  constructor(
+    private readonly registerGameEventReactionsUseCase = new RegisterGameEventReactionsUseCase(),
+  ) {
     super();
   }
 
@@ -25,6 +28,7 @@ export class JoinRoomUseCase extends UseCase<JoinRoomOptions, GameSession> {
       gameSessionStore.setGameState(gameState);
     });
     gameSessionStore.setGameState(this.gameRoomGateway.getState());
+    this.registerGameEventReactionsUseCase.execute();
 
     return session;
   }

@@ -15,6 +15,7 @@ import { gameGatewaysFrom } from "../../app/appDependenciesTestHarness.ts";
 import { createCountries, createCountry } from "../../domain/game/models/countryMother.ts";
 import { GameServerSpy } from "../../domain/game/ports/gameServerSpy.ts";
 import { SoundManagerSpy } from "../../domain/game/ports/soundManagerSpy.ts";
+import { NotifierSpy } from "../../domain/notification/ports/notifierSpy.ts";
 
 type Deferred<T> = {
   promise: Promise<T>;
@@ -45,6 +46,7 @@ function createStoreContext(gameMapApi: GameMapApi) {
     ...gameGatewaysFrom(gameServer),
     soundManager: new SoundManagerSpy(),
     gameMapApi,
+    notifier: new NotifierSpy(),
   };
 
   app.use(pinia);

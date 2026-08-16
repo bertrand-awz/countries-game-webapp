@@ -7,6 +7,7 @@
   import GameFormLayout from "@/app/layouts/GameFormLayout.vue";
   import LoadingLayout from "@/app/layouts/LoadingLayout.vue";
   import { layoutTypes } from "@/app/layouts/types/layoutTypes";
+  import ToastNotificationsContainer from "@/presentation/components/notifications/ToastNotificationsContainer.vue";
 
   const route = useRoute();
 
@@ -31,4 +32,5 @@
       <LoadingLayout />
     </template>
   </Suspense>
+  <ToastNotificationsContainer />
 </template>

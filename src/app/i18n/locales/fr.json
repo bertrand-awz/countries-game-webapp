@@ -120,6 +120,13 @@
         "PAUSE": "Pause"
       }
     },
+    "NOTIFICATIONS": {
+      "CLOSE": "Fermer la notification",
+      "GAME_FINISHED": {
+        "TITLE": "Partie terminée",
+        "MESSAGE": "Les réponses sont fermées. Consultez le pointage final."
+      }
+    },
     "CONTINENT_NAME": {
       "AFRICA": "Afrique",
       "NORTH_AMERICA": "Amérique du Nord",

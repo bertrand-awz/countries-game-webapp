@@ -1,3 +1,4 @@
+import type { GameFinishedEvent } from "@/domain/game/events/GameFinishedEvent.ts";
 import type { GameState } from "@/domain/game/models/state/GameState.ts";
 import type {
   CreateRoomOptions,
@@ -6,6 +7,7 @@ import type {
   GameRoomGateway,
   GameSession,
   JoinRoomOptions,
+  Unsubscribe,
 } from "@/domain/game/ports/GameServer.ts";
 
 import { createGameState } from "../models/state/gameStateMother.ts";
@@ -21,6 +23,8 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
   leaveRoomCallCount = 0;
   stateChangeSubscriptionCount = 0;
   stateChangeUnsubscriptionCount = 0;
+  gameFinishedSubscriptionCount = 0;
+  gameFinishedUnsubscriptionCount = 0;
   sessionToReturn: GameSession = {
     roomId: "room-1",
     playerId: "player-1",
@@ -28,6 +32,7 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
 
   private activeRoom = true;
   private stateChangeCallback: ((state: GameState) => void) | null = null;
+  private gameFinishedCallback: ((event: GameFinishedEvent) => void) | null = null;
 
   constructor(private currentState: GameState = createGameState()) {}
 
@@ -74,9 +79,11 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
     this.startGameCallCount++;
   }
 
-  onPlayerJoinRoom(): void {}
+  onPlayerJoinRoom(): Unsubscribe {
+    return () => {};
+  }
 
-  onStateChange(callback: (state: GameState) => void): () => void {
+  onStateChange(callback: (state: GameState) => void): Unsubscribe {
     this.stateChangeSubscriptionCount++;
     this.stateChangeCallback = callback;
 
@@ -85,14 +92,34 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
     };
   }
 
-  onCountryFound(): void {}
+  onCountryFound(): Unsubscribe {
+    return () => {};
+  }
 
-  onCountryRejected(): void {}
+  onCountryRejected(): Unsubscribe {
+    return () => {};
+  }
 
-  onTurnChanged(): void {}
+  onTurnChanged(): Unsubscribe {
+    return () => {};
+  }
+
+  onGameFinished(callback: (event: GameFinishedEvent) => void): Unsubscribe {
+    this.gameFinishedSubscriptionCount++;
+    this.gameFinishedCallback = callback;
+
+    return () => {
+      this.gameFinishedUnsubscriptionCount++;
+      this.gameFinishedCallback = null;
+    };
+  }
 
   emitStateChange(state: GameState): void {
     this.currentState = state;
     this.stateChangeCallback?.(state);
+  }
+
+  emitGameFinished(event: GameFinishedEvent = {}): void {
+    this.gameFinishedCallback?.(event);
   }
 }

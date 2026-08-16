@@ -120,6 +120,13 @@
         "PAUSE": "Pause"
       }
     },
+    "NOTIFICATIONS": {
+      "CLOSE": "Close notification",
+      "GAME_FINISHED": {
+        "TITLE": "Game finished",
+        "MESSAGE": "Answers are closed. Check the final scoreboard."
+      }
+    },
     "CONTINENT_NAME": {
       "AFRICA": "Africa",
       "NORTH_AMERICA": "North America",

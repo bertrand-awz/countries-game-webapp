@@ -17,20 +17,23 @@ export function gameGatewaysFrom(
   };
 }
 
-export function overrideAppDependencies(dependencies: AppDependencies): () => void {
+export function overrideAppDependencies(dependencies: Partial<AppDependencies>): () => void {
   const previousDependencies = {
     gameRoomGateway: appDependencies.gameRoomGateway,
     gameCommandGateway: appDependencies.gameCommandGateway,
     gameEventGateway: appDependencies.gameEventGateway,
     soundManager: appDependencies.soundManager,
     gameMapApi: appDependencies.gameMapApi,
+    notifier: appDependencies.notifier,
   };
 
-  appDependencies.gameRoomGateway = dependencies.gameRoomGateway;
-  appDependencies.gameCommandGateway = dependencies.gameCommandGateway;
-  appDependencies.gameEventGateway = dependencies.gameEventGateway;
-  appDependencies.soundManager = dependencies.soundManager;
-  appDependencies.gameMapApi = dependencies.gameMapApi;
+  appDependencies.gameRoomGateway = dependencies.gameRoomGateway ?? appDependencies.gameRoomGateway;
+  appDependencies.gameCommandGateway =
+    dependencies.gameCommandGateway ?? appDependencies.gameCommandGateway;
+  appDependencies.gameEventGateway = dependencies.gameEventGateway ?? appDependencies.gameEventGateway;
+  appDependencies.soundManager = dependencies.soundManager ?? appDependencies.soundManager;
+  appDependencies.gameMapApi = dependencies.gameMapApi ?? appDependencies.gameMapApi;
+  appDependencies.notifier = dependencies.notifier ?? appDependencies.notifier;
 
   return () => {
     appDependencies.gameRoomGateway = previousDependencies.gameRoomGateway;
@@ -38,5 +41,6 @@ export function overrideAppDependencies(dependencies: AppDependencies): () => vo
     appDependencies.gameEventGateway = previousDependencies.gameEventGateway;
     appDependencies.soundManager = previousDependencies.soundManager;
     appDependencies.gameMapApi = previousDependencies.gameMapApi;
+    appDependencies.notifier = previousDependencies.notifier;
   };
 }

@@ -1,8 +1,11 @@
 import type { CountryFoundEvent } from "@/domain/game/events/CountryFoundEvent.ts";
 import type { CountryRejectedEvent } from "@/domain/game/events/CountryRejectedEvent.ts";
+import type { GameFinishedEvent } from "@/domain/game/events/GameFinishedEvent.ts";
 import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEvent.ts";
 import type { TurnChangedEvent } from "@/domain/game/events/TurnChangedEvent.ts";
 import type { GameState } from "@/domain/game/models/state/GameState.ts";
+
+export type Unsubscribe = () => void;
 
 export type GameSession = {
   roomId: string;
@@ -38,9 +41,10 @@ export interface GameCommandGateway {
 }
 
 export interface GameEventGateway {
-  onPlayerJoinRoom(callback: (event: PlayerJoinRoomEvent) => void): void;
-  onStateChange(callback: (state: GameState) => void): () => void;
-  onCountryFound(callback: (event: CountryFoundEvent) => void): void;
-  onCountryRejected(callback: (event: CountryRejectedEvent) => void): void;
-  onTurnChanged(callback: (event: TurnChangedEvent) => void): void;
+  onPlayerJoinRoom(callback: (event: PlayerJoinRoomEvent) => void): Unsubscribe;
+  onStateChange(callback: (state: GameState) => void): Unsubscribe;
+  onCountryFound(callback: (event: CountryFoundEvent) => void): Unsubscribe;
+  onCountryRejected(callback: (event: CountryRejectedEvent) => void): Unsubscribe;
+  onTurnChanged(callback: (event: TurnChangedEvent) => void): Unsubscribe;
+  onGameFinished(callback: (event: GameFinishedEvent) => void): Unsubscribe;
 }

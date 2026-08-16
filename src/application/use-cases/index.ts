@@ -5,11 +5,13 @@ import { StartGameUseCase } from "./game-commands/startGameUseCase.ts";
 import { SubmitAnswerUseCase } from "./game-commands/submitAnswerUseCase.ts";
 import { JoinRoomUseCase } from "./joinRoomUseCase.ts";
 import { LoadContinentsUseCase } from "./loadContinentsUseCase.ts";
+import { RegisterGameEventReactionsUseCase } from "./registerGameEventReactionsUseCase.ts";
 
+export const registerGameEventReactionsUseCase = new RegisterGameEventReactionsUseCase();
 export const loadContinentsUseCase = new LoadContinentsUseCase();
-export const joinRoomUseCase = new JoinRoomUseCase();
+export const joinRoomUseCase = new JoinRoomUseCase(registerGameEventReactionsUseCase);
 export const submitCountryNameAnswerUseCase = new SubmitAnswerUseCase();
 export const startGameUseCase = new StartGameUseCase();
-export const createRoomUseCase = new CreateRoomUseCase();
+export const createRoomUseCase = new CreateRoomUseCase(registerGameEventReactionsUseCase);
 export const requestGamePauseUseCase = new RequestGamePauseUseCase();
 export const requestGameResumeUseCase = new RequestGameResumeUseCase();

@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
+import type { GameFinishedEvent } from "@/domain/game/events/GameFinishedEvent.ts";
 import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEvent.ts";
 import type { TurnChangedEvent } from "@/domain/game/events/TurnChangedEvent.ts";
 import { GameStatus } from "@/domain/game/models/state/GameState.ts";
@@ -81,11 +82,13 @@ describe("Colyseus game gateways", () => {
       createRoomGatewayWithRoom({
         onMessage: (message: GameRoomMessage, handler: MessageHandler) => {
           handlers.set(message, handler);
+          return () => handlers.delete(message);
         },
       }),
     );
     let playerJoinEvent: PlayerJoinRoomEvent | null = null;
     let turnChangedEvent: TurnChangedEvent | null = null;
+    let gameFinishedEvent: GameFinishedEvent | null = null;
     let rejectedReason: string | null = null;
     let foundCountryId: string | null = null;
 
@@ -101,6 +104,9 @@ describe("Colyseus game gateways", () => {
     events.onCountryFound((event) => {
       foundCountryId = event.countryId;
     });
+    const unsubscribeGameFinished = events.onGameFinished((event) => {
+      gameFinishedEvent = event;
+    });
 
     handlers.get(GameRoomMessage.PLAYER_JOIN_ROOM)?.({ player });
     handlers.get(GameRoomMessage.TURN_CHANGED)?.({ player });
@@ -110,11 +116,15 @@ describe("Colyseus game gateways", () => {
       player,
       pointsAwarded: 10,
     });
+    handlers.get(GameRoomMessage.GAME_FINISHED)?.({ winner: player, reason: "time_elapsed" });
+    unsubscribeGameFinished();
 
     assert.deepEqual(playerJoinEvent, { player });
     assert.deepEqual(turnChangedEvent, { currentPlayer: player });
     assert.equal(rejectedReason, "already found");
     assert.equal(foundCountryId, "CAN");
+    assert.deepEqual(gameFinishedEvent, { winner: player, reason: "time_elapsed" });
+    assert.equal(handlers.has(GameRoomMessage.GAME_FINISHED), false);
   });
 
   it("maps state changes into domain game states and returns an unsubscribe callback", () => {
