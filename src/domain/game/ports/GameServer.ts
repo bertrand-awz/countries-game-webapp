@@ -26,6 +26,7 @@ export interface GameRoomGateway {
   joinRoom(options: JoinRoomOptions): Promise<GameSession>;
   leaveRoom(): Promise<void>;
   getState(): GameState;
+  hasActiveRoom(): boolean;
 }
 
 export interface GameCommandGateway {
@@ -42,8 +43,4 @@ export interface GameEventGateway {
   onCountryFound(callback: (event: CountryFoundEvent) => void): void;
   onCountryRejected(callback: (event: CountryRejectedEvent) => void): void;
   onTurnChanged(callback: (event: TurnChangedEvent) => void): void;
-}
-
-export interface GameServer extends GameCommandGateway, GameEventGateway, GameRoomGateway {
-  hasActiveRoom(): boolean;
 }

@@ -17,14 +17,14 @@ export class CreateRoomUseCase extends UseCase<CreateRoomOptions, GameSession> {
       throw new Error("Room creation options are required.");
     }
 
-    const session = await this.gameServer.createRoom(this.options);
+    const session = await this.gameRoomGateway.createRoom(this.options);
     const gameSessionStore = this.gameSessionStore;
 
     gameSessionStore.setSession(session);
-    this.gameServer.onStateChange((gameState) => {
+    this.gameEventGateway.onStateChange((gameState) => {
       gameSessionStore.setGameState(gameState);
     });
-    gameSessionStore.setGameState(this.gameServer.getState());
+    gameSessionStore.setGameState(this.gameRoomGateway.getState());
 
     return session;
   }

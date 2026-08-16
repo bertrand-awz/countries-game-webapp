@@ -3,7 +3,10 @@ import { afterEach, describe, it } from "node:test";
 
 import { StartGameUseCase } from "@/application/use-cases/game-commands/startGameUseCase.ts";
 
-import { overrideAppDependencies } from "../../../app/appDependenciesTestHarness.ts";
+import {
+  gameGatewaysFrom,
+  overrideAppDependencies,
+} from "../../../app/appDependenciesTestHarness.ts";
 import { GameMapApiFake } from "../../../domain/game/ports/gameMapApiFake.ts";
 import { GameServerSpy } from "../../../domain/game/ports/gameServerSpy.ts";
 import { SoundManagerSpy } from "../../../domain/game/ports/soundManagerSpy.ts";
@@ -18,7 +21,7 @@ describe("StartGameUseCase", () => {
   it("delegates the start command to the active game server", () => {
     const gameServer = new GameServerSpy();
     restoreDependencies = overrideAppDependencies({
-      gameServer,
+      ...gameGatewaysFrom(gameServer),
       soundManager: new SoundManagerSpy(),
       gameMapApi: new GameMapApiFake(),
     });

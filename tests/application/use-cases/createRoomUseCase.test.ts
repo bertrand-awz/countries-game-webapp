@@ -7,7 +7,7 @@ import { useGameSessionStore } from "@/application/stores/gameSessionStore.ts";
 import { CreateRoomUseCase } from "@/application/use-cases/createRoomUseCase.ts";
 import type { CreateRoomOptions } from "@/domain/game/ports/GameServer.ts";
 
-import { overrideAppDependencies } from "../../app/appDependenciesTestHarness.ts";
+import { gameGatewaysFrom, overrideAppDependencies } from "../../app/appDependenciesTestHarness.ts";
 import { createGameState } from "../../domain/game/models/state/gameStateMother.ts";
 import { GameMapApiFake } from "../../domain/game/ports/gameMapApiFake.ts";
 import { GameServerSpy } from "../../domain/game/ports/gameServerSpy.ts";
@@ -35,7 +35,7 @@ describe("CreateRoomUseCase", () => {
       maxPlayersAllowed: 4,
     };
     restoreDependencies = overrideAppDependencies({
-      gameServer,
+      ...gameGatewaysFrom(gameServer),
       soundManager: new SoundManagerSpy(),
       gameMapApi: new GameMapApiFake(),
     });
@@ -59,7 +59,7 @@ describe("CreateRoomUseCase", () => {
   it("refuses to create a room when the creation intent is incomplete", async () => {
     const gameServer = new GameServerSpy();
     restoreDependencies = overrideAppDependencies({
-      gameServer,
+      ...gameGatewaysFrom(gameServer),
       soundManager: new SoundManagerSpy(),
       gameMapApi: new GameMapApiFake(),
     });

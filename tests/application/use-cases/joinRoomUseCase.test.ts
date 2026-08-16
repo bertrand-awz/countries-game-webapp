@@ -7,7 +7,7 @@ import { useGameSessionStore } from "@/application/stores/gameSessionStore.ts";
 import { JoinRoomUseCase } from "@/application/use-cases/joinRoomUseCase.ts";
 import type { JoinRoomOptions } from "@/domain/game/ports/GameServer.ts";
 
-import { overrideAppDependencies } from "../../app/appDependenciesTestHarness.ts";
+import { gameGatewaysFrom, overrideAppDependencies } from "../../app/appDependenciesTestHarness.ts";
 import { createGameState } from "../../domain/game/models/state/gameStateMother.ts";
 import { GameMapApiFake } from "../../domain/game/ports/gameMapApiFake.ts";
 import { GameServerSpy } from "../../domain/game/ports/gameServerSpy.ts";
@@ -33,7 +33,7 @@ describe("JoinRoomUseCase", () => {
       roomId: "room-42",
     };
     restoreDependencies = overrideAppDependencies({
-      gameServer,
+      ...gameGatewaysFrom(gameServer),
       soundManager: new SoundManagerSpy(),
       gameMapApi: new GameMapApiFake(),
     });
@@ -55,7 +55,7 @@ describe("JoinRoomUseCase", () => {
   it("refuses to join a room without a complete joining intent", async () => {
     const gameServer = new GameServerSpy();
     restoreDependencies = overrideAppDependencies({
-      gameServer,
+      ...gameGatewaysFrom(gameServer),
       soundManager: new SoundManagerSpy(),
       gameMapApi: new GameMapApiFake(),
     });

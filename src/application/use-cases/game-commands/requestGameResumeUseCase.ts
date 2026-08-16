@@ -6,6 +6,6 @@ export class RequestGameResumeUseCase extends UseCase<void, void> {
   }
 
   execute(): void {
-    this.gameServer.resumeGame();
+    this.gameCommandGateway.resumeGame();
   }
 }

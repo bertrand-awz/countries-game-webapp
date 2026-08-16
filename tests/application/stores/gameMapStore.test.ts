@@ -11,6 +11,7 @@ import type { Continent } from "@/domain/game/models/Continent.ts";
 import type { Countries } from "@/domain/game/models/Country.ts";
 import type { GameMapApi } from "@/domain/game/ports/GameMapApi.ts";
 
+import { gameGatewaysFrom } from "../../app/appDependenciesTestHarness.ts";
 import { createCountries, createCountry } from "../../domain/game/models/countryMother.ts";
 import { GameServerSpy } from "../../domain/game/ports/gameServerSpy.ts";
 import { SoundManagerSpy } from "../../domain/game/ports/soundManagerSpy.ts";
@@ -39,8 +40,9 @@ function createDeferred<T>(): Deferred<T> {
 function createStoreContext(gameMapApi: GameMapApi) {
   const app = createApp({});
   const pinia = createPinia();
+  const gameServer = new GameServerSpy();
   const dependencies: AppDependencies = {
-    gameServer: new GameServerSpy(),
+    ...gameGatewaysFrom(gameServer),
     soundManager: new SoundManagerSpy(),
     gameMapApi,
   };

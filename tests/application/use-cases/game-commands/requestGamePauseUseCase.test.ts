@@ -3,7 +3,10 @@ import { afterEach, describe, it } from "node:test";
 
 import { RequestGamePauseUseCase } from "@/application/use-cases/game-commands/requestGamePauseUseCase.ts";
 
-import { overrideAppDependencies } from "../../../app/appDependenciesTestHarness.ts";
+import {
+  gameGatewaysFrom,
+  overrideAppDependencies,
+} from "../../../app/appDependenciesTestHarness.ts";
 import { GameMapApiFake } from "../../../domain/game/ports/gameMapApiFake.ts";
 import { GameServerSpy } from "../../../domain/game/ports/gameServerSpy.ts";
 import { SoundManagerSpy } from "../../../domain/game/ports/soundManagerSpy.ts";
@@ -18,7 +21,7 @@ describe("RequestGamePauseUseCase", () => {
   it("asks the game server to pause the active game", () => {
     const gameServer = new GameServerSpy();
     restoreDependencies = overrideAppDependencies({
-      gameServer,
+      ...gameGatewaysFrom(gameServer),
       soundManager: new SoundManagerSpy(),
       gameMapApi: new GameMapApiFake(),
     });

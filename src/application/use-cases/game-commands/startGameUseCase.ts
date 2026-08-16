@@ -6,6 +6,6 @@ export class StartGameUseCase extends UseCase<void, void> {
   }
 
   execute(): void {
-    this.gameServer.startGame();
+    this.gameCommandGateway.startGame();
   }
 }

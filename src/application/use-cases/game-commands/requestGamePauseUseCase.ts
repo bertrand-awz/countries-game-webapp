@@ -6,6 +6,6 @@ export class RequestGamePauseUseCase extends UseCase<void, void> {
   }
 
   execute(): void {
-    this.gameServer.pauseGame();
+    this.gameCommandGateway.pauseGame();
   }
 }

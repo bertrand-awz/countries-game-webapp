@@ -17,14 +17,14 @@ export class JoinRoomUseCase extends UseCase<JoinRoomOptions, GameSession> {
       throw new Error("Room joining options are required.");
     }
 
-    const session = await this.gameServer.joinRoom(this.options);
+    const session = await this.gameRoomGateway.joinRoom(this.options);
     const gameSessionStore = this.gameSessionStore;
 
     gameSessionStore.setSession(session);
-    this.gameServer.onStateChange((gameState) => {
+    this.gameEventGateway.onStateChange((gameState) => {
       gameSessionStore.setGameState(gameState);
     });
-    gameSessionStore.setGameState(this.gameServer.getState());
+    gameSessionStore.setGameState(this.gameRoomGateway.getState());
 
     return session;
   }

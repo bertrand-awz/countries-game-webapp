@@ -4,7 +4,9 @@ import { describe, it } from "node:test";
 import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEvent.ts";
 import type { TurnChangedEvent } from "@/domain/game/events/TurnChangedEvent.ts";
 import { GameStatus } from "@/domain/game/models/state/GameState.ts";
-import { ColyseusGameServer } from "@/infrastructure/game-server/colyseus/ColyseusGameServer.ts";
+import { ColyseusGameCommandGateway } from "@/infrastructure/game-server/colyseus/ColyseusGameCommandGateway.ts";
+import { ColyseusGameEventGateway } from "@/infrastructure/game-server/colyseus/ColyseusGameEventGateway.ts";
+import { ColyseusRoomGateway } from "@/infrastructure/game-server/colyseus/ColyseusRoomGateway.ts";
 import { GameRoomMessage } from "@/infrastructure/game-server/colyseus/messages/GameRoomMessage.ts";
 
 import {
@@ -19,30 +21,32 @@ type SendCall = {
 
 type MessageHandler = (message: unknown) => void;
 
-function createServerWithRoom(room: object): ColyseusGameServer {
-  const server = Object.create(ColyseusGameServer.prototype) as ColyseusGameServer;
-  const serverInternals = server as unknown as {
+function createRoomGatewayWithRoom(room: object): ColyseusRoomGateway {
+  const gateway = Object.create(ColyseusRoomGateway.prototype) as ColyseusRoomGateway;
+  const gatewayInternals = gateway as unknown as {
     room: object;
   };
-  serverInternals.room = room;
+  gatewayInternals.room = room;
 
-  return server;
+  return gateway;
 }
 
-describe("ColyseusGameServer", () => {
+describe("Colyseus game gateways", () => {
   it("sends game commands with the messages expected by the Colyseus room", () => {
     const sendCalls: SendCall[] = [];
-    const server = createServerWithRoom({
-      send: (message: GameRoomMessage, payload?: unknown) => {
-        sendCalls.push({ message, payload });
-      },
-    });
+    const commands = new ColyseusGameCommandGateway(
+      createRoomGatewayWithRoom({
+        send: (message: GameRoomMessage, payload?: unknown) => {
+          sendCalls.push({ message, payload });
+        },
+      }),
+    );
 
-    server.submitCountry("Canada");
-    server.pauseGame();
-    server.resumeGame();
-    server.restartGame();
-    server.startGame();
+    commands.submitCountry("Canada");
+    commands.pauseGame();
+    commands.resumeGame();
+    commands.restartGame();
+    commands.startGame();
 
     assert.deepEqual(sendCalls, [
       {
@@ -73,26 +77,28 @@ describe("ColyseusGameServer", () => {
   it("maps Colyseus room messages to the domain event contract", () => {
     const handlers = new Map<GameRoomMessage, MessageHandler>();
     const player = createPlayer({ id: "player-1", username: "Ada" });
-    const server = createServerWithRoom({
-      onMessage: (message: GameRoomMessage, handler: MessageHandler) => {
-        handlers.set(message, handler);
-      },
-    });
+    const events = new ColyseusGameEventGateway(
+      createRoomGatewayWithRoom({
+        onMessage: (message: GameRoomMessage, handler: MessageHandler) => {
+          handlers.set(message, handler);
+        },
+      }),
+    );
     let playerJoinEvent: PlayerJoinRoomEvent | null = null;
     let turnChangedEvent: TurnChangedEvent | null = null;
     let rejectedReason: string | null = null;
     let foundCountryId: string | null = null;
 
-    server.onPlayerJoinRoom((event) => {
+    events.onPlayerJoinRoom((event) => {
       playerJoinEvent = event;
     });
-    server.onTurnChanged((event) => {
+    events.onTurnChanged((event) => {
       turnChangedEvent = event;
     });
-    server.onCountryRejected((event) => {
+    events.onCountryRejected((event) => {
       rejectedReason = event.reason;
     });
-    server.onCountryFound((event) => {
+    events.onCountryFound((event) => {
       foundCountryId = event.countryId;
     });
 
@@ -140,12 +146,14 @@ describe("ColyseusGameServer", () => {
     onStateChange.remove = (handler) => {
       removedHandlers.push(handler);
     };
-    const server = createServerWithRoom({
-      onStateChange,
-    });
+    const events = new ColyseusGameEventGateway(
+      createRoomGatewayWithRoom({
+        onStateChange,
+      }),
+    );
     let mappedState = createGameState({ status: GameStatus.WAITING });
 
-    const unsubscribe = server.onStateChange((state) => {
+    const unsubscribe = events.onStateChange((state) => {
       mappedState = state;
     });
     assert.notEqual(registeredStateHandler, null);
@@ -160,16 +168,16 @@ describe("ColyseusGameServer", () => {
 
   it("leaves the active room once and then behaves as disconnected", async () => {
     let leaveCallCount = 0;
-    const server = createServerWithRoom({
+    const roomGateway = createRoomGatewayWithRoom({
       leave: async () => {
         leaveCallCount++;
       },
     });
 
-    await server.leaveRoom();
-    await server.leaveRoom();
+    await roomGateway.leaveRoom();
+    await roomGateway.leaveRoom();
 
     assert.equal(leaveCallCount, 1);
-    assert.equal(server.hasActiveRoom(), false);
+    assert.equal(roomGateway.hasActiveRoom(), false);
   });
 });

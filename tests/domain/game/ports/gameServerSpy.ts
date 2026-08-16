@@ -1,14 +1,16 @@
 import type { GameState } from "@/domain/game/models/state/GameState.ts";
 import type {
   CreateRoomOptions,
-  GameServer,
+  GameCommandGateway,
+  GameEventGateway,
+  GameRoomGateway,
   GameSession,
   JoinRoomOptions,
 } from "@/domain/game/ports/GameServer.ts";
 
 import { createGameState } from "../models/state/gameStateMother.ts";
 
-export class GameServerSpy implements GameServer {
+export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameEventGateway {
   roomCreatedWith: CreateRoomOptions | null = null;
   roomJoinedWith: JoinRoomOptions | null = null;
   submittedCountries: string[] = [];

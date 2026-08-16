@@ -69,7 +69,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  if (to.meta.requiresRoom && !appDependencies.gameServer.hasActiveRoom()) {
+  if (to.meta.requiresRoom && !appDependencies.gameRoomGateway.hasActiveRoom()) {
     return { name: RouteName.GAME_ROOM_CREATION };
   }
 });
