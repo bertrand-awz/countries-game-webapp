@@ -1,4 +1,4 @@
-import { UseCase } from "./useCase.ts";
+import { UseCase } from "../useCase.ts";
 
 export class StartGameUseCase extends UseCase<void, void> {
   constructor() {

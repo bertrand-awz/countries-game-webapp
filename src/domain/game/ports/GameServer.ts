@@ -45,5 +45,5 @@ export interface GameEventGateway {
 }
 
 export interface GameServer extends GameCommandGateway, GameEventGateway, GameRoomGateway {
-   hasActiveRoom(): boolean;
+  hasActiveRoom(): boolean;
 }

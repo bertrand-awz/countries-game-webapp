@@ -1,12 +1,12 @@
 import assert from "node:assert/strict";
 import { afterEach, describe, it } from "node:test";
 
-import { RequestGamePauseUseCase } from "@/application/use-cases/requestGamePauseUseCase.ts";
+import { RequestGamePauseUseCase } from "@/application/use-cases/game-commands/requestGamePauseUseCase.ts";
 
-import { overrideAppDependencies } from "../../app/appDependenciesTestHarness.ts";
-import { GameMapApiFake } from "../../domain/game/ports/gameMapApiFake.ts";
-import { GameServerSpy } from "../../domain/game/ports/gameServerSpy.ts";
-import { SoundManagerSpy } from "../../domain/game/ports/soundManagerSpy.ts";
+import { overrideAppDependencies } from "../../../app/appDependenciesTestHarness.ts";
+import { GameMapApiFake } from "../../../domain/game/ports/gameMapApiFake.ts";
+import { GameServerSpy } from "../../../domain/game/ports/gameServerSpy.ts";
+import { SoundManagerSpy } from "../../../domain/game/ports/soundManagerSpy.ts";
 
 describe("RequestGamePauseUseCase", () => {
   let restoreDependencies: () => void = () => {};
