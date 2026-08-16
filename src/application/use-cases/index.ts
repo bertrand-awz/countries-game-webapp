@@ -1,8 +1,10 @@
 import { CreateRoomUseCase } from "./createRoomUseCase.ts";
 import { RequestGamePauseUseCase } from "./game-commands/requestGamePauseUseCase.ts";
+import { RequestGameRestartUseCase } from "./game-commands/requestGameRestartUseCase.ts";
 import { RequestGameResumeUseCase } from "./game-commands/requestGameResumeUseCase.ts";
 import { StartGameUseCase } from "./game-commands/startGameUseCase.ts";
 import { SubmitAnswerUseCase } from "./game-commands/submitAnswerUseCase.ts";
+import { UpdateRoomSettingsUseCase } from "./game-commands/updateRoomSettingsUseCase.ts";
 import { JoinRoomUseCase } from "./joinRoomUseCase.ts";
 import { LoadContinentsUseCase } from "./loadContinentsUseCase.ts";
 import { RegisterGameEventReactionsUseCase } from "./registerGameEventReactionsUseCase.ts";
@@ -15,3 +17,5 @@ export const startGameUseCase = new StartGameUseCase();
 export const createRoomUseCase = new CreateRoomUseCase(registerGameEventReactionsUseCase);
 export const requestGamePauseUseCase = new RequestGamePauseUseCase();
 export const requestGameResumeUseCase = new RequestGameResumeUseCase();
+export const requestGameRestartUseCase = new RequestGameRestartUseCase();
+export const updateRoomSettingsUseCase = new UpdateRoomSettingsUseCase();

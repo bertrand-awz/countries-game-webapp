@@ -32,6 +32,7 @@ describe("CreateRoomUseCase", () => {
       username: "Bertrand",
       gameLanguage: "fr",
       gameDurationInSeconds: 300,
+      turnDurationInSeconds: 45,
       maxPlayersAllowed: 4,
     };
     restoreDependencies = overrideAppDependencies({

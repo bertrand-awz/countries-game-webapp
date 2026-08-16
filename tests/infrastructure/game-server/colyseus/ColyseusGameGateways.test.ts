@@ -1,8 +1,12 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
+import type { GameActionVoteRequestedEvent } from "@/domain/game/events/GameActionVoteRequestedEvent.ts";
 import type { GameFinishedEvent } from "@/domain/game/events/GameFinishedEvent.ts";
+import type { GameRestartedEvent } from "@/domain/game/events/GameRestartedEvent.ts";
+import type { GameStartedEvent } from "@/domain/game/events/GameStartedEvent.ts";
 import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEvent.ts";
+import type { PlayerLeftRoomEvent } from "@/domain/game/events/PlayerLeftRoomEvent.ts";
 import type { TurnChangedEvent } from "@/domain/game/events/TurnChangedEvent.ts";
 import { GameStatus } from "@/domain/game/models/state/GameState.ts";
 import { ColyseusGameCommandGateway } from "@/infrastructure/game-server/colyseus/ColyseusGameCommandGateway.ts";
@@ -48,6 +52,14 @@ describe("Colyseus game gateways", () => {
     commands.resumeGame();
     commands.restartGame();
     commands.startGame();
+    commands.updateRoomSettings({
+      gameDurationInSeconds: 300,
+      turnDurationInSeconds: 45,
+      maxPlayersAllowed: 4,
+    });
+    commands.voteGameAction("pause", "request-1", true);
+    commands.voteGameAction("resume", "request-2", false);
+    commands.voteGameAction("restart", "request-3", true);
 
     assert.deepEqual(sendCalls, [
       {
@@ -66,11 +78,40 @@ describe("Colyseus game gateways", () => {
       },
       {
         message: GameRoomMessage.RESTART_GAME,
-        payload: undefined,
+        payload: {},
       },
       {
         message: GameRoomMessage.START_GAME,
         payload: {},
+      },
+      {
+        message: GameRoomMessage.UPDATE_ROOM_SETTINGS,
+        payload: {
+          gameDurationInSeconds: 300,
+          turnDurationInSeconds: 45,
+          maxPlayersAllowed: 4,
+        },
+      },
+      {
+        message: GameRoomMessage.VOTE_PAUSE_GAME,
+        payload: {
+          requestId: "request-1",
+          accepted: true,
+        },
+      },
+      {
+        message: GameRoomMessage.VOTE_RESUME_GAME,
+        payload: {
+          requestId: "request-2",
+          accepted: false,
+        },
+      },
+      {
+        message: GameRoomMessage.VOTE_RESTART_GAME,
+        payload: {
+          requestId: "request-3",
+          accepted: true,
+        },
       },
     ]);
   });
@@ -87,13 +128,20 @@ describe("Colyseus game gateways", () => {
       }),
     );
     let playerJoinEvent: PlayerJoinRoomEvent | null = null;
+    let playerLeftEvent: PlayerLeftRoomEvent | null = null;
     let turnChangedEvent: TurnChangedEvent | null = null;
+    let gameStartedEvent: GameStartedEvent | null = null;
+    let gameRestartedEvent: GameRestartedEvent | null = null;
+    let voteRequestedEvent: GameActionVoteRequestedEvent | null = null;
     let gameFinishedEvent: GameFinishedEvent | null = null;
     let rejectedReason: string | null = null;
     let foundCountryId: string | null = null;
 
     events.onPlayerJoinRoom((event) => {
       playerJoinEvent = event;
+    });
+    events.onPlayerLeftRoom((event) => {
+      playerLeftEvent = event;
     });
     events.onTurnChanged((event) => {
       turnChangedEvent = event;
@@ -107,24 +155,102 @@ describe("Colyseus game gateways", () => {
     const unsubscribeGameFinished = events.onGameFinished((event) => {
       gameFinishedEvent = event;
     });
+    events.onGameStarted((event) => {
+      gameStartedEvent = event;
+    });
+    events.onGameRestarted((event) => {
+      gameRestartedEvent = event;
+    });
+    const unsubscribeVoteRequest = events.onGameActionVoteRequested((event) => {
+      voteRequestedEvent = event;
+    });
 
-    handlers.get(GameRoomMessage.PLAYER_JOIN_ROOM)?.({ player });
-    handlers.get(GameRoomMessage.TURN_CHANGED)?.({ player });
+    handlers.get(GameRoomMessage.PLAYER_JOIN_ROOM)?.({
+      playerSessionId: "player-2",
+      username: "Grace",
+      numberOfPlayers: 2,
+    });
+    handlers.get(GameRoomMessage.PLAYER_LEFT_ROOM)?.({
+      playerSessionId: "player-2",
+      username: "Grace",
+      numberOfPlayers: 1,
+      code: 1000,
+    });
+    handlers.get(GameRoomMessage.TURN_CHANGED)?.({
+      player,
+      turnDurationInSeconds: 45,
+      turnStartedAt: 123,
+    });
     handlers.get(GameRoomMessage.COUNTRY_REJECTED)?.({ reason: "already found" });
     handlers.get(GameRoomMessage.COUNTRY_FOUND)?.({
       countryId: "CAN",
       player,
       pointsAwarded: 10,
     });
+    handlers.get(GameRoomMessage.GAME_STARTED)?.({
+      startAt: 10,
+      endAt: 310,
+      durationInSeconds: 300,
+      currentPlayerSessionId: "player-1",
+      startedBy: "player-2",
+    });
+    handlers.get(GameRoomMessage.GAME_RESTARTED)?.({
+      restartedAt: 500,
+      currentPlayerSessionId: "player-1",
+      restartedBy: "player-2",
+    });
+    handlers.get(GameRoomMessage.PAUSE_GAME_REQUESTED)?.({
+      requestId: "pause-request-1",
+      requestedByPlayerSessionId: "player-2",
+      requestedByUsername: "Grace",
+      requiredVoterSessionIds: ["player-1"],
+    });
     handlers.get(GameRoomMessage.GAME_FINISHED)?.({ winner: player, reason: "time_elapsed" });
     unsubscribeGameFinished();
+    unsubscribeVoteRequest();
 
-    assert.deepEqual(playerJoinEvent, { player });
-    assert.deepEqual(turnChangedEvent, { currentPlayer: player });
+    assert.deepEqual(playerJoinEvent, {
+      playerId: "player-2",
+      username: "Grace",
+      numberOfPlayers: 2,
+    });
+    assert.deepEqual(playerLeftEvent, {
+      playerId: "player-2",
+      username: "Grace",
+      numberOfPlayers: 1,
+      code: 1000,
+    });
+    assert.deepEqual(turnChangedEvent, {
+      currentPlayer: player,
+      turnDurationInSeconds: 45,
+      turnStartedAt: 123,
+    });
     assert.equal(rejectedReason, "already found");
     assert.equal(foundCountryId, "CAN");
+    assert.deepEqual(gameStartedEvent, {
+      startAt: 10,
+      endAt: 310,
+      durationInSeconds: 300,
+      currentPlayerId: "player-1",
+      startedByPlayerId: "player-2",
+    });
+    assert.deepEqual(gameRestartedEvent, {
+      restartedAt: 500,
+      currentPlayerId: "player-1",
+      restartedByPlayerId: "player-2",
+    });
+    assert.deepEqual(voteRequestedEvent, {
+      requestId: "pause-request-1",
+      action: "pause",
+      requestedByPlayerId: "player-2",
+      requestedByUsername: "Grace",
+      requiredVoterIds: ["player-1"],
+    });
     assert.deepEqual(gameFinishedEvent, { winner: player, reason: "time_elapsed" });
     assert.equal(handlers.has(GameRoomMessage.GAME_FINISHED), false);
+    assert.equal(handlers.has(GameRoomMessage.PAUSE_GAME_REQUESTED), false);
+    assert.equal(handlers.has(GameRoomMessage.RESUME_GAME_REQUESTED), false);
+    assert.equal(handlers.has(GameRoomMessage.RESTART_GAME_REQUESTED), false);
   });
 
   it("maps state changes into domain game states and returns an unsubscribe callback", () => {

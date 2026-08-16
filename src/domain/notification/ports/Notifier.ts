@@ -2,4 +2,5 @@ import type { NotificationRequest } from "@/domain/notification/models/Notificat
 
 export interface Notifier {
   notify(notification: NotificationRequest): void;
+  dismiss(notificationId: string): void;
 }

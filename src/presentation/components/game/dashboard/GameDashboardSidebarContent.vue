@@ -32,6 +32,9 @@
       <GameSettings
         :translator="translator"
         :room-id="roomId"
+        :game-duration-in-minutes="Math.round(gameState.durationInSeconds / 60)"
+        :players-count="gameState.numberOfPlayers"
+        :turn-duration-in-seconds="gameState.turnDurationInSeconds"
         :apply-setting-callback="applySettingCallback"
       />
     </nav>

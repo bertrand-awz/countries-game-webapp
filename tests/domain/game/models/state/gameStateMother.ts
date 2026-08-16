@@ -14,6 +14,7 @@ type GameStateMotherOptions = {
   numberOfPlayers?: number;
   defaultLanguage?: SupportedLanguage;
   durationInSeconds?: number;
+  turnDurationInSeconds?: number;
   startAt?: number;
   endAt?: number;
   status?: GameStatus;
@@ -40,6 +41,7 @@ export function createGameState(options: GameStateMotherOptions = {}): GameState
     options.numberOfPlayers ?? players.length,
     options.defaultLanguage ?? "fr",
     options.durationInSeconds ?? 300,
+    options.turnDurationInSeconds ?? 45,
     options.startAt ?? 1_700_000_000,
     options.endAt ?? 1_700_000_300,
     options.status ?? GameStatus.WAITING,

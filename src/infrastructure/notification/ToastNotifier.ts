@@ -6,4 +6,8 @@ export class ToastNotifier implements Notifier {
   notify(notification: NotificationRequest): void {
     useNotificationStore().add(notification);
   }
+
+  dismiss(notificationId: string): void {
+    useNotificationStore().remove(notificationId);
+  }
 }

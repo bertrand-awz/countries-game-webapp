@@ -21,6 +21,7 @@
   const gameLanguage = ref("fr");
   const maxPlayers = ref(4);
   const gameDuration = ref(3);
+  const turnDurationInSeconds = ref(GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.default);
   const freedomOfLanguage = ref(true);
 
   const languageOptions = computed<SelectOption[]>(() => [
@@ -43,6 +44,7 @@
     props.onSubmitRoomCreationFormCallback({
       username: trimmedUsername,
       gameDurationInSeconds: gameDuration.value * 60,
+      turnDurationInSeconds: turnDurationInSeconds.value,
       maxPlayersAllowed: maxPlayers.value,
       gameLanguage: gameLanguage.value,
     });
@@ -100,6 +102,15 @@
           :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.GAME_DURATION')"
           :min="GameConstraints.ALLOWED_TIME_IN_MINUTES.min"
           :max="GameConstraints.ALLOWED_TIME_IN_MINUTES.max"
+        />
+
+        <LabeledNumberInput
+          id="turn-duration"
+          v-model="turnDurationInSeconds"
+          :label="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_LABELS.TURN_DURATION')"
+          :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.TURN_DURATION')"
+          :min="GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.min"
+          :max="GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.max"
         />
 
         <LabeledCheckboxInput

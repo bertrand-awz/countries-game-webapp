@@ -44,6 +44,7 @@
           "GAME_LANGUAGE": "Game default language",
           "MAX_PLAYER": "Room's max players",
           "GAME_DURATION": "Game duration",
+          "TURN_DURATION": "Turn duration",
           "FREEDOM_OF_LANGUAGE": "Freedom of language"
         },
         "INPUT_HINTS": {
@@ -53,6 +54,7 @@
           "GAME_LANGUAGE": "Main language used for country names during the game.",
           "MAX_PLAYER": "Maximum number of players allowed to join this room.",
           "GAME_DURATION": "Total game duration in minutes.",
+          "TURN_DURATION": "Time given to each player to answer, between 30 and 55 seconds.",
           "FREEDOM_OF_LANGUAGE": "Allows the server to accept responses in the languages selected by the players."
         },
         "BUTTONS": {
@@ -108,6 +110,8 @@
           "MAX_PLAYERS_ALLOWED": "Maximum players in the room",
           "GAME_DURATION": "Game duration",
           "GAME_DURATION_UNIT": "min",
+          "TURN_DURATION": "Turn duration",
+          "TURN_DURATION_UNIT": "s",
           "BUTTON_INVITE": "Invite",
           "BUTTON_APPLY": "Apply"
         }
@@ -122,10 +126,68 @@
     },
     "NOTIFICATIONS": {
       "CLOSE": "Close notification",
-      "GAME_FINISHED": {
-        "TITLE": "Game finished",
-        "MESSAGE": "Answers are closed. Check the final scoreboard."
+      "PLAYER_JOINED": {
+        "TITLE": "Player joined",
+        "MESSAGE": "{username} joined the room. Players present: {numberOfPlayers}."
+      },
+      "PLAYER_LEFT": {
+        "TITLE": "Player left",
+        "MESSAGE": "{username} left the room. Players present: {numberOfPlayers}."
+      },
+      "GAME_STARTED": {
+        "TITLE": "Game started",
+        "MESSAGE": "{username} started the game.",
+        "MESSAGE_WITHOUT_PLAYER": "The game started."
+      },
+      "TURN": {
+        "YOUR_TURN_TITLE": "Your turn",
+        "YOUR_TURN_MESSAGE": "You have {seconds} seconds to name a country.",
+        "PLAYER_TURN_TITLE": "{username}'s turn",
+        "PLAYER_TURN_MESSAGE": "{username} has {seconds} seconds to answer."
+      },
+      "VOTE_REQUESTS": {
+        "PAUSE": {
+          "TITLE": "Pause request",
+          "MESSAGE": "{username} wants to pause the game."
+        },
+        "RESUME": {
+          "TITLE": "Resume request",
+          "MESSAGE": "{username} wants to resume the game."
+        },
+        "RESTART": {
+          "TITLE": "Restart request",
+          "MESSAGE": "{username} wants to restart the game."
+        },
+        "WAITING": {
+          "PAUSE": {
+            "TITLE": "Pause request sent",
+            "MESSAGE": "Waiting for the other players to agree."
+          },
+          "RESUME": {
+            "TITLE": "Resume request sent",
+            "MESSAGE": "Waiting for the other players to agree."
+          },
+          "RESTART": {
+            "TITLE": "Restart request sent",
+            "MESSAGE": "Waiting for the other players to agree."
+          }
+        },
+        "ACTIONS": {
+          "ACCEPT": "Accept",
+          "DECLINE": "Decline"
+        }
       }
+    },
+    "FINAL_SCOREBOARD": {
+      "MATCH_COMPLETE": "Match complete",
+      "TITLE": "Final scoreboard",
+      "WINNER": "Winner",
+      "PLAYERS": "Players",
+      "COUNTRIES_FOUND": "Countries found",
+      "RANK": "Rank",
+      "PLAYER": "Player",
+      "SCORE": "Score",
+      "YOU": "You"
     },
     "CONTINENT_NAME": {
       "AFRICA": "Africa",

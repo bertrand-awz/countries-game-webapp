@@ -20,6 +20,7 @@ type ColyseusGameState = {
   numberOfPlayers: number;
   defaultLanguage: SupportedLanguage;
   durationInSeconds: number;
+  turnDurationInSeconds: number;
   startAt: number;
   endAt: number;
   status: GameStatus;
@@ -36,6 +37,7 @@ export class GameStateMapper {
       state.numberOfPlayers,
       state.defaultLanguage,
       state.durationInSeconds,
+      state.turnDurationInSeconds,
       state.startAt,
       state.endAt,
       state.status,

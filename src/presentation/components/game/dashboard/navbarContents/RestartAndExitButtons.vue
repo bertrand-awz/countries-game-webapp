@@ -5,9 +5,8 @@
 
   defineProps<{
     translator: (translationKey: string) => string;
+    requestRestart: () => void;
   }>();
-
-  function recommencer() {}
 
   function quitter() {}
 </script>
@@ -18,7 +17,7 @@
       button-class="navbar-restart-button"
       :icon="RotateCcwIcon"
       :label="translator('APP.RESTART')"
-      :on-click-callback="recommencer"
+      :on-click-callback="requestRestart"
     />
 
     <ClickableSoundButton

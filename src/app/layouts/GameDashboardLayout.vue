@@ -9,14 +9,17 @@
   import { useGameSessionStore } from "@/application/stores/gameSessionStore.ts";
   import {
     requestGamePauseUseCase,
+    requestGameRestartUseCase,
     requestGameResumeUseCase,
     startGameUseCase,
     submitCountryNameAnswerUseCase,
+    updateRoomSettingsUseCase,
   } from "@/application/use-cases";
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
   import type { GameSetting } from "@/domain/game/settings";
   import GameNavbar from "@/presentation/components/game/dashboard/GameDashboardNavbar.vue";
   import GameSidebar from "@/presentation/components/game/dashboard/GameDashboardSidebar.vue";
+  import GameFinalScoreboardOverlay from "@/presentation/components/game/dashboard/GameFinalScoreboardOverlay.vue";
   import GameBoard from "@/presentation/components/game/GameBoard.vue";
 
   const { soundManager } = useAppDependencies();
@@ -88,12 +91,16 @@
     requestGameResumeUseCase.execute();
   }
 
+  function restart() {
+    requestGameRestartUseCase.execute();
+  }
+
   function submitCountryNameAnswer(playerAnswer: string) {
     submitCountryNameAnswerUseCase.setOptions({ countryName: playerAnswer }).execute();
   }
 
   function applySettingCallback(newSetting: GameSetting) {
-    void newSetting;
+    updateRoomSettingsUseCase.setOptions(newSetting).execute();
   }
 
   function calculateTimeLeftInSeconds(endAt: number): number {
@@ -110,6 +117,7 @@
       :game-status="gameState.status"
       :request-pause="pause"
       :request-resume="resume"
+      :request-restart="restart"
       :start-game="start"
       :time-left-in-seconds="timeLeftInSeconds"
       @open-sidebar="sidebarOpen = true"
@@ -126,6 +134,13 @@
     <GameBoard
       :country-name-answer-submitter="submitCountryNameAnswer"
       :countries-features="gameMapStore.getCountriesFeatures"
+    />
+    <GameFinalScoreboardOverlay
+      v-if="gameState.status === GameStatus.FINISHED"
+      :game-state="gameState"
+      :current-player-id="gameSessionStore.playerId"
+      :translator="t"
+      :request-restart="restart"
     />
   </div>
 

@@ -14,6 +14,7 @@ export class GameState {
     readonly numberOfPlayers: number,
     readonly defaultLanguage: SupportedLanguage,
     readonly durationInSeconds: number,
+    readonly turnDurationInSeconds: number,
     readonly startAt: number,
     readonly endAt: number,
     readonly status: GameStatus,

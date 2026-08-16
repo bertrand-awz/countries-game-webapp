@@ -14,6 +14,7 @@
     translator: (translationKey: string) => string;
     requestPause: () => void;
     requestResume: () => void;
+    requestRestart: () => void;
     startGame: () => void;
     timeLeftInSeconds: number;
   }>();
@@ -67,7 +68,7 @@
 
             <!-- Right side -->
             <div class="flex flex-1 items-center justify-end gap-3 md:gap-4">
-              <RestartAndExitButtons :translator="translator" />
+              <RestartAndExitButtons :translator="translator" :request-restart="requestRestart" />
               <LanguagesMenu />
             </div>
           </div>

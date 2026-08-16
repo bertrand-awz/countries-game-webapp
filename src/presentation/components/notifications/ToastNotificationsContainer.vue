@@ -12,7 +12,7 @@
 <template>
   <div
     aria-live="assertive"
-    class="pointer-events-none fixed inset-0 z-[80] flex items-end px-4 py-6 sm:items-start sm:p-6"
+    class="pointer-events-none fixed top-16 right-0 bottom-0 left-0 z-[80] flex items-start px-4 py-4 sm:p-6"
   >
     <TransitionGroup
       tag="div"

@@ -17,6 +17,7 @@ describe("GameStateMapper", () => {
       numberOfPlayers: 2,
       defaultLanguage: "en",
       durationInSeconds: 600,
+      turnDurationInSeconds: 45,
       startAt: 100,
       endAt: 700,
       status: GameStatus.PLAYING,
@@ -37,6 +38,7 @@ describe("GameStateMapper", () => {
 
     assert.equal(gameState.numberOfPlayers, 2);
     assert.equal(gameState.defaultLanguage, "en");
+    assert.equal(gameState.turnDurationInSeconds, 45);
     assert.equal(gameState.status, GameStatus.PLAYING);
     assert.equal(gameState.allowAnswerValidationInPlayerCurrentLanguage, true);
     assert.deepEqual(gameState.continents, [

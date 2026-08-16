@@ -47,4 +47,22 @@ describe("notificationStore", () => {
 
     assert.equal(store.notifications.length, 0);
   });
+
+  it("replaces an existing notification when a stable id is reused", () => {
+    const store = useNotificationStore();
+
+    store.add({
+      id: "current-turn",
+      title: "Alice is playing",
+      durationMs: 0,
+    });
+    store.add({
+      id: "current-turn",
+      title: "Bob is playing",
+      durationMs: 0,
+    });
+
+    assert.equal(store.notifications.length, 1);
+    assert.equal(store.notifications[0].title, "Bob is playing");
+  });
 });

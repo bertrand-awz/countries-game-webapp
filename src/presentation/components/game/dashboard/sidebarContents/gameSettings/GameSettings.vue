@@ -6,6 +6,7 @@
     SettingsIcon,
     Share2Icon,
     TimerIcon,
+    TimerResetIcon,
     UsersRoundIcon,
     XIcon,
   } from "@lucide/vue";
@@ -20,6 +21,9 @@
   const props = defineProps<{
     translator: (translationKey: string) => string;
     roomId: string | null;
+    gameDurationInMinutes: number;
+    playersCount: number;
+    turnDurationInSeconds: number;
     applySettingCallback: (newSettings: GameSetting) => void;
   }>();
 
@@ -30,13 +34,9 @@
   const copiedItem = ref<CopiedItem | null>(null);
   let copiedFeedbackTimeoutId: number | null = null;
 
-  const playersCount = defineModel<number>("playersCount", {
-    default: GameConstraints.ALLOWED_PLAYERS_NUMBER.min,
-  });
-
-  const timerMinutes = defineModel<number>("timerMinutes", {
-    default: GameConstraints.ALLOWED_TIME_IN_MINUTES.min,
-  });
+  const playersCount = ref(props.playersCount);
+  const timerMinutes = ref(props.gameDurationInMinutes);
+  const turnDurationInSeconds = ref(props.turnDurationInSeconds);
 
   const invitationLink = computed(() => {
     if (!props.roomId) {
@@ -52,6 +52,9 @@
   });
 
   function openSettingsModal() {
+    playersCount.value = props.playersCount;
+    timerMinutes.value = props.gameDurationInMinutes;
+    turnDurationInSeconds.value = props.turnDurationInSeconds;
     isSettingsOpen.value = true;
   }
 
@@ -60,7 +63,11 @@
   }
 
   function applySettings() {
-    const newSettings = { numPlayers: playersCount.value, durationInMinutes: timerMinutes.value };
+    const newSettings = {
+      numPlayers: playersCount.value,
+      durationInMinutes: timerMinutes.value,
+      turnDurationInSeconds: turnDurationInSeconds.value,
+    };
     props.applySettingCallback(newSettings);
     closeSettingsModal();
   }
@@ -265,6 +272,17 @@
             :minimum="GameConstraints.ALLOWED_TIME_IN_MINUTES.min"
             :maximum="GameConstraints.ALLOWED_TIME_IN_MINUTES.max"
             :unit="translator('GAME.SIDEBAR.SETTINGS.MODAL.GAME_DURATION_UNIT')"
+          />
+
+          <InputRangeSlider
+            v-model:input-value="turnDurationInSeconds"
+            :label="translator('GAME.SIDEBAR.SETTINGS.MODAL.TURN_DURATION')"
+            label-class="text-sm font-normal"
+            :icon-component="TimerResetIcon"
+            :icon-color-class="'size-4 text-cyan-300'"
+            :minimum="GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.min"
+            :maximum="GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.max"
+            :unit="translator('GAME.SIDEBAR.SETTINGS.MODAL.TURN_DURATION_UNIT')"
           />
         </div>
 

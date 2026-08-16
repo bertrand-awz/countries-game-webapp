@@ -44,6 +44,7 @@
           "GAME_LANGUAGE": "Langues du jeu",
           "MAX_PLAYER": "Nombre maximal de joueurs dans la salle",
           "GAME_DURATION": "Durée d'une partie",
+          "TURN_DURATION": "Durée d'un tour",
           "FREEDOM_OF_LANGUAGE": "Liberté de langue"
         },
         "INPUT_HINTS": {
@@ -53,6 +54,7 @@
           "GAME_LANGUAGE": "Langue principale utilisée pour les noms de pays pendant la partie.",
           "MAX_PLAYER": "Nombre maximal de joueurs pouvant rejoindre cette salle.",
           "GAME_DURATION": "Durée totale de la partie en minutes.",
+          "TURN_DURATION": "Temps accordé à chaque joueur pour répondre, entre 30 et 55 secondes.",
           "FREEDOM_OF_LANGUAGE": "Permet au serveur d'accepter les réponses dans les langues choisies par les joueurs."
         },
         "BUTTONS": {
@@ -108,6 +110,8 @@
           "MAX_PLAYERS_ALLOWED": "Maximum de joueurs permis",
           "GAME_DURATION": "Durée de la partie",
           "GAME_DURATION_UNIT": "min",
+          "TURN_DURATION": "Durée d'un tour",
+          "TURN_DURATION_UNIT": "s",
           "BUTTON_INVITE": "Inviter",
           "BUTTON_APPLY": "Appliquer"
         }
@@ -122,10 +126,68 @@
     },
     "NOTIFICATIONS": {
       "CLOSE": "Fermer la notification",
-      "GAME_FINISHED": {
-        "TITLE": "Partie terminée",
-        "MESSAGE": "Les réponses sont fermées. Consultez le pointage final."
+      "PLAYER_JOINED": {
+        "TITLE": "Joueur arrivé",
+        "MESSAGE": "{username} a rejoint la salle. Joueurs présents : {numberOfPlayers}."
+      },
+      "PLAYER_LEFT": {
+        "TITLE": "Joueur parti",
+        "MESSAGE": "{username} a quitté la salle. Joueurs présents : {numberOfPlayers}."
+      },
+      "GAME_STARTED": {
+        "TITLE": "Partie lancée",
+        "MESSAGE": "{username} a démarré la partie.",
+        "MESSAGE_WITHOUT_PLAYER": "La partie a démarré."
+      },
+      "TURN": {
+        "YOUR_TURN_TITLE": "À vous de jouer",
+        "YOUR_TURN_MESSAGE": "Vous avez {seconds} secondes pour nommer un pays.",
+        "PLAYER_TURN_TITLE": "Tour de {username}",
+        "PLAYER_TURN_MESSAGE": "{username} a {seconds} secondes pour répondre."
+      },
+      "VOTE_REQUESTS": {
+        "PAUSE": {
+          "TITLE": "Demande de pause",
+          "MESSAGE": "{username} souhaite mettre la partie en pause."
+        },
+        "RESUME": {
+          "TITLE": "Demande de reprise",
+          "MESSAGE": "{username} souhaite reprendre la partie."
+        },
+        "RESTART": {
+          "TITLE": "Demande de redémarrage",
+          "MESSAGE": "{username} souhaite recommencer la partie."
+        },
+        "WAITING": {
+          "PAUSE": {
+            "TITLE": "Demande de pause envoyée",
+            "MESSAGE": "En attente de l'accord des autres joueurs."
+          },
+          "RESUME": {
+            "TITLE": "Demande de reprise envoyée",
+            "MESSAGE": "En attente de l'accord des autres joueurs."
+          },
+          "RESTART": {
+            "TITLE": "Demande de redémarrage envoyée",
+            "MESSAGE": "En attente de l'accord des autres joueurs."
+          }
+        },
+        "ACTIONS": {
+          "ACCEPT": "Accepter",
+          "DECLINE": "Refuser"
+        }
       }
+    },
+    "FINAL_SCOREBOARD": {
+      "MATCH_COMPLETE": "Match terminé",
+      "TITLE": "Tableau final",
+      "WINNER": "Vainqueur",
+      "PLAYERS": "Joueurs",
+      "COUNTRIES_FOUND": "Pays trouvés",
+      "RANK": "Rang",
+      "PLAYER": "Joueur",
+      "SCORE": "Score",
+      "YOU": "Vous"
     },
     "CONTINENT_NAME": {
       "AFRICA": "Afrique",

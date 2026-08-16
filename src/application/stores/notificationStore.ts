@@ -24,6 +24,10 @@ export const useNotificationStore = defineStore("notifications", () => {
   const timeouts = new Map<string, ReturnType<typeof setTimeout>>();
 
   function add(notificationRequest: NotificationRequest): Notification {
+    if (notificationRequest.id) {
+      remove(notificationRequest.id);
+    }
+
     const notification: Notification = {
       id: notificationRequest.id ?? createNotificationId(),
       variant: notificationRequest.variant ?? "info",
