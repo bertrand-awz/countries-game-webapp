@@ -7,7 +7,7 @@
     TrophyIcon,
     XIcon,
   } from "@lucide/vue";
-  import { computed } from "vue";
+  import { computed, onBeforeUnmount, ref, watch } from "vue";
   import { useI18n } from "vue-i18n";
 
   import type {
@@ -26,9 +26,44 @@
   }>();
 
   const { t } = useI18n();
+  const now = ref(Date.now());
+  let countdownIntervalId: number | null = null;
 
   const variantConfig = computed(() => {
     return notificationVariantConfigs[props.notification.variant];
+  });
+
+  const countdownRemainingInSeconds = computed(() => {
+    if (!props.notification.countdown) {
+      return 0;
+    }
+
+    return Math.max(0, Math.ceil((props.notification.countdown.endsAt - now.value) / 1000));
+  });
+
+  const countdownPercentage = computed(() => {
+    const countdown = props.notification.countdown;
+
+    if (!countdown) {
+      return 0;
+    }
+
+    const duration = countdown.endsAt - countdown.startedAt;
+
+    if (duration <= 0) {
+      return 0;
+    }
+
+    const elapsed = Math.min(duration, Math.max(0, now.value - countdown.startedAt));
+
+    return Math.max(0, Math.min(100, 100 - (elapsed / duration) * 100));
+  });
+
+  const formattedCountdown = computed(() => {
+    const minutes = Math.floor(countdownRemainingInSeconds.value / 60);
+    const seconds = countdownRemainingInSeconds.value % 60;
+
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   });
 
   function resolveText(text: NotificationText): string {
@@ -46,6 +81,30 @@
       emit("close", props.notification.id);
     }
   }
+
+  function refreshCountdownInterval(): void {
+    if (countdownIntervalId !== null) {
+      window.clearInterval(countdownIntervalId);
+      countdownIntervalId = null;
+    }
+
+    if (!props.notification.countdown) {
+      return;
+    }
+
+    now.value = Date.now();
+    countdownIntervalId = window.setInterval(() => {
+      now.value = Date.now();
+    }, 250);
+  }
+
+  watch(() => props.notification.countdown, refreshCountdownInterval, { immediate: true });
+
+  onBeforeUnmount(() => {
+    if (countdownIntervalId !== null) {
+      window.clearInterval(countdownIntervalId);
+    }
+  });
 
   const notificationVariantConfigs: Record<
     NotificationVariant,
@@ -110,6 +169,19 @@
         <p v-if="notification.message" class="mt-1 text-sm leading-5 text-gray-400">
           {{ resolveText(notification.message) }}
         </p>
+
+        <div v-if="notification.countdown" class="mt-3">
+          <div class="flex items-center justify-between text-xs font-semibold text-gray-400">
+            <span>{{ t("GAME.NOTIFICATIONS.TURN.TIME_LEFT") }}</span>
+            <span class="text-white">{{ formattedCountdown }}</span>
+          </div>
+          <div class="mt-1 h-1.5 overflow-hidden rounded-full bg-white/10">
+            <div
+              class="h-full rounded-full bg-emerald-300 transition-[width] duration-200"
+              :style="{ width: `${countdownPercentage}%` }"
+            ></div>
+          </div>
+        </div>
 
         <div v-if="notification.actions.length > 0" class="mt-3 flex flex-wrap gap-2">
           <button

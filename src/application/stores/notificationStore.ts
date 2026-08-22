@@ -34,6 +34,7 @@ export const useNotificationStore = defineStore("notifications", () => {
       title: notificationRequest.title,
       message: notificationRequest.message,
       durationMs: notificationRequest.durationMs ?? DEFAULT_NOTIFICATION_DURATION_MS,
+      countdown: notificationRequest.countdown,
       actions: notificationRequest.actions ?? [],
     };
 

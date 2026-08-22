@@ -32,7 +32,8 @@
   const now = ref(Date.now());
   const pausedTimeLeftInSeconds = ref<number | null>(null);
 
-  const { currentPlayer, gameState, roomId } = storeToRefs(gameSessionStore);
+  const { currentPlayer, currentTurn, gameState, isCurrentPlayerTurn, roomId } =
+    storeToRefs(gameSessionStore);
   const timerInterval = window.setInterval(() => {
     if (gameState.value?.status === GameStatus.PLAYING) {
       now.value = Date.now();
@@ -59,6 +60,18 @@
     }
 
     return calculateTimeLeftInSeconds(state.endAt);
+  });
+
+  const answerInputFocusToken = computed(() => {
+    if (
+      !isCurrentPlayerTurn.value ||
+      gameState.value?.status !== GameStatus.PLAYING ||
+      !currentTurn.value
+    ) {
+      return "";
+    }
+
+    return `${currentTurn.value.playerId}-${currentTurn.value.startedAt}`;
   });
 
   watch(
@@ -134,6 +147,7 @@
     <GameBoard
       :country-name-answer-submitter="submitCountryNameAnswer"
       :countries-features="gameMapStore.getCountriesFeatures"
+      :answer-input-focus-token="answerInputFocusToken"
     />
     <GameFinalScoreboardOverlay
       v-if="gameState.status === GameStatus.FINISHED"

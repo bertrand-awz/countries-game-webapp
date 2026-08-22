@@ -42,15 +42,22 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
         );
       }),
       this.gameEventGateway.onTurnChanged((event) => {
+        this.gameSessionStore.setCurrentTurn({
+          playerId: event.currentPlayer.getId(),
+          startedAt: event.turnStartedAt,
+          durationInSeconds: event.turnDurationInSeconds,
+        });
         this.gameTurnChangedReaction.handle(event);
       }),
       this.gameEventGateway.onGameActionVoteRequested((event) => {
         this.gameActionVoteRequestedReaction.handle(event);
       }),
       this.gameEventGateway.onGameFinished(() => {
+        this.gameSessionStore.clearCurrentTurn();
         this.gameTurnChangedReaction.clear();
       }),
       this.gameEventGateway.onGameRestarted(() => {
+        this.gameSessionStore.clearCurrentTurn();
         this.gameTurnChangedReaction.clear();
       }),
     ];

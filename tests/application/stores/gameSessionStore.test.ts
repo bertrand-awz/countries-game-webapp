@@ -29,6 +29,19 @@ describe("gameSessionStore", () => {
     assert.equal(store.currentPlayer, bob);
     assert.equal(store.status, GameStatus.PLAYING);
     assert.deepEqual(store.players, [alice, bob]);
+
+    store.setCurrentTurn({
+      playerId: "player-2",
+      startedAt: 100,
+      durationInSeconds: 45,
+    });
+
+    assert.equal(store.isCurrentPlayerTurn, true);
+    assert.deepEqual(store.currentTurn, {
+      playerId: "player-2",
+      startedAt: 100,
+      durationInSeconds: 45,
+    });
   });
 
   it("clears the local session and derived game context when the session ends", () => {
@@ -40,6 +53,7 @@ describe("gameSessionStore", () => {
 
     assert.equal(store.isConnected, false);
     assert.equal(store.currentPlayer, null);
+    assert.equal(store.currentTurn, null);
     assert.equal(store.gameState, null);
     assert.deepEqual(store.players, []);
     assert.deepEqual(store.continents, []);

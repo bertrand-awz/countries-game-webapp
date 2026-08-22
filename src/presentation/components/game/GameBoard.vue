@@ -9,6 +9,7 @@
   defineProps<{
     countryNameAnswerSubmitter: (playerAnswer: string) => void;
     countriesFeatures: Country[];
+    answerInputFocusToken: string;
   }>();
 
   const countryId = ref("");
@@ -16,7 +17,10 @@
 
 <template>
   <section class="game-board">
-    <CountryNameAnswerInputForm :on-submit-callback="countryNameAnswerSubmitter" />
+    <CountryNameAnswerInputForm
+      :on-submit-callback="countryNameAnswerSubmitter"
+      :focus-token="answerInputFocusToken"
+    />
     <div class="game-board-map">
       <InteractiveGlobe :countries="countriesFeatures" :highlighted-country-id="countryId" />
     </div>

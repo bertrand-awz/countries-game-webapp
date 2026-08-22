@@ -15,12 +15,18 @@ export type NotificationAction = {
   run(): void;
 };
 
+export type NotificationCountdown = {
+  startedAt: number;
+  endsAt: number;
+};
+
 export type Notification = {
   id: string;
   variant: NotificationVariant;
   title: NotificationText;
   message?: NotificationText;
   durationMs: number;
+  countdown?: NotificationCountdown;
   actions: NotificationAction[];
 };
 
@@ -30,5 +36,6 @@ export type NotificationRequest = {
   title: NotificationText;
   message?: NotificationText;
   durationMs?: number;
+  countdown?: NotificationCountdown;
   actions?: NotificationAction[];
 };

@@ -143,7 +143,8 @@
         "YOUR_TURN_TITLE": "Your turn",
         "YOUR_TURN_MESSAGE": "You have {seconds} seconds to name a country.",
         "PLAYER_TURN_TITLE": "{username}'s turn",
-        "PLAYER_TURN_MESSAGE": "{username} has {seconds} seconds to answer."
+        "PLAYER_TURN_MESSAGE": "{username} has {seconds} seconds to answer.",
+        "TIME_LEFT": "Time left"
       },
       "VOTE_REQUESTS": {
         "PAUSE": {

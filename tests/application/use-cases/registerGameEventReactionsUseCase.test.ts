@@ -143,6 +143,10 @@ describe("RegisterGameEventReactionsUseCase", () => {
           },
         },
         durationMs: 0,
+        countdown: {
+          startedAt: 10,
+          endsAt: 45_010,
+        },
       },
       {
         id: "current-turn",
@@ -161,6 +165,10 @@ describe("RegisterGameEventReactionsUseCase", () => {
           },
         },
         durationMs: 0,
+        countdown: {
+          startedAt: 55,
+          endsAt: 45_055,
+        },
       },
     ]);
     assert.deepEqual(notifier.dismissedNotificationIds, ["current-turn"]);

@@ -35,6 +35,10 @@ export class GameTurnChangedReaction {
         },
       },
       durationMs: 0,
+      countdown: {
+        startedAt: event.turnStartedAt,
+        endsAt: event.turnStartedAt + event.turnDurationInSeconds * 1000,
+      },
     });
   }
 

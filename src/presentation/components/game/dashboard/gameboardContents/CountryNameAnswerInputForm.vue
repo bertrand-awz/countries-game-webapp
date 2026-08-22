@@ -1,18 +1,32 @@
 <script setup lang="ts">
-  import { ref } from "vue";
+  import { nextTick, ref, watch } from "vue";
 
   import { GameConstraints } from "@/domain/game/constraints/gameConstraints.js";
 
   const props = defineProps<{
     onSubmitCallback: (inputValue: string) => void;
+    focusToken: string;
   }>();
 
   const countryNameAnswer = ref("");
   const inputRef = ref<HTMLInputElement | null>(null);
 
   function focusInput(): void {
-    inputRef.value?.focus();
+    inputRef.value?.focus({ preventScroll: true });
   }
+
+  watch(
+    () => props.focusToken,
+    async (focusToken) => {
+      if (!focusToken) {
+        return;
+      }
+
+      await nextTick();
+      focusInput();
+    },
+    { immediate: true },
+  );
 
   function onSubmit(): void {
     const trimmedAnswer = countryNameAnswer.value.trim();
