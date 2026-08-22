@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { MedalIcon, RotateCcwIcon, TrophyIcon } from "@lucide/vue";
+  import { DoorOpenIcon, MedalIcon, RotateCcwIcon, TrophyIcon } from "@lucide/vue";
   import { computed } from "vue";
 
   import type { Player } from "@/domain/game/models/Player.ts";
@@ -10,6 +10,7 @@
     currentPlayerId: string | null;
     translator: (translationKey: string, values?: Record<string, string | number>) => string;
     requestRestart: () => void;
+    exitGame: () => void | Promise<void>;
   }>();
 
   const rankedPlayers = computed<Player[]>(() => {
@@ -78,7 +79,7 @@
         </div>
       </header>
 
-      <div class="grid gap-3 border-b border-white/10 px-5 py-4 sm:grid-cols-3 sm:px-6">
+      <div class="grid gap-3 border-b border-white/10 px-5 py-4 sm:grid-cols-2 sm:px-6">
         <div class="rounded-md bg-white/5 px-3 py-3">
           <p class="text-xs text-gray-400">{{ translator("GAME.FINAL_SCOREBOARD.PLAYERS") }}</p>
           <p class="mt-1 text-xl font-bold">{{ gameState.players.length }}</p>
@@ -88,15 +89,6 @@
           <p class="text-xs text-gray-400">{{ translator("GAME.FINAL_SCOREBOARD.COUNTRIES_FOUND") }}</p>
           <p class="mt-1 text-xl font-bold">{{ totalCountriesFound }}</p>
         </div>
-
-        <button
-          type="button"
-          class="inline-flex min-h-16 items-center justify-center gap-2 rounded-md bg-cyan-500 px-4 py-3 text-sm font-bold text-white transition hover:bg-cyan-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300"
-          @click="requestRestart"
-        >
-          <RotateCcwIcon class="size-5" aria-hidden="true" />
-          {{ translator("APP.RESTART") }}
-        </button>
       </div>
 
       <div class="max-h-[55vh] overflow-auto px-5 py-5 sm:px-6">
@@ -141,6 +133,26 @@
           </tbody>
         </table>
       </div>
+
+      <footer class="flex flex-col-reverse gap-3 border-t border-white/10 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+        <button
+          type="button"
+          class="navbar-exit-button justify-center"
+          @click="exitGame"
+        >
+          <DoorOpenIcon class="size-5" aria-hidden="true" />
+          {{ translator("APP.EXIT") }}
+        </button>
+
+        <button
+          type="button"
+          class="navbar-restart-button justify-center"
+          @click="requestRestart"
+        >
+          <RotateCcwIcon class="size-5" aria-hidden="true" />
+          {{ translator("APP.RESTART") }}
+        </button>
+      </footer>
     </section>
   </div>
 </template>

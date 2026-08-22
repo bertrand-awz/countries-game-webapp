@@ -16,6 +16,7 @@ export class LeaveRoomUseCase extends UseCase<void, Promise<void>> {
     await this.gameRoomGateway.leaveRoom();
     this.gameEventReactionsRegistry.clearSubscriptions();
     this.notifier.dismiss(CURRENT_TURN_NOTIFICATION_ID);
+    this.soundManager.stopAllSounds();
     this.gameSessionStore.reset();
   }
 }

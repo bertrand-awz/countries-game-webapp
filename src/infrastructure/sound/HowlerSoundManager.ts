@@ -83,6 +83,19 @@ export class HowlerSoundManager implements SoundManager {
     const loopableEffect = this.loopableEffects[effectName];
     if (loopableEffect.playing()) loopableEffect.stop();
   }
+
+  stopAllSounds(): void {
+    this.backgroundMusic.stop();
+
+    Object.values(this.effects).forEach((sound) => {
+      sound.stop();
+    });
+
+    Object.values(this.loopableEffects).forEach((sound) => {
+      sound.stop();
+    });
+  }
+
   playMainThemeSound(): void {
     if (this.backgroundMusic.playing()) {
       return;

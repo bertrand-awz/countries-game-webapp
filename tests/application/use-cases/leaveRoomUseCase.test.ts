@@ -35,10 +35,11 @@ describe("LeaveRoomUseCase", () => {
   it("leaves the active room and clears the local game session", async () => {
     const gameServer = new GameServerSpy();
     const notifier = new NotifierSpy();
+    const soundManager = new SoundManagerSpy();
     const gameEventReactionsRegistry = new GameEventReactionsRegistrySpy();
     restoreDependencies = overrideAppDependencies({
       ...gameGatewaysFrom(gameServer),
-      soundManager: new SoundManagerSpy(),
+      soundManager,
       gameMapApi: new GameMapApiFake(),
       notifier,
     });
@@ -52,6 +53,7 @@ describe("LeaveRoomUseCase", () => {
     assert.equal(gameServer.hasActiveRoom(), false);
     assert.equal(gameEventReactionsRegistry.clearSubscriptionsCallCount, 1);
     assert.deepEqual(notifier.dismissedNotificationIds, ["current-turn"]);
+    assert.equal(soundManager.stopAllSoundsCallCount, 1);
     assert.equal(gameSessionStore.isConnected, false);
     assert.equal(gameSessionStore.roomId, null);
     assert.equal(gameSessionStore.playerId, null);

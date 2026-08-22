@@ -165,6 +165,7 @@
       :current-player-id="gameSessionStore.playerId"
       :translator="t"
       :request-restart="restart"
+      :exit-game="exit"
     />
   </div>
 

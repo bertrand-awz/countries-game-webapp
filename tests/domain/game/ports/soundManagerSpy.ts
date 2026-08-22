@@ -8,6 +8,7 @@ export class SoundManagerSpy implements SoundManager {
   playedEffects: SoundEffectName[] = [];
   loopedEffects: LoopableSoundEffectName[] = [];
   stoppedLoopableEffects: LoopableSoundEffectName[] = [];
+  stopAllSoundsCallCount = 0;
   mainThemePlayCount = 0;
   mainThemeVolume = 20;
   soundEffectVolume = 10;
@@ -26,6 +27,10 @@ export class SoundManagerSpy implements SoundManager {
 
   stopLoopableEffect(effectName: LoopableSoundEffectName): void {
     this.stoppedLoopableEffects.push(effectName);
+  }
+
+  stopAllSounds(): void {
+    this.stopAllSoundsCallCount++;
   }
 
   setMainThemeVolume(newVolume: number): void {
