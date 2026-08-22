@@ -174,6 +174,28 @@ describe("RegisterGameEventReactionsUseCase", () => {
     assert.deepEqual(notifier.dismissedNotificationIds, ["current-turn"]);
   });
 
+  it("highlights the country found by a player", () => {
+    const alice = createPlayer({ id: "player-1", username: "Alice" });
+    const gameServer = new GameServerSpy(createGameState({ players: [alice] }));
+    restoreDependencies = overrideAppDependencies({
+      ...gameGatewaysFrom(gameServer),
+      soundManager: new SoundManagerSpy(),
+      gameMapApi: new GameMapApiFake(),
+      notifier: new NotifierSpy(),
+    });
+    const gameSessionStore = useGameSessionStore();
+
+    new RegisterGameEventReactionsUseCase().execute();
+    gameServer.emitCountryFound({
+      countryId: "CAN",
+      foundByPlayer: alice,
+      pointsAwarded: 1,
+    });
+
+    assert.equal(gameSessionStore.highlightedCountryId, "CAN");
+    assert.deepEqual(gameSessionStore.foundCountryIds, ["CAN"]);
+  });
+
   it("notifies voters with actions when a player requests a voted game action", () => {
     const gameServer = new GameServerSpy();
     const notifier = new NotifierSpy();
@@ -284,6 +306,8 @@ describe("RegisterGameEventReactionsUseCase", () => {
     assert.equal(gameServer.gameStartedUnsubscriptionCount, 1);
     assert.equal(gameServer.turnChangedSubscriptionCount, 2);
     assert.equal(gameServer.turnChangedUnsubscriptionCount, 1);
+    assert.equal(gameServer.countryFoundSubscriptionCount, 2);
+    assert.equal(gameServer.countryFoundUnsubscriptionCount, 1);
     assert.equal(gameServer.gameActionVoteRequestedSubscriptionCount, 2);
     assert.equal(gameServer.gameActionVoteRequestedUnsubscriptionCount, 1);
     assert.equal(gameServer.gameFinishedSubscriptionCount, 2);

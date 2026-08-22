@@ -66,6 +66,10 @@
           "JOIN_ROOM_LINK_LABEL": "Joindre une partie",
           "CREATE_ROOM_QUESTION": "Souhaitez-vous créer votre salle?",
           "CREATE_ROOM_LINK_LABEL": "Créer une salle de jeu"
+        },
+        "ERRORS": {
+          "ROOM_FULL": "La salle est déjà pleine.",
+          "UNABLE_TO_CONNECT": "Impossible de rejoindre la salle."
         }
       }
     }
@@ -83,6 +87,20 @@
     "CORRECT": "Bonne réponse : {country}",
     "WRONG": "Mauvaise réponse",
     "ALREADY_FOUND": "Pays déjà trouvé : {country}",
+    "WAITING_QUEUE": {
+      "EYEBROW": "File d'attente",
+      "TITLE": "Vous serez admis à la prochaine partie",
+      "DESCRIPTION": "La partie en cours est déjà lancée. Vous restez connecté à la salle et vous serez admis automatiquement dès qu'une place sera disponible au prochain lobby.",
+      "POSITION_LABEL": "Votre position",
+      "POSITION": "{position} / {total}",
+      "ESTIMATE_LABEL": "Temps estimé",
+      "TIME_LEFT": "{minutes} min {seconds} s",
+      "LESS_THAN_ONE_MINUTE": "Moins d'une minute",
+      "NEXT_ROUND": "Admission prévue à la prochaine relance.",
+      "PLAYERS_TITLE": "Joueurs dans la file",
+      "YOU": "Vous",
+      "CREATE_ROOM": "Créer une salle"
+    },
     "SIDEBAR": {
       "SOUND_CONTROLLER": {
         "TITLE": "Gestion sonore",

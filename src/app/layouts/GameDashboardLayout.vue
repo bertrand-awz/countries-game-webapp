@@ -23,6 +23,7 @@
   import GameNavbar from "@/presentation/components/game/dashboard/GameDashboardNavbar.vue";
   import GameSidebar from "@/presentation/components/game/dashboard/GameDashboardSidebar.vue";
   import GameFinalScoreboardOverlay from "@/presentation/components/game/dashboard/GameFinalScoreboardOverlay.vue";
+  import GameWaitingQueue from "@/presentation/components/game/dashboard/GameWaitingQueue.vue";
   import GameBoard from "@/presentation/components/game/GameBoard.vue";
 
   const { soundManager } = useAppDependencies();
@@ -36,8 +37,17 @@
   const now = ref(Date.now());
   const pausedTimeLeftInSeconds = ref<number | null>(null);
 
-  const { currentPlayer, currentTurn, gameState, isCurrentPlayerTurn, roomId } =
-    storeToRefs(gameSessionStore);
+  const {
+    currentPlayer,
+    currentTurn,
+    currentWaitingPlayer,
+    foundCountryIds,
+    gameState,
+    highlightedCountryId,
+    isCurrentPlayerTurn,
+    roomId,
+    waitingPlayers,
+  } = storeToRefs(gameSessionStore);
   const timerInterval = window.setInterval(() => {
     if (gameState.value?.status === GameStatus.PLAYING) {
       now.value = Date.now();
@@ -117,6 +127,11 @@
     await router.push({ name: RouteName.HOME });
   }
 
+  async function createRoomFromQueue() {
+    await leaveRoomUseCase.execute();
+    await router.push({ name: RouteName.GAME_ROOM_CREATION });
+  }
+
   function submitCountryNameAnswer(playerAnswer: string) {
     submitCountryNameAnswerUseCase.setOptions({ countryName: playerAnswer }).execute();
   }
@@ -158,6 +173,8 @@
       :country-name-answer-submitter="submitCountryNameAnswer"
       :countries-features="gameMapStore.getCountriesFeatures"
       :answer-input-focus-token="answerInputFocusToken"
+      :highlighted-country-id="highlightedCountryId"
+      :found-country-ids="foundCountryIds"
     />
     <GameFinalScoreboardOverlay
       v-if="gameState.status === GameStatus.FINISHED"
@@ -166,6 +183,17 @@
       :translator="t"
       :request-restart="restart"
       :exit-game="exit"
+    />
+  </div>
+
+  <div v-else-if="gameState && currentWaitingPlayer" class="font-mono-app h-screen bg-black">
+    <GameWaitingQueue
+      :waiting-player="currentWaitingPlayer"
+      :waiting-players="waitingPlayers"
+      :time-left-in-seconds="timeLeftInSeconds"
+      :translator="t"
+      :create-room="createRoomFromQueue"
+      :leave-queue="exit"
     />
   </div>
 

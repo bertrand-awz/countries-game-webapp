@@ -14,9 +14,12 @@ export const useGameSessionStore = defineStore("gameSession", () => {
   const roomId = ref<string | null>(null);
   const playerId = ref<string | null>(null);
   const currentTurn = shallowRef<CurrentTurn | null>(null);
+  const highlightedCountryId = ref<string | null>(null);
+  const foundCountryIds = ref<string[]>([]);
   const isConnected = ref(false);
 
   const players = computed(() => gameState.value?.players ?? []);
+  const waitingPlayers = computed(() => gameState.value?.waitingPlayers ?? []);
   const continents = computed(() => gameState.value?.continents ?? []);
   const status = computed(() => gameState.value?.status ?? null);
   const currentPlayer = computed(() => {
@@ -24,6 +27,9 @@ export const useGameSessionStore = defineStore("gameSession", () => {
   });
   const isCurrentPlayerTurn = computed(() => {
     return currentTurn.value?.playerId === playerId.value;
+  });
+  const currentWaitingPlayer = computed(() => {
+    return waitingPlayers.value.find((player) => player.id === playerId.value) ?? null;
   });
 
   function setSession(session: { roomId: string; playerId: string }): void {
@@ -44,11 +50,34 @@ export const useGameSessionStore = defineStore("gameSession", () => {
     currentTurn.value = null;
   }
 
+  function highlightCountry(countryId: string): void {
+    highlightedCountryId.value = countryId;
+  }
+
+  function recordCountryFound(countryId: string): void {
+    if (!foundCountryIds.value.includes(countryId)) {
+      foundCountryIds.value = [...foundCountryIds.value, countryId];
+    }
+
+    highlightCountry(countryId);
+  }
+
+  function clearHighlightedCountry(): void {
+    highlightedCountryId.value = null;
+  }
+
+  function clearFoundCountries(): void {
+    foundCountryIds.value = [];
+    clearHighlightedCountry();
+  }
+
   function reset(): void {
     gameState.value = null;
     roomId.value = null;
     playerId.value = null;
     currentTurn.value = null;
+    highlightedCountryId.value = null;
+    foundCountryIds.value = [];
     isConnected.value = false;
   }
 
@@ -58,15 +87,23 @@ export const useGameSessionStore = defineStore("gameSession", () => {
     playerId,
     isConnected,
     currentTurn,
+    highlightedCountryId,
+    foundCountryIds,
     players,
+    waitingPlayers,
     continents,
     status,
     currentPlayer,
+    currentWaitingPlayer,
     isCurrentPlayerTurn,
     setSession,
     setGameState,
     setCurrentTurn,
     clearCurrentTurn,
+    highlightCountry,
+    recordCountryFound,
+    clearHighlightedCountry,
+    clearFoundCountries,
     reset,
   };
 });

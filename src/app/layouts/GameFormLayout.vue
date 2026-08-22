@@ -46,11 +46,24 @@
         name: RouteName.GAME,
       });
     } catch (error) {
-      connectionError.value =
-        error instanceof Error ? error.message : "Unable to connect to the game room.";
+      connectionError.value = getConnectionErrorMessage(error);
     } finally {
       isConnecting.value = false;
     }
+  }
+
+  function getConnectionErrorMessage(error: unknown): string {
+    if (!(error instanceof Error)) {
+      return t("VIEWS.FORMS.GAME_ROOM_LOBBYING.ERRORS.UNABLE_TO_CONNECT");
+    }
+
+    const message = error.message.toLowerCase();
+
+    if (message.includes("room_full") || message.includes("full")) {
+      return t("VIEWS.FORMS.GAME_ROOM_LOBBYING.ERRORS.ROOM_FULL");
+    }
+
+    return error.message || t("VIEWS.FORMS.GAME_ROOM_LOBBYING.ERRORS.UNABLE_TO_CONNECT");
   }
 
   function submitRoomCreationForm(roomCreationOptions: CreateRoomOptions): Promise<void> {

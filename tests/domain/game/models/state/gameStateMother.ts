@@ -1,6 +1,7 @@
 import { Player } from "@/domain/game/models/Player.ts";
 import type { FoundingContinentProgressionState } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
 import { GameState, GameStatus } from "@/domain/game/models/state/GameState.ts";
+import type { WaitingPlayer } from "@/domain/game/models/WaitingPlayer.ts";
 import type { SupportedLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
 
 type PlayerMotherOptions = {
@@ -12,6 +13,7 @@ type PlayerMotherOptions = {
 
 type GameStateMotherOptions = {
   numberOfPlayers?: number;
+  maxPlayersAllowed?: number;
   defaultLanguage?: SupportedLanguage;
   durationInSeconds?: number;
   turnDurationInSeconds?: number;
@@ -21,6 +23,7 @@ type GameStateMotherOptions = {
   continents?: FoundingContinentProgressionState[];
   allowAnswerValidationInPlayerCurrentLanguage?: boolean;
   players?: Player[];
+  waitingPlayers?: WaitingPlayer[];
 };
 
 export function createPlayer(options: PlayerMotherOptions = {}): Player {
@@ -39,6 +42,7 @@ export function createGameState(options: GameStateMotherOptions = {}): GameState
 
   return new GameState(
     options.numberOfPlayers ?? players.length,
+    options.maxPlayersAllowed ?? 4,
     options.defaultLanguage ?? "fr",
     options.durationInSeconds ?? 300,
     options.turnDurationInSeconds ?? 45,
@@ -56,5 +60,6 @@ export function createGameState(options: GameStateMotherOptions = {}): GameState
     ],
     options.allowAnswerValidationInPlayerCurrentLanguage ?? false,
     players,
+    options.waitingPlayers ?? [],
   );
 }

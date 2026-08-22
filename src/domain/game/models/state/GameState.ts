@@ -1,5 +1,6 @@
 import type { Player } from "@/domain/game/models/Player.ts";
 import type { FoundingContinentProgressionState } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
+import type { WaitingPlayer } from "@/domain/game/models/WaitingPlayer.ts";
 import type { SupportedLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
 
 export enum GameStatus {
@@ -12,6 +13,7 @@ export enum GameStatus {
 export class GameState {
   constructor(
     readonly numberOfPlayers: number,
+    readonly maxPlayersAllowed: number,
     readonly defaultLanguage: SupportedLanguage,
     readonly durationInSeconds: number,
     readonly turnDurationInSeconds: number,
@@ -21,5 +23,6 @@ export class GameState {
     readonly continents: FoundingContinentProgressionState[],
     readonly allowAnswerValidationInPlayerCurrentLanguage: boolean,
     readonly players: Player[],
+    readonly waitingPlayers: WaitingPlayer[],
   ) {}
 }

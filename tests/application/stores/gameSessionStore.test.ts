@@ -19,6 +19,7 @@ describe("gameSessionStore", () => {
     const gameState = createGameState({
       status: GameStatus.PLAYING,
       players: [alice, bob],
+      waitingPlayers: [{ id: "player-3", username: "Grace", joinedAt: 200 }],
     });
     const store = useGameSessionStore();
 
@@ -29,6 +30,7 @@ describe("gameSessionStore", () => {
     assert.equal(store.currentPlayer, bob);
     assert.equal(store.status, GameStatus.PLAYING);
     assert.deepEqual(store.players, [alice, bob]);
+    assert.equal(store.waitingPlayers[0].username, "Grace");
 
     store.setCurrentTurn({
       playerId: "player-2",
@@ -42,12 +44,19 @@ describe("gameSessionStore", () => {
       startedAt: 100,
       durationInSeconds: 45,
     });
+
+    store.recordCountryFound("FRA");
+
+    assert.equal(store.highlightedCountryId, "FRA");
+    assert.deepEqual(store.foundCountryIds, ["FRA"]);
   });
 
   it("clears the local session and derived game context when the session ends", () => {
     const store = useGameSessionStore();
     store.setSession({ roomId: "room-1", playerId: "player-1" });
     store.setGameState(createGameState());
+    store.highlightCountry("CAN");
+    store.recordCountryFound("FRA");
 
     store.reset();
 
@@ -55,7 +64,29 @@ describe("gameSessionStore", () => {
     assert.equal(store.currentPlayer, null);
     assert.equal(store.currentTurn, null);
     assert.equal(store.gameState, null);
+    assert.equal(store.highlightedCountryId, null);
+    assert.deepEqual(store.foundCountryIds, []);
     assert.deepEqual(store.players, []);
+    assert.deepEqual(store.waitingPlayers, []);
     assert.deepEqual(store.continents, []);
+  });
+
+  it("detects when the local session is waiting for the next game", () => {
+    const store = useGameSessionStore();
+
+    store.setSession({ roomId: "room-1", playerId: "player-2" });
+    store.setGameState(
+      createGameState({
+        players: [createPlayer({ id: "player-1", username: "Alice" })],
+        waitingPlayers: [{ id: "player-2", username: "Grace", joinedAt: 200 }],
+      }),
+    );
+
+    assert.equal(store.currentPlayer, null);
+    assert.deepEqual(store.currentWaitingPlayer, {
+      id: "player-2",
+      username: "Grace",
+      joinedAt: 200,
+    });
   });
 });

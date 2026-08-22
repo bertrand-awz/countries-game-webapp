@@ -66,6 +66,10 @@
           "JOIN_ROOM_LINK_LABEL": "Join room instead",
           "CREATE_ROOM_QUESTION": "Do you want your own room?",
           "CREATE_ROOM_LINK_LABEL": "Create room instead"
+        },
+        "ERRORS": {
+          "ROOM_FULL": "This room is already full.",
+          "UNABLE_TO_CONNECT": "Unable to join the room."
         }
       }
     }
@@ -83,6 +87,20 @@
     "CORRECT": "Correct answer: {country}",
     "WRONG": "Wrong answer",
     "ALREADY_FOUND": "Country already found: {country}",
+    "WAITING_QUEUE": {
+      "EYEBROW": "Waiting queue",
+      "TITLE": "You will join the next game",
+      "DESCRIPTION": "The current game has already started. You stay connected to the room and will be admitted automatically when a seat is available in the next lobby.",
+      "POSITION_LABEL": "Your position",
+      "POSITION": "{position} / {total}",
+      "ESTIMATE_LABEL": "Estimated time",
+      "TIME_LEFT": "{minutes} min {seconds} s",
+      "LESS_THAN_ONE_MINUTE": "Less than one minute",
+      "NEXT_ROUND": "Admission expected at the next restart.",
+      "PLAYERS_TITLE": "Players in queue",
+      "YOU": "You",
+      "CREATE_ROOM": "Create a room"
+    },
     "SIDEBAR": {
       "SOUND_CONTROLLER": {
         "TITLE": "Sound Management",

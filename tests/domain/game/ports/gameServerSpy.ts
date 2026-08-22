@@ -1,3 +1,4 @@
+import type { CountryFoundEvent } from "@/domain/game/events/CountryFoundEvent.ts";
 import type {
   GameActionVote,
   GameActionVoteRequestedEvent,
@@ -51,6 +52,8 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
   turnChangedUnsubscriptionCount = 0;
   gameActionVoteRequestedSubscriptionCount = 0;
   gameActionVoteRequestedUnsubscriptionCount = 0;
+  countryFoundSubscriptionCount = 0;
+  countryFoundUnsubscriptionCount = 0;
   gameFinishedSubscriptionCount = 0;
   gameFinishedUnsubscriptionCount = 0;
   sessionToReturn: GameSession = {
@@ -65,6 +68,7 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
   private gameStartedCallback: ((event: GameStartedEvent) => void) | null = null;
   private gameRestartedCallback: ((event: GameRestartedEvent) => void) | null = null;
   private turnChangedCallback: ((event: TurnChangedEvent) => void) | null = null;
+  private countryFoundCallback: ((event: CountryFoundEvent) => void) | null = null;
   private gameActionVoteRequestedCallback:
     | ((event: GameActionVoteRequestedEvent) => void)
     | null = null;
@@ -156,8 +160,14 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
     };
   }
 
-  onCountryFound(): Unsubscribe {
-    return () => {};
+  onCountryFound(callback: (event: CountryFoundEvent) => void): Unsubscribe {
+    this.countryFoundSubscriptionCount++;
+    this.countryFoundCallback = callback;
+
+    return () => {
+      this.countryFoundUnsubscriptionCount++;
+      this.countryFoundCallback = null;
+    };
   }
 
   onCountryRejected(): Unsubscribe {
@@ -237,6 +247,10 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
 
   emitTurnChanged(event: TurnChangedEvent): void {
     this.turnChangedCallback?.(event);
+  }
+
+  emitCountryFound(event: CountryFoundEvent): void {
+    this.countryFoundCallback?.(event);
   }
 
   emitGameActionVoteRequested(event: GameActionVoteRequestedEvent): void {

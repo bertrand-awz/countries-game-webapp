@@ -9,11 +9,13 @@
     defineProps<{
       countries: Country[];
       highlightedCountryId?: string | null;
+      foundCountryIds?: string[];
       width?: number;
       height?: number;
     }>(),
     {
       highlightedCountryId: null,
+      foundCountryIds: () => [],
       width: 700,
       height: 700,
     },
@@ -101,11 +103,15 @@
   }
 
   function getCountryFill(countryId: string): string {
-    if (countryId === props.highlightedCountryId) {
+    if (isCountryFound(countryId) || countryId === props.highlightedCountryId) {
       return "#facc15";
     }
 
     return "#475569";
+  }
+
+  function isCountryFound(countryId: string): boolean {
+    return props.foundCountryIds.includes(countryId);
   }
 
   function updateCountryColors(): void {
@@ -223,6 +229,14 @@
     (newCountryId) => {
       highlightCountry(newCountryId, true);
     },
+  );
+
+  watch(
+    () => props.foundCountryIds,
+    () => {
+      updateCountryColors();
+    },
+    { deep: true },
   );
 </script>
 

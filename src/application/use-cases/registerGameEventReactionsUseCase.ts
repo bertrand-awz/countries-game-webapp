@@ -49,6 +49,9 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
         });
         this.gameTurnChangedReaction.handle(event);
       }),
+      this.gameEventGateway.onCountryFound((event) => {
+        this.gameSessionStore.recordCountryFound(event.countryId);
+      }),
       this.gameEventGateway.onGameActionVoteRequested((event) => {
         this.gameActionVoteRequestedReaction.handle(event);
       }),
@@ -58,6 +61,7 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
       }),
       this.gameEventGateway.onGameRestarted(() => {
         this.gameSessionStore.clearCurrentTurn();
+        this.gameSessionStore.clearFoundCountries();
         this.gameTurnChangedReaction.clear();
       }),
     ];

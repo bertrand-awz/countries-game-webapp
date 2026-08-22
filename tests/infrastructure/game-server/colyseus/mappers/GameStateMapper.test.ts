@@ -15,6 +15,7 @@ describe("GameStateMapper", () => {
     };
     const colyseusState = {
       numberOfPlayers: 2,
+      maxPlayersAllowed: 4,
       defaultLanguage: "en",
       durationInSeconds: 600,
       turnDurationInSeconds: 45,
@@ -32,11 +33,13 @@ describe("GameStateMapper", () => {
       ],
       allowAnswerValidationInPlayerCurrentLanguage: true,
       players: [colyseusPlayer],
+      waitingPlayers: [{ id: "player-2", username: "Grace", joinedAt: 300 }],
     };
 
     const gameState = GameStateMapper.fromColyseusState(colyseusState);
 
     assert.equal(gameState.numberOfPlayers, 2);
+    assert.equal(gameState.maxPlayersAllowed, 4);
     assert.equal(gameState.defaultLanguage, "en");
     assert.equal(gameState.turnDurationInSeconds, 45);
     assert.equal(gameState.status, GameStatus.PLAYING);
@@ -56,5 +59,12 @@ describe("GameStateMapper", () => {
     assert.equal(gameState.players[0].getUsername(), "Ada");
     assert.equal(gameState.players[0].getScore(), 18);
     assert.equal(gameState.players[0].getCountriesFoundNumber(), 3);
+    assert.deepEqual(gameState.waitingPlayers, [
+      {
+        id: "player-2",
+        username: "Grace",
+        joinedAt: 300,
+      },
+    ]);
   });
 });
