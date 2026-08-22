@@ -15,6 +15,7 @@
     requestPause: () => void;
     requestResume: () => void;
     requestRestart: () => void;
+    exitGame: () => void | Promise<void>;
     startGame: () => void;
     timeLeftInSeconds: number;
   }>();
@@ -68,7 +69,11 @@
 
             <!-- Right side -->
             <div class="flex flex-1 items-center justify-end gap-3 md:gap-4">
-              <RestartAndExitButtons :translator="translator" :request-restart="requestRestart" />
+              <RestartAndExitButtons
+                :translator="translator"
+                :request-restart="requestRestart"
+                :exit-game="exitGame"
+              />
               <LanguagesMenu />
             </div>
           </div>

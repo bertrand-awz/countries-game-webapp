@@ -6,7 +6,7 @@
       buttonClass: string;
       icon: Component;
       label: string;
-      onClickCallback: () => void;
+      onClickCallback: () => void | Promise<void>;
       type?: "button" | "submit" | "reset";
       disabled?: boolean;
     }>(),

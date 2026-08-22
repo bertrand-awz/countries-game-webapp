@@ -6,9 +6,8 @@
   defineProps<{
     translator: (translationKey: string) => string;
     requestRestart: () => void;
+    exitGame: () => void | Promise<void>;
   }>();
-
-  function quitter() {}
 </script>
 
 <template>
@@ -24,7 +23,7 @@
       button-class="navbar-exit-button"
       :icon="DoorOpenIcon"
       :label="translator('APP.EXIT')"
-      :on-click-callback="quitter"
+      :on-click-callback="exitGame"
     />
   </div>
 </template>

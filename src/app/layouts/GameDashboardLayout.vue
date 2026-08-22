@@ -2,12 +2,15 @@
   import { storeToRefs } from "pinia";
   import { computed, onBeforeUnmount, ref, watch } from "vue";
   import { useI18n } from "vue-i18n";
+  import { useRouter } from "vue-router";
 
   import { useAppDependencies } from "@/app/composables/useAppDependencies.ts";
   import LoadingLayout from "@/app/layouts/LoadingLayout.vue";
+  import { RouteName } from "@/app/router/routeName.ts";
   import { useGameMapStore } from "@/application/stores/gameMapStore.ts";
   import { useGameSessionStore } from "@/application/stores/gameSessionStore.ts";
   import {
+    leaveRoomUseCase,
     requestGamePauseUseCase,
     requestGameRestartUseCase,
     requestGameResumeUseCase,
@@ -25,6 +28,7 @@
   const { soundManager } = useAppDependencies();
 
   const { t } = useI18n();
+  const router = useRouter();
   const gameMapStore = useGameMapStore();
   const gameSessionStore = useGameSessionStore();
   await gameMapStore.preload();
@@ -108,6 +112,11 @@
     requestGameRestartUseCase.execute();
   }
 
+  async function exit() {
+    await leaveRoomUseCase.execute();
+    await router.push({ name: RouteName.HOME });
+  }
+
   function submitCountryNameAnswer(playerAnswer: string) {
     submitCountryNameAnswerUseCase.setOptions({ countryName: playerAnswer }).execute();
   }
@@ -131,6 +140,7 @@
       :request-pause="pause"
       :request-resume="resume"
       :request-restart="restart"
+      :exit-game="exit"
       :start-game="start"
       :time-left-in-seconds="timeLeftInSeconds"
       @open-sidebar="sidebarOpen = true"
