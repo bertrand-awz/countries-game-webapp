@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, ref } from "vue";
+  import { computed, ref, watch } from "vue";
 
   import { GameConstraints } from "@/domain/game/constraints/gameConstraints.ts";
   import type { CreateRoomOptions } from "@/domain/game/ports/GameServer.ts";
@@ -13,9 +13,22 @@
 
   const props = defineProps<{
     toJoinRoomRedirection: () => void;
-    translator: (translationKey: string) => string;
+    translator: (translationKey: string, values?: Record<string, string | number>) => string;
     onSubmitRoomCreationFormCallback: (createRoomOptions: CreateRoomOptions) => Promise<void>;
+    isSubmitting: boolean;
+    submissionError: string | null;
+    clearSubmissionError: () => void;
   }>();
+
+  type FieldErrors = {
+    username?: string;
+    gameLanguage?: string;
+    maxPlayers?: string;
+    gameDuration?: string;
+    turnDurationInSeconds?: string;
+  };
+
+  const USERNAME_MIN_LENGTH = 2;
 
   const username = ref("");
   const gameLanguage = ref("fr");
@@ -23,6 +36,7 @@
   const gameDuration = ref(3);
   const turnDurationInSeconds = ref(GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.default);
   const freedomOfLanguage = ref(true);
+  const fieldErrors = ref<FieldErrors>({});
 
   const languageOptions = computed<SelectOption[]>(() => [
     {
@@ -35,12 +49,21 @@
     },
   ]);
 
+  watch([username, gameLanguage, maxPlayers, gameDuration, turnDurationInSeconds], () => {
+    props.clearSubmissionError();
+
+    if (Object.keys(fieldErrors.value).length > 0) {
+      validate();
+    }
+  });
+
   function submit(): void {
     const trimmedUsername = username.value.trim();
 
-    if (!trimmedUsername) {
+    if (!validate()) {
       return;
     }
+
     props.onSubmitRoomCreationFormCallback({
       username: trimmedUsername,
       gameDurationInSeconds: gameDuration.value * 60,
@@ -48,6 +71,66 @@
       maxPlayersAllowed: maxPlayers.value,
       gameLanguage: gameLanguage.value,
     });
+  }
+
+  function validate(): boolean {
+    const nextErrors: FieldErrors = {};
+    const trimmedUsername = username.value.trim();
+
+    if (!trimmedUsername) {
+      nextErrors.username = props.translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.VALIDATION.REQUIRED");
+    } else if (trimmedUsername.length < USERNAME_MIN_LENGTH) {
+      nextErrors.username = props.translator(
+        "VIEWS.FORMS.GAME_ROOM_LOBBYING.VALIDATION.USERNAME_MIN_LENGTH",
+        {
+          min: USERNAME_MIN_LENGTH,
+        },
+      );
+    }
+
+    if (!gameLanguage.value) {
+      nextErrors.gameLanguage = props.translator(
+        "VIEWS.FORMS.GAME_ROOM_LOBBYING.VALIDATION.REQUIRED",
+      );
+    }
+
+    if (!isIntegerInRange(maxPlayers.value, GameConstraints.ALLOWED_PLAYERS_NUMBER)) {
+      nextErrors.maxPlayers = props.translator(
+        "VIEWS.FORMS.GAME_ROOM_LOBBYING.VALIDATION.NUMBER_RANGE",
+        toTranslationRange(GameConstraints.ALLOWED_PLAYERS_NUMBER),
+      );
+    }
+
+    if (!isIntegerInRange(gameDuration.value, GameConstraints.ALLOWED_TIME_IN_MINUTES)) {
+      nextErrors.gameDuration = props.translator(
+        "VIEWS.FORMS.GAME_ROOM_LOBBYING.VALIDATION.NUMBER_RANGE",
+        toTranslationRange(GameConstraints.ALLOWED_TIME_IN_MINUTES),
+      );
+    }
+
+    if (
+      !isIntegerInRange(turnDurationInSeconds.value, GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS)
+    ) {
+      nextErrors.turnDurationInSeconds = props.translator(
+        "VIEWS.FORMS.GAME_ROOM_LOBBYING.VALIDATION.NUMBER_RANGE",
+        toTranslationRange(GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS),
+      );
+    }
+
+    fieldErrors.value = nextErrors;
+
+    return Object.keys(nextErrors).length === 0;
+  }
+
+  function isIntegerInRange(value: number, range: { min: number; max: number }): boolean {
+    return Number.isInteger(value) && value >= range.min && value <= range.max;
+  }
+
+  function toTranslationRange(range: { min: number; max: number }): Record<string, number> {
+    return {
+      min: range.min,
+      max: range.max,
+    };
   }
 </script>
 
@@ -67,6 +150,14 @@
       </div>
 
       <form class="mt-8 space-y-5" @submit.prevent="submit">
+        <p
+          v-if="submissionError"
+          role="alert"
+          class="rounded-lg border border-red-400/30 bg-red-400/10 px-3 py-2 text-sm text-red-100"
+        >
+          {{ submissionError }}
+        </p>
+
         <LabeledTextInput
           id="username"
           v-model="username"
@@ -76,6 +167,8 @@
             translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.USERNAME_PLACEHOLDER')
           "
           autocomplete="off"
+          :disabled="isSubmitting"
+          :error="fieldErrors.username"
         />
 
         <LabeledSelectionInput
@@ -84,6 +177,8 @@
           :label="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_LABELS.GAME_LANGUAGE')"
           :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.GAME_LANGUAGE')"
           :options="languageOptions"
+          :disabled="isSubmitting"
+          :error="fieldErrors.gameLanguage"
         />
 
         <LabeledNumberInput
@@ -93,6 +188,8 @@
           :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.MAX_PLAYER')"
           :min="GameConstraints.ALLOWED_PLAYERS_NUMBER.min"
           :max="GameConstraints.ALLOWED_PLAYERS_NUMBER.max"
+          :disabled="isSubmitting"
+          :error="fieldErrors.maxPlayers"
         />
 
         <LabeledNumberInput
@@ -102,6 +199,8 @@
           :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.GAME_DURATION')"
           :min="GameConstraints.ALLOWED_TIME_IN_MINUTES.min"
           :max="GameConstraints.ALLOWED_TIME_IN_MINUTES.max"
+          :disabled="isSubmitting"
+          :error="fieldErrors.gameDuration"
         />
 
         <LabeledNumberInput
@@ -111,6 +210,8 @@
           :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.TURN_DURATION')"
           :min="GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.min"
           :max="GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.max"
+          :disabled="isSubmitting"
+          :error="fieldErrors.turnDurationInSeconds"
         />
 
         <LabeledCheckboxInput
@@ -121,13 +222,19 @@
           :description="
             translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.FREEDOM_OF_LANGUAGE')
           "
+          :disabled="isSubmitting"
         />
 
         <button
           type="submit"
-          class="flex w-full justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+          :disabled="isSubmitting"
+          class="flex w-full justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {{ translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.BUTTONS.CREATE_ROOM") }}
+          {{
+            isSubmitting
+              ? translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.BUTTONS.SUBMITTING")
+              : translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.BUTTONS.CREATE_ROOM")
+          }}
         </button>
       </form>
 

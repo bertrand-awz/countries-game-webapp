@@ -58,8 +58,9 @@
           "FREEDOM_OF_LANGUAGE": "Permet au serveur d'accepter les réponses dans les langues choisies par les joueurs."
         },
         "BUTTONS": {
-          "CREATE_ROOM": "Create a room",
-          "JOIN_ROOM": "Join a room"
+          "CREATE_ROOM": "Créer une salle",
+          "JOIN_ROOM": "Joindre la salle",
+          "SUBMITTING": "Connexion..."
         },
         "BOTTOM_TEXTS": {
           "JOIN_ROOM_QUESTION": "Souhaitez-vous vous joindre à une partie?",
@@ -68,8 +69,16 @@
           "CREATE_ROOM_LINK_LABEL": "Créer une salle de jeu"
         },
         "ERRORS": {
-          "ROOM_FULL": "La salle est déjà pleine.",
-          "UNABLE_TO_CONNECT": "Impossible de rejoindre la salle."
+          "ROOM_LOCKED": "Cette salle est verrouillée",
+          "ROOM_LOCKED_JOIN_ADVICE": "Elle a atteint le nombre maximal d'utilisateurs autorisés; vous ne pouvez pas la rejoindre. Utilisez le lien ci-dessous pour créer votre propre salle de jeu et inviter d'autres joueurs.",
+          "ROOM_FULL": "La salle est déjà pleine",
+          "UNABLE_TO_CONNECT": "Impossible de rejoindre la salle",
+          "JOIN_CREATE_ROOM_ADVICE": "Vous pouvez vérifier l'identifiant de la salle ou créer votre propre salle pour lancer une nouvelle partie."
+        },
+        "VALIDATION": {
+          "REQUIRED": "Ce champ est requis.",
+          "USERNAME_MIN_LENGTH": "Le nom d'utilisateur doit contenir au moins {min} caractères.",
+          "NUMBER_RANGE": "La valeur doit être un nombre entier entre {min} et {max}."
         }
       }
     }

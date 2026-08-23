@@ -59,7 +59,8 @@
         },
         "BUTTONS": {
           "CREATE_ROOM": "Create a room",
-          "JOIN_ROOM": "Join a room"
+          "JOIN_ROOM": "Join room",
+          "SUBMITTING": "Connecting..."
         },
         "BOTTOM_TEXTS": {
           "JOIN_ROOM_QUESTION": "Do you want to join your friends?",
@@ -68,8 +69,16 @@
           "CREATE_ROOM_LINK_LABEL": "Create room instead"
         },
         "ERRORS": {
-          "ROOM_FULL": "This room is already full.",
-          "UNABLE_TO_CONNECT": "Unable to join the room."
+          "ROOM_LOCKED": "This room is locked",
+          "ROOM_LOCKED_JOIN_ADVICE": "It has reached the maximum number of allowed users, so you cannot join it. Use the link below to create your own game room and invite other players.",
+          "ROOM_FULL": "This room is already full",
+          "UNABLE_TO_CONNECT": "Unable to join the room",
+          "JOIN_CREATE_ROOM_ADVICE": "You can check the room ID or create your own room to start a new game."
+        },
+        "VALIDATION": {
+          "REQUIRED": "This field is required",
+          "USERNAME_MIN_LENGTH": "Username must contain at least {min} characters.",
+          "NUMBER_RANGE": "Value must be an integer between {min} and {max}."
         }
       }
     }

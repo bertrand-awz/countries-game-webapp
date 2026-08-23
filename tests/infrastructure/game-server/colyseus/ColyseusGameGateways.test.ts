@@ -3,7 +3,9 @@ import { describe, it } from "node:test";
 
 import type { GameActionVoteRequestedEvent } from "@/domain/game/events/GameActionVoteRequestedEvent.ts";
 import type { GameFinishedEvent } from "@/domain/game/events/GameFinishedEvent.ts";
+import type { GamePausedEvent } from "@/domain/game/events/GamePausedEvent.ts";
 import type { GameRestartedEvent } from "@/domain/game/events/GameRestartedEvent.ts";
+import type { GameResumedEvent } from "@/domain/game/events/GameResumedEvent.ts";
 import type { GameStartedEvent } from "@/domain/game/events/GameStartedEvent.ts";
 import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEvent.ts";
 import type { PlayerLeftRoomEvent } from "@/domain/game/events/PlayerLeftRoomEvent.ts";
@@ -131,6 +133,8 @@ describe("Colyseus game gateways", () => {
     let playerLeftEvent: PlayerLeftRoomEvent | null = null;
     let turnChangedEvent: TurnChangedEvent | null = null;
     let gameStartedEvent: GameStartedEvent | null = null;
+    let gamePausedEvent: GamePausedEvent | null = null;
+    let gameResumedEvent: GameResumedEvent | null = null;
     let gameRestartedEvent: GameRestartedEvent | null = null;
     let voteRequestedEvent: GameActionVoteRequestedEvent | null = null;
     let gameFinishedEvent: GameFinishedEvent | null = null;
@@ -157,6 +161,12 @@ describe("Colyseus game gateways", () => {
     });
     events.onGameStarted((event) => {
       gameStartedEvent = event;
+    });
+    events.onGamePaused((event) => {
+      gamePausedEvent = event;
+    });
+    events.onGameResumed((event) => {
+      gameResumedEvent = event;
     });
     events.onGameRestarted((event) => {
       gameRestartedEvent = event;
@@ -193,6 +203,15 @@ describe("Colyseus game gateways", () => {
       durationInSeconds: 300,
       currentPlayerSessionId: "player-1",
       startedBy: "player-2",
+    });
+    handlers.get(GameRoomMessage.GAME_PAUSED)?.({
+      pausedAt: 200,
+      pausedBy: "player-2",
+    });
+    handlers.get(GameRoomMessage.GAME_RESUMED)?.({
+      resumedAt: 220,
+      endAt: 330,
+      resumedBy: "player-1",
     });
     handlers.get(GameRoomMessage.GAME_RESTARTED)?.({
       restartedAt: 500,
@@ -233,6 +252,15 @@ describe("Colyseus game gateways", () => {
       durationInSeconds: 300,
       currentPlayerId: "player-1",
       startedByPlayerId: "player-2",
+    });
+    assert.deepEqual(gamePausedEvent, {
+      pausedAt: 200,
+      pausedByPlayerId: "player-2",
+    });
+    assert.deepEqual(gameResumedEvent, {
+      resumedAt: 220,
+      endAt: 330,
+      resumedByPlayerId: "player-1",
     });
     assert.deepEqual(gameRestartedEvent, {
       restartedAt: 500,

@@ -5,7 +5,9 @@ import type {
   GameActionVoteRequestedEvent,
 } from "@/domain/game/events/GameActionVoteRequestedEvent.ts";
 import type { GameFinishedEvent } from "@/domain/game/events/GameFinishedEvent.ts";
+import type { GamePausedEvent } from "@/domain/game/events/GamePausedEvent.ts";
 import type { GameRestartedEvent } from "@/domain/game/events/GameRestartedEvent.ts";
+import type { GameResumedEvent } from "@/domain/game/events/GameResumedEvent.ts";
 import type { GameStartedEvent } from "@/domain/game/events/GameStartedEvent.ts";
 import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEvent.ts";
 import type { PlayerLeftRoomEvent } from "@/domain/game/events/PlayerLeftRoomEvent.ts";
@@ -95,6 +97,25 @@ export class ColyseusGameEventGateway implements GameEventGateway {
         durationInSeconds: message.durationInSeconds,
         currentPlayerId: message.currentPlayerSessionId,
         startedByPlayerId: message.startedBy,
+      });
+    });
+  }
+
+  onGamePaused(callback: (event: GamePausedEvent) => void): Unsubscribe {
+    return this.roomGateway.getActiveRoom().onMessage(GameRoomMessage.GAME_PAUSED, (message) => {
+      callback({
+        pausedAt: message.pausedAt,
+        pausedByPlayerId: message.pausedBy,
+      });
+    });
+  }
+
+  onGameResumed(callback: (event: GameResumedEvent) => void): Unsubscribe {
+    return this.roomGateway.getActiveRoom().onMessage(GameRoomMessage.GAME_RESUMED, (message) => {
+      callback({
+        resumedAt: message.resumedAt,
+        endAt: message.endAt,
+        resumedByPlayerId: message.resumedBy,
       });
     });
   }

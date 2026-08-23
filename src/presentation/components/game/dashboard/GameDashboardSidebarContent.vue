@@ -33,7 +33,7 @@
         :translator="translator"
         :room-id="roomId"
         :game-duration-in-minutes="Math.round(gameState.durationInSeconds / 60)"
-        :players-count="gameState.numberOfPlayers"
+        :max-players-allowed="gameState.maxPlayersAllowed"
         :turn-duration-in-seconds="gameState.turnDurationInSeconds"
         :apply-setting-callback="applySettingCallback"
       />

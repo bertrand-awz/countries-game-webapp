@@ -13,7 +13,7 @@ export class UpdateRoomSettingsUseCase extends UseCase<GameSetting, void> {
     }
 
     this.gameCommandGateway.updateRoomSettings({
-      maxPlayersAllowed: this.options.numPlayers,
+      maxPlayersAllowed: this.options.maxPlayersAllowed,
       gameDurationInSeconds: this.options.durationInMinutes * 60,
       turnDurationInSeconds: this.options.turnDurationInSeconds,
     });

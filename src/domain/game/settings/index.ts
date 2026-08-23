@@ -1,5 +1,5 @@
 export type GameSetting = {
-  numPlayers: number;
+  maxPlayersAllowed: number;
   durationInMinutes: number;
   turnDurationInSeconds: number;
 };

@@ -126,6 +126,10 @@ describe("RegisterGameEventReactionsUseCase", () => {
       turnDurationInSeconds: 45,
       turnStartedAt: 55,
     });
+    gameServer.emitGamePaused({
+      pausedAt: 60,
+      pausedByPlayerId: "player-2",
+    });
     gameServer.emitGameFinished();
 
     assert.deepEqual(notifier.notifications, [
@@ -171,7 +175,7 @@ describe("RegisterGameEventReactionsUseCase", () => {
         },
       },
     ]);
-    assert.deepEqual(notifier.dismissedNotificationIds, ["current-turn"]);
+    assert.deepEqual(notifier.dismissedNotificationIds, ["current-turn", "current-turn"]);
   });
 
   it("highlights the country found by a player", () => {
@@ -304,6 +308,10 @@ describe("RegisterGameEventReactionsUseCase", () => {
     assert.equal(gameServer.playerLeftRoomUnsubscriptionCount, 1);
     assert.equal(gameServer.gameStartedSubscriptionCount, 2);
     assert.equal(gameServer.gameStartedUnsubscriptionCount, 1);
+    assert.equal(gameServer.gamePausedSubscriptionCount, 2);
+    assert.equal(gameServer.gamePausedUnsubscriptionCount, 1);
+    assert.equal(gameServer.gameResumedSubscriptionCount, 2);
+    assert.equal(gameServer.gameResumedUnsubscriptionCount, 1);
     assert.equal(gameServer.turnChangedSubscriptionCount, 2);
     assert.equal(gameServer.turnChangedUnsubscriptionCount, 1);
     assert.equal(gameServer.countryFoundSubscriptionCount, 2);

@@ -4,7 +4,9 @@ import type {
   GameActionVoteRequestedEvent,
 } from "@/domain/game/events/GameActionVoteRequestedEvent.ts";
 import type { GameFinishedEvent } from "@/domain/game/events/GameFinishedEvent.ts";
+import type { GamePausedEvent } from "@/domain/game/events/GamePausedEvent.ts";
 import type { GameRestartedEvent } from "@/domain/game/events/GameRestartedEvent.ts";
+import type { GameResumedEvent } from "@/domain/game/events/GameResumedEvent.ts";
 import type { GameStartedEvent } from "@/domain/game/events/GameStartedEvent.ts";
 import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEvent.ts";
 import type { PlayerLeftRoomEvent } from "@/domain/game/events/PlayerLeftRoomEvent.ts";
@@ -46,6 +48,10 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
   playerLeftRoomUnsubscriptionCount = 0;
   gameStartedSubscriptionCount = 0;
   gameStartedUnsubscriptionCount = 0;
+  gamePausedSubscriptionCount = 0;
+  gamePausedUnsubscriptionCount = 0;
+  gameResumedSubscriptionCount = 0;
+  gameResumedUnsubscriptionCount = 0;
   gameRestartedSubscriptionCount = 0;
   gameRestartedUnsubscriptionCount = 0;
   turnChangedSubscriptionCount = 0;
@@ -66,6 +72,8 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
   private playerJoinRoomCallback: ((event: PlayerJoinRoomEvent) => void) | null = null;
   private playerLeftRoomCallback: ((event: PlayerLeftRoomEvent) => void) | null = null;
   private gameStartedCallback: ((event: GameStartedEvent) => void) | null = null;
+  private gamePausedCallback: ((event: GamePausedEvent) => void) | null = null;
+  private gameResumedCallback: ((event: GameResumedEvent) => void) | null = null;
   private gameRestartedCallback: ((event: GameRestartedEvent) => void) | null = null;
   private turnChangedCallback: ((event: TurnChangedEvent) => void) | null = null;
   private countryFoundCallback: ((event: CountryFoundEvent) => void) | null = null;
@@ -194,6 +202,26 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
     };
   }
 
+  onGamePaused(callback: (event: GamePausedEvent) => void): Unsubscribe {
+    this.gamePausedSubscriptionCount++;
+    this.gamePausedCallback = callback;
+
+    return () => {
+      this.gamePausedUnsubscriptionCount++;
+      this.gamePausedCallback = null;
+    };
+  }
+
+  onGameResumed(callback: (event: GameResumedEvent) => void): Unsubscribe {
+    this.gameResumedSubscriptionCount++;
+    this.gameResumedCallback = callback;
+
+    return () => {
+      this.gameResumedUnsubscriptionCount++;
+      this.gameResumedCallback = null;
+    };
+  }
+
   onGameRestarted(callback: (event: GameRestartedEvent) => void): Unsubscribe {
     this.gameRestartedSubscriptionCount++;
     this.gameRestartedCallback = callback;
@@ -239,6 +267,14 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
 
   emitGameStarted(event: GameStartedEvent): void {
     this.gameStartedCallback?.(event);
+  }
+
+  emitGamePaused(event: GamePausedEvent): void {
+    this.gamePausedCallback?.(event);
+  }
+
+  emitGameResumed(event: GameResumedEvent): void {
+    this.gameResumedCallback?.(event);
   }
 
   emitGameRestarted(event: GameRestartedEvent): void {

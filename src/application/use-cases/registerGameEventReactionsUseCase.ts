@@ -41,6 +41,10 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
           this.findPlayerUsername(event.startedByPlayerId),
         );
       }),
+      this.gameEventGateway.onGamePaused(() => {
+        this.gameTurnChangedReaction.clear();
+      }),
+      this.gameEventGateway.onGameResumed(() => {}),
       this.gameEventGateway.onTurnChanged((event) => {
         this.gameSessionStore.setCurrentTurn({
           playerId: event.currentPlayer.getId(),

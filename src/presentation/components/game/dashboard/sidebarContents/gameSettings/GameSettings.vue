@@ -22,7 +22,7 @@
     translator: (translationKey: string) => string;
     roomId: string | null;
     gameDurationInMinutes: number;
-    playersCount: number;
+    maxPlayersAllowed: number;
     turnDurationInSeconds: number;
     applySettingCallback: (newSettings: GameSetting) => void;
   }>();
@@ -34,7 +34,7 @@
   const copiedItem = ref<CopiedItem | null>(null);
   let copiedFeedbackTimeoutId: number | null = null;
 
-  const playersCount = ref(props.playersCount);
+  const maxPlayersAllowed = ref(props.maxPlayersAllowed);
   const timerMinutes = ref(props.gameDurationInMinutes);
   const turnDurationInSeconds = ref(props.turnDurationInSeconds);
 
@@ -52,7 +52,7 @@
   });
 
   function openSettingsModal() {
-    playersCount.value = props.playersCount;
+    maxPlayersAllowed.value = props.maxPlayersAllowed;
     timerMinutes.value = props.gameDurationInMinutes;
     turnDurationInSeconds.value = props.turnDurationInSeconds;
     isSettingsOpen.value = true;
@@ -64,7 +64,7 @@
 
   function applySettings() {
     const newSettings = {
-      numPlayers: playersCount.value,
+      maxPlayersAllowed: maxPlayersAllowed.value,
       durationInMinutes: timerMinutes.value,
       turnDurationInSeconds: turnDurationInSeconds.value,
     };
@@ -253,7 +253,7 @@
           </div>
 
           <InputRangeSlider
-            v-model:input-value="playersCount"
+            v-model:input-value="maxPlayersAllowed"
             :label="translator('GAME.SIDEBAR.SETTINGS.MODAL.MAX_PLAYERS_ALLOWED')"
             label-class="text-sm font-normal"
             :icon-component="UsersRoundIcon"

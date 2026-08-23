@@ -28,7 +28,7 @@ describe("UpdateRoomSettingsUseCase", () => {
 
     new UpdateRoomSettingsUseCase()
       .setOptions({
-        numPlayers: 4,
+        maxPlayersAllowed: 4,
         durationInMinutes: 3,
         turnDurationInSeconds: 45,
       })

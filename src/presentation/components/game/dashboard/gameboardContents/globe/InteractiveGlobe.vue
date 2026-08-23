@@ -21,10 +21,6 @@
     },
   );
 
-  const emit = defineEmits<{
-    "update:highlightedCountryId": [countryId: string | null];
-  }>();
-
   const svgElement = ref<SVGSVGElement | null>(null);
 
   let projection: GeoProjection;
@@ -57,7 +53,7 @@
     svg
       .attr("viewBox", `0 0 ${width} ${height}`)
       .attr("role", "img")
-      .attr("aria-label", "Interactive world globe");
+      .attr("aria-label", "World globe");
 
     svg
       .append("circle")
@@ -71,7 +67,6 @@
     globeGroup = svg.append("g");
 
     renderCountries();
-    enableDragRotation();
 
     if (props.highlightedCountryId) {
       highlightCountry(props.highlightedCountryId, false);
@@ -86,20 +81,7 @@
       .attr("d", pathGenerator)
       .attr("fill", (country) => getCountryFill(getCountryId(country)))
       .attr("stroke", "#1e293b")
-      .attr("stroke-width", 0.5)
-      .attr("cursor", "pointer")
-      .on("click", (_event, country) => {
-        const countryId = getCountryId(country);
-
-        emit("update:highlightedCountryId", countryId);
-        highlightCountry(countryId, true);
-      })
-      .on("mouseenter", function () {
-        d3.select(this).attr("fill", "#818cf8");
-      })
-      .on("mouseleave", function (_event, country) {
-        d3.select(this).attr("fill", getCountryFill(getCountryId(country)));
-      });
+      .attr("stroke-width", 0.5);
   }
 
   function getCountryFill(countryId: string): string {
@@ -183,33 +165,6 @@
       .transition()
       .duration(250)
       .attr("stroke-width", 1.5);
-  }
-
-  function enableDragRotation(): void {
-    let previousX = 0;
-    let previousY = 0;
-
-    const dragBehavior = d3
-      .drag<SVGSVGElement, unknown>()
-      .on("start", (event) => {
-        previousX = event.x;
-        previousY = event.y;
-      })
-      .on("drag", (event) => {
-        const rotation = projection.rotate();
-
-        const deltaX = event.x - previousX;
-        const deltaY = event.y - previousY;
-
-        projection.rotate([rotation[0] + deltaX * 0.35, rotation[1] - deltaY * 0.35, rotation[2]]);
-
-        previousX = event.x;
-        previousY = event.y;
-
-        countryPaths.attr("d", pathGenerator);
-      });
-
-    svg.call(dragBehavior);
   }
 
   onMounted(() => {

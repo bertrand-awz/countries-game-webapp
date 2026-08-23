@@ -5,7 +5,9 @@ import type {
   GameActionVoteRequestedEvent,
 } from "@/domain/game/events/GameActionVoteRequestedEvent.ts";
 import type { GameFinishedEvent } from "@/domain/game/events/GameFinishedEvent.ts";
+import type { GamePausedEvent } from "@/domain/game/events/GamePausedEvent.ts";
 import type { GameRestartedEvent } from "@/domain/game/events/GameRestartedEvent.ts";
+import type { GameResumedEvent } from "@/domain/game/events/GameResumedEvent.ts";
 import type { GameStartedEvent } from "@/domain/game/events/GameStartedEvent.ts";
 import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEvent.ts";
 import type { PlayerLeftRoomEvent } from "@/domain/game/events/PlayerLeftRoomEvent.ts";
@@ -64,6 +66,8 @@ export interface GameEventGateway {
   onCountryRejected(callback: (event: CountryRejectedEvent) => void): Unsubscribe;
   onTurnChanged(callback: (event: TurnChangedEvent) => void): Unsubscribe;
   onGameStarted(callback: (event: GameStartedEvent) => void): Unsubscribe;
+  onGamePaused(callback: (event: GamePausedEvent) => void): Unsubscribe;
+  onGameResumed(callback: (event: GameResumedEvent) => void): Unsubscribe;
   onGameRestarted(callback: (event: GameRestartedEvent) => void): Unsubscribe;
   onGameActionVoteRequested(callback: (event: GameActionVoteRequestedEvent) => void): Unsubscribe;
   onGameFinished(callback: (event: GameFinishedEvent) => void): Unsubscribe;
