@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { Dialog, DialogPanel, TransitionChild, TransitionRoot } from "@headlessui/vue";
 
+  import type { Player } from "@/domain/game/models/Player.ts";
   import type { GameState } from "@/domain/game/models/state/GameState.ts";
   import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
   import type { GameSetting } from "@/domain/game/settings";
@@ -10,6 +11,7 @@
   defineProps<{
     open: boolean;
     roomId: string | null;
+    currentPlayer: Player;
     translator: (translationKey: string) => string;
     soundManager: SoundManager;
     applySettingCallback: (newSettings: GameSetting) => void;
@@ -68,6 +70,7 @@
             <GameDashboardSidebarContent
               class="navbar border-r"
               :game-state="gameState"
+              :current-player="currentPlayer"
               :room-id="roomId"
               :sound-manager="soundManager"
               :apply-setting-callback="applySettingCallback"
@@ -84,6 +87,7 @@
     <GameDashboardSidebarContent
       class="navbar border-r"
       :game-state="gameState"
+      :current-player="currentPlayer"
       :room-id="roomId"
       :sound-manager="soundManager"
       :apply-setting-callback="applySettingCallback"

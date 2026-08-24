@@ -44,6 +44,7 @@
     foundCountryIds,
     gameState,
     highlightedCountryId,
+    isConnected,
     isCurrentPlayerTurn,
     roomId,
     waitingPlayers,
@@ -76,12 +77,12 @@
     return calculateTimeLeftInSeconds(state.endAt);
   });
 
+  const canCurrentPlayerAnswer = computed(() => {
+    return isCurrentPlayerTurn.value && gameState.value?.status === GameStatus.PLAYING;
+  });
+
   const answerInputFocusToken = computed(() => {
-    if (
-      !isCurrentPlayerTurn.value ||
-      gameState.value?.status !== GameStatus.PLAYING ||
-      !currentTurn.value
-    ) {
+    if (!canCurrentPlayerAnswer.value || !currentTurn.value) {
       return "";
     }
 
@@ -101,6 +102,12 @@
     },
     { immediate: true },
   );
+
+  watch(isConnected, (connected, wasConnected) => {
+    if (!connected && wasConnected) {
+      void router.push({ name: RouteName.HOME });
+    }
+  });
 
   onBeforeUnmount(() => {
     window.clearInterval(timerInterval);
@@ -133,6 +140,10 @@
   }
 
   function submitCountryNameAnswer(playerAnswer: string) {
+    if (!canCurrentPlayerAnswer.value) {
+      return;
+    }
+
     submitCountryNameAnswerUseCase.setOptions({ countryName: playerAnswer }).execute();
   }
 
@@ -163,6 +174,7 @@
     <GameSidebar
       v-model:open="sidebarOpen"
       :game-state="gameState"
+      :current-player="currentPlayer"
       :room-id="roomId"
       :translator="t"
       :sound-manager="soundManager"
@@ -172,6 +184,7 @@
     <GameBoard
       :country-name-answer-submitter="submitCountryNameAnswer"
       :countries-features="gameMapStore.getCountriesFeatures"
+      :can-answer="canCurrentPlayerAnswer"
       :answer-input-focus-token="answerInputFocusToken"
       :highlighted-country-id="highlightedCountryId"
       :found-country-ids="foundCountryIds"

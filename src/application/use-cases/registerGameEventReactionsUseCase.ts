@@ -1,6 +1,9 @@
 import { GameActionVoteRequestedReaction } from "@/application/reactions/game/GameActionVoteRequestedReaction.ts";
 import { GameRoomNotificationReaction } from "@/application/reactions/game/GameRoomNotificationReaction.ts";
-import { GameTurnChangedReaction } from "@/application/reactions/game/GameTurnChangedReaction.ts";
+import {
+  CURRENT_TURN_NOTIFICATION_ID,
+  GameTurnChangedReaction,
+} from "@/application/reactions/game/GameTurnChangedReaction.ts";
 import type { Unsubscribe } from "@/domain/game/ports/GameServer.ts";
 
 import { UseCase } from "./useCase.ts";
@@ -18,6 +21,9 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
       this.notifier,
       this.gameCommandGateway,
       () => this.gameSessionStore.playerId,
+      () => {
+        void this.leaveRoomAfterDecliningRestart();
+      },
     );
     this.gameTurnChangedReaction = new GameTurnChangedReaction(
       this.notifier,
@@ -30,12 +36,24 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
 
     this.unsubscriptions = [
       this.gameEventGateway.onPlayerJoinRoom((event) => {
+        if (this.isCurrentPlayerWaiting()) {
+          return;
+        }
+
         this.gameRoomNotificationReaction.handlePlayerJoinRoom(event);
       }),
       this.gameEventGateway.onPlayerLeftRoom((event) => {
+        if (this.isCurrentPlayerWaiting()) {
+          return;
+        }
+
         this.gameRoomNotificationReaction.handlePlayerLeftRoom(event);
       }),
       this.gameEventGateway.onGameStarted((event) => {
+        if (this.isCurrentPlayerWaiting()) {
+          return;
+        }
+
         this.gameRoomNotificationReaction.handleGameStarted(
           event,
           this.findPlayerUsername(event.startedByPlayerId),
@@ -46,6 +64,10 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
       }),
       this.gameEventGateway.onGameResumed(() => {}),
       this.gameEventGateway.onTurnChanged((event) => {
+        if (this.isCurrentPlayerWaiting()) {
+          return;
+        }
+
         this.gameSessionStore.setCurrentTurn({
           playerId: event.currentPlayer.getId(),
           startedAt: event.turnStartedAt,
@@ -54,9 +76,17 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
         this.gameTurnChangedReaction.handle(event);
       }),
       this.gameEventGateway.onCountryFound((event) => {
+        if (this.isCurrentPlayerWaiting()) {
+          return;
+        }
+
         this.gameSessionStore.recordCountryFound(event.countryId);
       }),
       this.gameEventGateway.onGameActionVoteRequested((event) => {
+        if (this.isCurrentPlayerWaiting()) {
+          return;
+        }
+
         this.gameActionVoteRequestedReaction.handle(event);
       }),
       this.gameEventGateway.onGameFinished(() => {
@@ -85,5 +115,18 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
       this.gameSessionStore.players.find((player) => player.getId() === playerId)?.getUsername() ??
       null
     );
+  }
+
+  private isCurrentPlayerWaiting(): boolean {
+    return this.gameSessionStore.currentWaitingPlayer !== null;
+  }
+
+  private async leaveRoomAfterDecliningRestart(): Promise<void> {
+    await this.gameRoomGateway.leaveRoom();
+    this.clearSubscriptions();
+    this.gameTurnChangedReaction.clear();
+    this.notifier.dismiss(CURRENT_TURN_NOTIFICATION_ID);
+    this.soundManager.stopAllSounds();
+    this.gameSessionStore.reset();
   }
 }

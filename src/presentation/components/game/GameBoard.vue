@@ -7,6 +7,7 @@
   defineProps<{
     countryNameAnswerSubmitter: (playerAnswer: string) => void;
     countriesFeatures: Country[];
+    canAnswer: boolean;
     answerInputFocusToken: string;
     highlightedCountryId: string | null;
     foundCountryIds: string[];
@@ -17,6 +18,7 @@
   <section class="game-board">
     <CountryNameAnswerInputForm
       :on-submit-callback="countryNameAnswerSubmitter"
+      :is-active="canAnswer"
       :focus-token="answerInputFocusToken"
     />
     <div class="game-board-map">

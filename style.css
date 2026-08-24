@@ -184,6 +184,10 @@
     @apply flex min-h-7 items-center text-center tracking-wider;
   }
 
+  .answer-input-taker-hidden {
+    @apply invisible pointer-events-none;
+  }
+
   .cyber-cursor {
     @apply ml-1 inline-block font-extrabold text-neutral-300;
     animation: cyber-cursor 0.28s steps(1, end) infinite;

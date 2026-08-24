@@ -183,8 +183,8 @@
           "MESSAGE": "{username} wants to resume the game."
         },
         "RESTART": {
-          "TITLE": "Restart request",
-          "MESSAGE": "{username} wants to restart the game."
+          "TITLE": "Play again request",
+          "MESSAGE": "{username} wants to play a new game."
         },
         "WAITING": {
           "PAUSE": {
@@ -196,7 +196,7 @@
             "MESSAGE": "Waiting for the other players to agree."
           },
           "RESTART": {
-            "TITLE": "Restart request sent",
+            "TITLE": "Play again request sent",
             "MESSAGE": "Waiting for the other players to agree."
           }
         },
@@ -215,7 +215,8 @@
       "RANK": "Rank",
       "PLAYER": "Player",
       "SCORE": "Score",
-      "YOU": "You"
+      "YOU": "You",
+      "PLAY_AGAIN": "Play again"
     },
     "CONTINENT_NAME": {
       "AFRICA": "Africa",

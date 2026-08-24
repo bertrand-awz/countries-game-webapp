@@ -5,6 +5,7 @@
 
   const props = defineProps<{
     onSubmitCallback: (inputValue: string) => void;
+    isActive: boolean;
     focusToken: string;
   }>();
 
@@ -12,13 +13,17 @@
   const inputRef = ref<HTMLInputElement | null>(null);
 
   function focusInput(): void {
+    if (!props.isActive) {
+      return;
+    }
+
     inputRef.value?.focus({ preventScroll: true });
   }
 
   watch(
-    () => props.focusToken,
-    async (focusToken) => {
-      if (!focusToken) {
+    () => [props.focusToken, props.isActive] as const,
+    async ([focusToken, isActive]) => {
+      if (!focusToken || !isActive) {
         return;
       }
 
@@ -29,6 +34,10 @@
   );
 
   function onSubmit(): void {
+    if (!props.isActive) {
+      return;
+    }
+
     const trimmedAnswer = countryNameAnswer.value.trim();
 
     if (!trimmedAnswer) {
@@ -41,7 +50,12 @@
 </script>
 
 <template>
-  <form id="answer-form" autocomplete="off" @submit.prevent="onSubmit">
+  <form
+    id="answer-form"
+    autocomplete="off"
+    :aria-hidden="!isActive"
+    @submit.prevent="onSubmit"
+  >
     <div id="answer-input-container" class="answer-input-container" @click="focusInput">
       <input
         id="answer-input"
@@ -50,12 +64,13 @@
         class="answer-input-hidden"
         autocomplete="off"
         spellcheck="false"
+        :disabled="!isActive"
         :maxlength="GameConstraints.COUNTRY_NAME_MAX_LENGTH"
         @paste.prevent
         @drop.prevent
       />
 
-      <div class="answer-input-taker">
+      <div class="answer-input-taker" :class="{ 'answer-input-taker-hidden': !isActive }">
         <span v-if="countryNameAnswer">
           {{ countryNameAnswer }}
         </span>

@@ -14,6 +14,7 @@ export class GameActionVoteRequestedReaction {
     private readonly notifier: Notifier,
     private readonly gameCommandGateway: GameCommandGateway,
     private readonly getCurrentPlayerId: () => string | null,
+    private readonly onRestartDeclined: () => void = () => {},
   ) {}
 
   handle(event: GameActionVoteRequestedEvent): void {
@@ -58,6 +59,10 @@ export class GameActionVoteRequestedReaction {
               style: "secondary",
               run: () => {
                 this.gameCommandGateway.voteGameAction(event.action, event.requestId, false);
+
+                if (event.action === "restart") {
+                  this.onRestartDeclined();
+                }
               },
             },
           ],

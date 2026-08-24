@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { DoorOpenIcon, MedalIcon, RotateCcwIcon, TrophyIcon } from "@lucide/vue";
+  import { DoorOpenIcon, MedalIcon, PlayIcon, TrophyIcon } from "@lucide/vue";
   import { computed } from "vue";
 
   import type { Player } from "@/domain/game/models/Player.ts";
@@ -146,11 +146,11 @@
 
         <button
           type="button"
-          class="navbar-restart-button justify-center"
+          class="navbar-continue-button justify-center"
           @click="requestRestart"
         >
-          <RotateCcwIcon class="size-5" aria-hidden="true" />
-          {{ translator("APP.RESTART") }}
+          <PlayIcon class="size-5" aria-hidden="true" />
+          {{ translator("GAME.FINAL_SCOREBOARD.PLAY_AGAIN") }}
         </button>
       </footer>
     </section>

@@ -289,6 +289,96 @@ describe("RegisterGameEventReactionsUseCase", () => {
     ]);
   });
 
+  it("leaves the room locally when the current player declines a play again request", async () => {
+    const gameServer = new GameServerSpy();
+    const notifier = new NotifierSpy();
+    restoreDependencies = overrideAppDependencies({
+      ...gameGatewaysFrom(gameServer),
+      soundManager: new SoundManagerSpy(),
+      gameMapApi: new GameMapApiFake(),
+      notifier,
+    });
+    const gameSessionStore = useGameSessionStore();
+    gameSessionStore.setSession({ roomId: "room-1", playerId: "player-1" });
+
+    new RegisterGameEventReactionsUseCase().execute();
+    gameServer.emitGameActionVoteRequested({
+      requestId: "restart-request-1",
+      action: "restart",
+      requestedByPlayerId: "player-2",
+      requestedByUsername: "Grace",
+      requiredVoterIds: ["player-1"],
+    });
+
+    notifier.notifications[0].actions?.[1].run();
+    await Promise.resolve();
+
+    assert.deepEqual(gameServer.voteGameActionCalls, [
+      {
+        action: "restart",
+        requestId: "restart-request-1",
+        accepted: false,
+      },
+    ]);
+    assert.equal(gameServer.leaveRoomCallCount, 1);
+    assert.equal(gameSessionStore.isConnected, false);
+  });
+
+  it("ignores active game notifications while the current player is waiting in queue", () => {
+    const alice = createPlayer({ id: "player-1", username: "Alice" });
+    const gameServer = new GameServerSpy(
+      createGameState({
+        players: [alice],
+        waitingPlayers: [{ id: "player-2", username: "Grace", joinedAt: 100 }],
+      }),
+    );
+    const notifier = new NotifierSpy();
+    restoreDependencies = overrideAppDependencies({
+      ...gameGatewaysFrom(gameServer),
+      soundManager: new SoundManagerSpy(),
+      gameMapApi: new GameMapApiFake(),
+      notifier,
+    });
+    const gameSessionStore = useGameSessionStore();
+    gameSessionStore.setSession({ roomId: "room-1", playerId: "player-2" });
+    gameSessionStore.setGameState(gameServer.getState());
+
+    new RegisterGameEventReactionsUseCase().execute();
+    gameServer.emitPlayerJoinRoom({
+      playerId: "player-3",
+      username: "Bob",
+      numberOfPlayers: 2,
+    });
+    gameServer.emitGameStarted({
+      startAt: 10,
+      endAt: 310,
+      durationInSeconds: 300,
+      startedByPlayerId: "player-1",
+      currentPlayerId: "player-1",
+    });
+    gameServer.emitTurnChanged({
+      currentPlayer: alice,
+      turnDurationInSeconds: 45,
+      turnStartedAt: 10,
+    });
+    gameServer.emitCountryFound({
+      countryId: "CAN",
+      foundByPlayer: alice,
+      pointsAwarded: 1,
+    });
+    gameServer.emitGameActionVoteRequested({
+      requestId: "restart-request-1",
+      action: "restart",
+      requestedByPlayerId: "player-1",
+      requestedByUsername: "Alice",
+      requiredVoterIds: ["player-2"],
+    });
+
+    assert.deepEqual(notifier.notifications, []);
+    assert.equal(gameSessionStore.currentTurn, null);
+    assert.deepEqual(gameSessionStore.foundCountryIds, []);
+  });
+
   it("clears previous reaction subscriptions before registering new ones", () => {
     const gameServer = new GameServerSpy();
     restoreDependencies = overrideAppDependencies({

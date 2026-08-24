@@ -183,8 +183,8 @@
           "MESSAGE": "{username} souhaite reprendre la partie."
         },
         "RESTART": {
-          "TITLE": "Demande de redémarrage",
-          "MESSAGE": "{username} souhaite recommencer la partie."
+          "TITLE": "Nouvelle partie",
+          "MESSAGE": "{username} souhaite jouer une nouvelle partie."
         },
         "WAITING": {
           "PAUSE": {
@@ -196,7 +196,7 @@
             "MESSAGE": "En attente de l'accord des autres joueurs."
           },
           "RESTART": {
-            "TITLE": "Demande de redémarrage envoyée",
+            "TITLE": "Demande de nouvelle partie envoyée",
             "MESSAGE": "En attente de l'accord des autres joueurs."
           }
         },
@@ -215,7 +215,8 @@
       "RANK": "Rang",
       "PLAYER": "Joueur",
       "SCORE": "Score",
-      "YOU": "Vous"
+      "YOU": "Vous",
+      "PLAY_AGAIN": "Jouer une nouvelle partie"
     },
     "CONTINENT_NAME": {
       "AFRICA": "Afrique",
