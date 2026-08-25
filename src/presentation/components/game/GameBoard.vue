@@ -9,6 +9,7 @@
     countriesFeatures: Country[];
     canAnswer: boolean;
     answerInputFocusToken: string;
+    answerInputClearToken: number;
     highlightedCountryId: string | null;
     foundCountryIds: string[];
   }>();
@@ -20,6 +21,7 @@
       :on-submit-callback="countryNameAnswerSubmitter"
       :is-active="canAnswer"
       :focus-token="answerInputFocusToken"
+      :clear-token="answerInputClearToken"
     />
     <div class="game-board-map">
       <InteractiveGlobe

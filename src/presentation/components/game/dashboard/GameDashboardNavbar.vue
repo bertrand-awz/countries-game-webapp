@@ -18,6 +18,7 @@
     exitGame: () => void | Promise<void>;
     startGame: () => void;
     timeLeftInSeconds: number;
+    totalDurationInSeconds: number;
   }>();
 
   defineEmits<{
@@ -53,6 +54,7 @@
             <div class="flex flex-1 items-center justify-start gap-3 md:gap-4">
               <TimeDisplayer
                 :time-left-in-seconds="timeLeftInSeconds"
+                :total-duration-in-seconds="totalDurationInSeconds"
                 :translator="translator"
                 :show-timer="!sidebarOpened"
                 :game-status="gameStatus"

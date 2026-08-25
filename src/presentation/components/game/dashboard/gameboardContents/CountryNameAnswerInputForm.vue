@@ -7,6 +7,7 @@
     onSubmitCallback: (inputValue: string) => void;
     isActive: boolean;
     focusToken: string;
+    clearToken: number;
   }>();
 
   const countryNameAnswer = ref("");
@@ -31,6 +32,13 @@
       focusInput();
     },
     { immediate: true },
+  );
+
+  watch(
+    () => props.clearToken,
+    () => {
+      countryNameAnswer.value = "";
+    },
   );
 
   function onSubmit(): void {

@@ -36,6 +36,7 @@
   const sidebarOpen = ref(false);
   const now = ref(Date.now());
   const pausedTimeLeftInSeconds = ref<number | null>(null);
+  const answerInputClearToken = ref(0);
 
   const {
     currentPlayer,
@@ -98,6 +99,10 @@
         soundManager.playMainThemeSound();
       } else if (status === GameStatus.PAUSED && previousStatus === GameStatus.PLAYING) {
         pausedTimeLeftInSeconds.value = calculateTimeLeftInSeconds(gameState.value?.endAt ?? 0);
+      }
+
+      if (status === GameStatus.FINISHED && previousStatus !== GameStatus.FINISHED) {
+        answerInputClearToken.value += 1;
       }
     },
     { immediate: true },
@@ -169,6 +174,7 @@
       :exit-game="exit"
       :start-game="start"
       :time-left-in-seconds="timeLeftInSeconds"
+      :total-duration-in-seconds="gameState.durationInSeconds"
       @open-sidebar="sidebarOpen = true"
     />
     <GameSidebar
@@ -186,6 +192,7 @@
       :countries-features="gameMapStore.getCountriesFeatures"
       :can-answer="canCurrentPlayerAnswer"
       :answer-input-focus-token="answerInputFocusToken"
+      :answer-input-clear-token="answerInputClearToken"
       :highlighted-country-id="highlightedCountryId"
       :found-country-ids="foundCountryIds"
     />
