@@ -41,7 +41,11 @@
       :aria-invalid="error ? 'true' : 'false'"
       :aria-describedby="error ? `${id}-error` : undefined"
       class="block w-full rounded-lg border bg-white/5 px-3 py-2 text-sm text-white outline-none disabled:cursor-not-allowed disabled:opacity-60"
-      :class="error ? 'border-red-400/70 focus:border-red-300' : 'border-white/10 focus:border-emerald-400'"
+      :class="
+        error
+          ? 'border-red-400/70 focus:border-red-300'
+          : 'border-white/10 focus:border-emerald-400'
+      "
     >
       <option
         v-for="option in options"

@@ -21,7 +21,9 @@
   }>();
 
   const opponents = computed(() => {
-    return props.gameState.players.filter((player) => player.getId() !== props.currentPlayer.getId());
+    return props.gameState.players.filter(
+      (player) => player.getId() !== props.currentPlayer.getId(),
+    );
   });
 </script>
 

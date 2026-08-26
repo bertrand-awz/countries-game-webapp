@@ -30,7 +30,8 @@ export function overrideAppDependencies(dependencies: Partial<AppDependencies>):
   appDependencies.gameRoomGateway = dependencies.gameRoomGateway ?? appDependencies.gameRoomGateway;
   appDependencies.gameCommandGateway =
     dependencies.gameCommandGateway ?? appDependencies.gameCommandGateway;
-  appDependencies.gameEventGateway = dependencies.gameEventGateway ?? appDependencies.gameEventGateway;
+  appDependencies.gameEventGateway =
+    dependencies.gameEventGateway ?? appDependencies.gameEventGateway;
   appDependencies.soundManager = dependencies.soundManager ?? appDependencies.soundManager;
   appDependencies.gameMapApi = dependencies.gameMapApi ?? appDependencies.gameMapApi;
   appDependencies.notifier = dependencies.notifier ?? appDependencies.notifier;

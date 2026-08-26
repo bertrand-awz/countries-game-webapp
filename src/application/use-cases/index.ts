@@ -5,6 +5,7 @@ import { RequestGameResumeUseCase } from "./game-commands/requestGameResumeUseCa
 import { StartGameUseCase } from "./game-commands/startGameUseCase.ts";
 import { SubmitAnswerUseCase } from "./game-commands/submitAnswerUseCase.ts";
 import { UpdateRoomSettingsUseCase } from "./game-commands/updateRoomSettingsUseCase.ts";
+import { SynchronizeCountdownSoundUseCase } from "./game-sound/synchronizeCountdownSoundUseCase.ts";
 import { JoinRoomUseCase } from "./joinRoomUseCase.ts";
 import { LeaveRoomUseCase } from "./leaveRoomUseCase.ts";
 import { LoadContinentsUseCase } from "./loadContinentsUseCase.ts";
@@ -21,3 +22,4 @@ export const requestGamePauseUseCase = new RequestGamePauseUseCase();
 export const requestGameResumeUseCase = new RequestGameResumeUseCase();
 export const requestGameRestartUseCase = new RequestGameRestartUseCase();
 export const updateRoomSettingsUseCase = new UpdateRoomSettingsUseCase();
+export const synchronizeCountdownSoundUseCase = new SynchronizeCountdownSoundUseCase();

@@ -7,5 +7,6 @@ export class StartGameUseCase extends UseCase<void, void> {
 
   execute(): void {
     this.gameCommandGateway.startGame();
+    this.soundManager.playMainThemeSound();
   }
 }

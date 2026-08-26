@@ -130,9 +130,7 @@ export class ColyseusGameEventGateway implements GameEventGateway {
     });
   }
 
-  onGameActionVoteRequested(
-    callback: (event: GameActionVoteRequestedEvent) => void,
-  ): Unsubscribe {
+  onGameActionVoteRequested(callback: (event: GameActionVoteRequestedEvent) => void): Unsubscribe {
     const room = this.roomGateway.getActiveRoom();
     const unsubscriptions = (
       [

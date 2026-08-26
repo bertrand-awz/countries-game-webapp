@@ -47,9 +47,13 @@
       aria-labelledby="final-scoreboard-title"
       class="relative w-full max-w-4xl overflow-hidden rounded-lg border border-white/15 bg-neutral-950/95 shadow-2xl shadow-black/60"
     >
-      <div class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-300 via-cyan-300 to-amber-300"></div>
+      <div
+        class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-300 via-cyan-300 to-amber-300"
+      ></div>
 
-      <header class="flex flex-col gap-4 border-b border-white/10 px-5 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between">
+      <header
+        class="flex flex-col gap-4 border-b border-white/10 px-5 py-5 sm:px-6 lg:flex-row lg:items-center lg:justify-between"
+      >
         <div class="flex min-w-0 items-center gap-3">
           <div
             class="flex size-12 shrink-0 items-center justify-center rounded-md bg-amber-300/10 text-amber-200 ring-1 ring-amber-300/30"
@@ -58,10 +62,13 @@
           </div>
 
           <div class="min-w-0">
-            <p class="text-xs font-semibold uppercase text-cyan-200">
+            <p class="text-xs font-semibold text-cyan-200 uppercase">
               {{ translator("GAME.FINAL_SCOREBOARD.MATCH_COMPLETE") }}
             </p>
-            <h2 id="final-scoreboard-title" class="mt-1 text-2xl font-bold tracking-normal sm:text-3xl">
+            <h2
+              id="final-scoreboard-title"
+              class="mt-1 text-2xl font-bold tracking-normal sm:text-3xl"
+            >
               {{ translator("GAME.FINAL_SCOREBOARD.TITLE") }}
             </h2>
           </div>
@@ -73,7 +80,9 @@
         >
           <MedalIcon class="size-5 shrink-0 text-amber-200" aria-hidden="true" />
           <div class="min-w-0">
-            <p class="text-xs text-amber-100/80">{{ translator("GAME.FINAL_SCOREBOARD.WINNER") }}</p>
+            <p class="text-xs text-amber-100/80">
+              {{ translator("GAME.FINAL_SCOREBOARD.WINNER") }}
+            </p>
             <p class="truncate text-sm font-bold text-white">{{ winner.getUsername() }}</p>
           </div>
         </div>
@@ -86,18 +95,26 @@
         </div>
 
         <div class="rounded-md bg-white/5 px-3 py-3">
-          <p class="text-xs text-gray-400">{{ translator("GAME.FINAL_SCOREBOARD.COUNTRIES_FOUND") }}</p>
+          <p class="text-xs text-gray-400">
+            {{ translator("GAME.FINAL_SCOREBOARD.COUNTRIES_FOUND") }}
+          </p>
           <p class="mt-1 text-xl font-bold">{{ totalCountriesFound }}</p>
         </div>
       </div>
 
       <div class="max-h-[55vh] overflow-auto px-5 py-5 sm:px-6">
         <table class="w-full min-w-[36rem] border-separate border-spacing-y-2 text-left text-sm">
-          <thead class="text-xs uppercase text-gray-500">
+          <thead class="text-xs text-gray-500 uppercase">
             <tr>
-              <th scope="col" class="w-16 px-3 py-2">{{ translator("GAME.FINAL_SCOREBOARD.RANK") }}</th>
-              <th scope="col" class="px-3 py-2">{{ translator("GAME.FINAL_SCOREBOARD.PLAYER") }}</th>
-              <th scope="col" class="px-3 py-2 text-right">{{ translator("GAME.FINAL_SCOREBOARD.SCORE") }}</th>
+              <th scope="col" class="w-16 px-3 py-2">
+                {{ translator("GAME.FINAL_SCOREBOARD.RANK") }}
+              </th>
+              <th scope="col" class="px-3 py-2">
+                {{ translator("GAME.FINAL_SCOREBOARD.PLAYER") }}
+              </th>
+              <th scope="col" class="px-3 py-2 text-right">
+                {{ translator("GAME.FINAL_SCOREBOARD.SCORE") }}
+              </th>
               <th scope="col" class="px-3 py-2 text-right">
                 {{ translator("GAME.FINAL_SCOREBOARD.COUNTRIES_FOUND") }}
               </th>
@@ -134,21 +151,15 @@
         </table>
       </div>
 
-      <footer class="flex flex-col-reverse gap-3 border-t border-white/10 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
-        <button
-          type="button"
-          class="navbar-exit-button justify-center"
-          @click="exitGame"
-        >
+      <footer
+        class="flex flex-col-reverse gap-3 border-t border-white/10 px-5 py-4 sm:flex-row sm:justify-end sm:px-6"
+      >
+        <button type="button" class="navbar-exit-button justify-center" @click="exitGame">
           <DoorOpenIcon class="size-5" aria-hidden="true" />
           {{ translator("APP.EXIT") }}
         </button>
 
-        <button
-          type="button"
-          class="navbar-continue-button justify-center"
-          @click="requestRestart"
-        >
+        <button type="button" class="navbar-continue-button justify-center" @click="requestRestart">
           <PlayIcon class="size-5" aria-hidden="true" />
           {{ translator("GAME.FINAL_SCOREBOARD.PLAY_AGAIN") }}
         </button>

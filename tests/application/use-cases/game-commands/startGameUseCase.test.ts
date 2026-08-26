@@ -20,14 +20,16 @@ describe("StartGameUseCase", () => {
 
   it("delegates the start command to the active game server", () => {
     const gameServer = new GameServerSpy();
+    const soundManager = new SoundManagerSpy();
     restoreDependencies = overrideAppDependencies({
       ...gameGatewaysFrom(gameServer),
-      soundManager: new SoundManagerSpy(),
+      soundManager,
       gameMapApi: new GameMapApiFake(),
     });
 
     new StartGameUseCase().execute();
 
     assert.equal(gameServer.startGameCallCount, 1);
+    assert.equal(soundManager.mainThemePlayCount, 1);
   });
 });

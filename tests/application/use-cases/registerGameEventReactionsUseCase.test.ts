@@ -5,6 +5,8 @@ import { createPinia, setActivePinia } from "pinia";
 
 import { useGameSessionStore } from "@/application/stores/gameSessionStore.ts";
 import { RegisterGameEventReactionsUseCase } from "@/application/use-cases/registerGameEventReactionsUseCase.ts";
+import { GameStatus } from "@/domain/game/models/state/GameState.ts";
+import { SoundEffectName } from "@/domain/game/ports/SoundManager.ts";
 
 import { gameGatewaysFrom, overrideAppDependencies } from "../../app/appDependenciesTestHarness.ts";
 import { createGameState, createPlayer } from "../../domain/game/models/state/gameStateMother.ts";
@@ -29,9 +31,10 @@ describe("RegisterGameEventReactionsUseCase", () => {
     const grace = createPlayer({ id: "player-2", username: "Grace" });
     const gameServer = new GameServerSpy(createGameState({ players: [alice, grace] }));
     const notifier = new NotifierSpy();
+    const soundManager = new SoundManagerSpy();
     restoreDependencies = overrideAppDependencies({
       ...gameGatewaysFrom(gameServer),
-      soundManager: new SoundManagerSpy(),
+      soundManager,
       gameMapApi: new GameMapApiFake(),
       notifier,
     });
@@ -99,6 +102,7 @@ describe("RegisterGameEventReactionsUseCase", () => {
         durationMs: 5000,
       },
     ]);
+    assert.equal(soundManager.mainThemePlayCount, 1);
     assert.equal(gameServer.gameFinishedSubscriptionCount, 1);
   });
 
@@ -107,9 +111,10 @@ describe("RegisterGameEventReactionsUseCase", () => {
     const bob = createPlayer({ id: "player-2", username: "Bob" });
     const gameServer = new GameServerSpy(createGameState({ players: [alice, bob] }));
     const notifier = new NotifierSpy();
+    const soundManager = new SoundManagerSpy();
     restoreDependencies = overrideAppDependencies({
       ...gameGatewaysFrom(gameServer),
-      soundManager: new SoundManagerSpy(),
+      soundManager,
       gameMapApi: new GameMapApiFake(),
       notifier,
     });
@@ -176,14 +181,63 @@ describe("RegisterGameEventReactionsUseCase", () => {
       },
     ]);
     assert.deepEqual(notifier.dismissedNotificationIds, ["current-turn", "current-turn"]);
+    assert.equal(soundManager.mainThemeStopCount, 1);
+  });
+
+  it("caps the turn notification duration to the remaining game time", () => {
+    const alice = createPlayer({ id: "player-1", username: "Alice" });
+    const gameServer = new GameServerSpy(
+      createGameState({
+        players: [alice],
+        status: GameStatus.PLAYING,
+        turnDurationInSeconds: 45,
+        startAt: 0,
+        endAt: 30_000,
+      }),
+    );
+    const notifier = new NotifierSpy();
+    restoreDependencies = overrideAppDependencies({
+      ...gameGatewaysFrom(gameServer),
+      soundManager: new SoundManagerSpy(),
+      gameMapApi: new GameMapApiFake(),
+      notifier,
+    });
+    const gameSessionStore = useGameSessionStore();
+    gameSessionStore.setSession({ roomId: "room-1", playerId: "player-1" });
+    gameSessionStore.setGameState(gameServer.getState());
+
+    new RegisterGameEventReactionsUseCase().execute();
+    gameServer.emitTurnChanged({
+      currentPlayer: alice,
+      turnDurationInSeconds: 45,
+      turnStartedAt: 10_000,
+    });
+
+    assert.deepEqual(gameSessionStore.currentTurn, {
+      playerId: "player-1",
+      startedAt: 10_000,
+      durationInSeconds: 20,
+    });
+    assert.deepEqual(notifier.notifications[0].message, {
+      translationKey: "GAME.NOTIFICATIONS.TURN.YOUR_TURN_MESSAGE",
+      values: {
+        username: "Alice",
+        seconds: 20,
+      },
+    });
+    assert.deepEqual(notifier.notifications[0].countdown, {
+      startedAt: 10_000,
+      endsAt: 30_000,
+    });
   });
 
   it("highlights the country found by a player", () => {
     const alice = createPlayer({ id: "player-1", username: "Alice" });
     const gameServer = new GameServerSpy(createGameState({ players: [alice] }));
+    const soundManager = new SoundManagerSpy();
     restoreDependencies = overrideAppDependencies({
       ...gameGatewaysFrom(gameServer),
-      soundManager: new SoundManagerSpy(),
+      soundManager,
       gameMapApi: new GameMapApiFake(),
       notifier: new NotifierSpy(),
     });
@@ -198,6 +252,7 @@ describe("RegisterGameEventReactionsUseCase", () => {
 
     assert.equal(gameSessionStore.highlightedCountryId, "CAN");
     assert.deepEqual(gameSessionStore.foundCountryIds, ["CAN"]);
+    assert.deepEqual(soundManager.playedEffects, [SoundEffectName.SUCCESS]);
   });
 
   it("notifies voters with actions when a player requests a voted game action", () => {

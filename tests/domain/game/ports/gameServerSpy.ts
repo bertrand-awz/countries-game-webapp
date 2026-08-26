@@ -77,9 +77,8 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
   private gameRestartedCallback: ((event: GameRestartedEvent) => void) | null = null;
   private turnChangedCallback: ((event: TurnChangedEvent) => void) | null = null;
   private countryFoundCallback: ((event: CountryFoundEvent) => void) | null = null;
-  private gameActionVoteRequestedCallback:
-    | ((event: GameActionVoteRequestedEvent) => void)
-    | null = null;
+  private gameActionVoteRequestedCallback: ((event: GameActionVoteRequestedEvent) => void) | null =
+    null;
   private gameFinishedCallback: ((event: GameFinishedEvent) => void) | null = null;
 
   constructor(private currentState: GameState = createGameState()) {}

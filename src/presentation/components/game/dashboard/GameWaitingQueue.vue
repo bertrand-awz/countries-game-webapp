@@ -76,7 +76,11 @@
             {{ translator("GAME.WAITING_QUEUE.ESTIMATE_LABEL") }}
           </div>
           <p class="mt-2 text-2xl font-bold text-white">
-            {{ timeLeftInSeconds > 0 ? formattedTimeLeft : translator("GAME.WAITING_QUEUE.NEXT_ROUND") }}
+            {{
+              timeLeftInSeconds > 0
+                ? formattedTimeLeft
+                : translator("GAME.WAITING_QUEUE.NEXT_ROUND")
+            }}
           </p>
         </div>
       </div>
@@ -103,7 +107,9 @@
         </ol>
       </div>
 
-      <footer class="flex flex-col-reverse gap-3 border-t border-white/10 px-5 py-4 sm:flex-row sm:justify-end sm:px-6">
+      <footer
+        class="flex flex-col-reverse gap-3 border-t border-white/10 px-5 py-4 sm:flex-row sm:justify-end sm:px-6"
+      >
         <button type="button" class="navbar-exit-button justify-center" @click="leaveQueue">
           <DoorOpenIcon class="size-5" aria-hidden="true" />
           {{ translator("APP.EXIT") }}

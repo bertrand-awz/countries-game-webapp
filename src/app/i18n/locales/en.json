@@ -114,7 +114,9 @@
       "SOUND_CONTROLLER": {
         "TITLE": "Sound Management",
         "BACKGROUND_SOUND": "Background music",
-        "SOUND_EFFECTS": "Sound effects"
+        "SOUND_EFFECTS": "Sound effects",
+        "ENABLE_SOUND_EFFECTS": "Play sound effects",
+        "PERSONAL_SOUND_EFFECTS_SETTING": "Only affects this browser."
       },
       "SCORE_DISPLAYER": {
         "TITLE": "Scoreboard",

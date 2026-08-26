@@ -114,7 +114,9 @@
       "SOUND_CONTROLLER": {
         "TITLE": "Gestion sonore",
         "BACKGROUND_SOUND": "Musique de fonds",
-        "SOUND_EFFECTS": "Effets sonores"
+        "SOUND_EFFECTS": "Effets sonores",
+        "ENABLE_SOUND_EFFECTS": "Activer les effets sonores",
+        "PERSONAL_SOUND_EFFECTS_SETTING": "Ce choix n'affecte que vous."
       },
       "SCORE_DISPLAYER": {
         "TITLE": "Pointage",

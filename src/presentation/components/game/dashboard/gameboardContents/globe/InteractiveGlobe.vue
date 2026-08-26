@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { GeoPath, GeoProjection } from "d3";
+  import type { D3DragEvent, GeoPath, GeoProjection } from "d3";
   import * as d3 from "d3";
   import { onMounted, ref, watch } from "vue";
 
@@ -28,6 +28,10 @@
   let svg: d3.Selection<SVGSVGElement, unknown, null, undefined>;
   let globeGroup: d3.Selection<SVGGElement, unknown, null, undefined>;
   let countryPaths: d3.Selection<SVGPathElement, Country, SVGGElement, unknown>;
+
+  const MOUSE_ROTATION_SENSITIVITY = 0.35;
+  const MIN_LATITUDE_ROTATION = -90;
+  const MAX_LATITUDE_ROTATION = 90;
 
   function getCountryId(country: Country): string {
     return country.id || country.properties.id;
@@ -67,6 +71,7 @@
     globeGroup = svg.append("g");
 
     renderCountries();
+    enableMouseRotation();
 
     if (props.highlightedCountryId) {
       highlightCountry(props.highlightedCountryId, false);
@@ -82,6 +87,40 @@
       .attr("fill", (country) => getCountryFill(getCountryId(country)))
       .attr("stroke", "#1e293b")
       .attr("stroke-width", 0.5);
+  }
+
+  function enableMouseRotation(): void {
+    const mouseDrag = d3
+      .drag<SVGSVGElement, unknown>()
+      .filter((event: MouseEvent) => event.type === "mousedown" && event.button === 0)
+      .touchable(false)
+      .on("start", () => {
+        svg.classed("globe-svg-dragging", true);
+      })
+      .on("drag", (event: D3DragEvent<SVGSVGElement, unknown, unknown>) => {
+        rotateGlobeFromMouseDrag(event.dx, event.dy);
+      })
+      .on("end", () => {
+        svg.classed("globe-svg-dragging", false);
+      });
+
+    svg.call(mouseDrag);
+  }
+
+  function rotateGlobeFromMouseDrag(deltaX: number, deltaY: number): void {
+    const [longitudeRotation, latitudeRotation, gammaRotation = 0] = projection.rotate();
+
+    projection.rotate([
+      longitudeRotation + deltaX * MOUSE_ROTATION_SENSITIVITY,
+      clampLatitudeRotation(latitudeRotation - deltaY * MOUSE_ROTATION_SENSITIVITY),
+      gammaRotation,
+    ]);
+
+    countryPaths.attr("d", pathGenerator);
+  }
+
+  function clampLatitudeRotation(latitudeRotation: number): number {
+    return Math.max(MIN_LATITUDE_ROTATION, Math.min(MAX_LATITUDE_ROTATION, latitudeRotation));
   }
 
   function getCountryFill(countryId: string): string {
@@ -216,5 +255,10 @@
     height: 100%;
     touch-action: none;
     user-select: none;
+    cursor: grab;
+  }
+
+  .globe-svg-dragging {
+    cursor: grabbing;
   }
 </style>

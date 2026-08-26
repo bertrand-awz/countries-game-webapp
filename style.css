@@ -185,7 +185,7 @@
   }
 
   .answer-input-taker-hidden {
-    @apply invisible pointer-events-none;
+    @apply pointer-events-none invisible;
   }
 
   .cyber-cursor {

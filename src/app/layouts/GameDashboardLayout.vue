@@ -16,6 +16,7 @@
     requestGameResumeUseCase,
     startGameUseCase,
     submitCountryNameAnswerUseCase,
+    synchronizeCountdownSoundUseCase,
     updateRoomSettingsUseCase,
   } from "@/application/use-cases";
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
@@ -96,7 +97,6 @@
       if (status === GameStatus.PLAYING) {
         pausedTimeLeftInSeconds.value = null;
         now.value = Date.now();
-        soundManager.playMainThemeSound();
       } else if (status === GameStatus.PAUSED && previousStatus === GameStatus.PLAYING) {
         pausedTimeLeftInSeconds.value = calculateTimeLeftInSeconds(gameState.value?.endAt ?? 0);
       }
@@ -104,6 +104,20 @@
       if (status === GameStatus.FINISHED && previousStatus !== GameStatus.FINISHED) {
         answerInputClearToken.value += 1;
       }
+    },
+    { immediate: true },
+  );
+
+  watch(
+    [timeLeftInSeconds, gameState],
+    ([timeLeft, state]) => {
+      synchronizeCountdownSoundUseCase
+        .setOptions({
+          gameStatus: state?.status,
+          timeLeftInSeconds: timeLeft,
+          totalDurationInSeconds: state?.durationInSeconds ?? 0,
+        })
+        .execute();
     },
     { immediate: true },
   );
@@ -116,6 +130,7 @@
 
   onBeforeUnmount(() => {
     window.clearInterval(timerInterval);
+    synchronizeCountdownSoundUseCase.stop();
   });
 
   function start() {

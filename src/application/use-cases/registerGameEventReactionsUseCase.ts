@@ -5,6 +5,7 @@ import {
   GameTurnChangedReaction,
 } from "@/application/reactions/game/GameTurnChangedReaction.ts";
 import type { Unsubscribe } from "@/domain/game/ports/GameServer.ts";
+import { SoundEffectName } from "@/domain/game/ports/SoundManager.ts";
 
 import { UseCase } from "./useCase.ts";
 
@@ -58,6 +59,7 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
           event,
           this.findPlayerUsername(event.startedByPlayerId),
         );
+        this.soundManager.playMainThemeSound();
       }),
       this.gameEventGateway.onGamePaused(() => {
         this.gameTurnChangedReaction.clear();
@@ -68,12 +70,21 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
           return;
         }
 
+        const effectiveTurnDurationInSeconds = this.getEffectiveTurnDurationInSeconds(
+          event.turnStartedAt,
+          event.turnDurationInSeconds,
+        );
+        const effectiveTurnChangedEvent = {
+          ...event,
+          turnDurationInSeconds: effectiveTurnDurationInSeconds,
+        };
+
         this.gameSessionStore.setCurrentTurn({
           playerId: event.currentPlayer.getId(),
           startedAt: event.turnStartedAt,
-          durationInSeconds: event.turnDurationInSeconds,
+          durationInSeconds: effectiveTurnDurationInSeconds,
         });
-        this.gameTurnChangedReaction.handle(event);
+        this.gameTurnChangedReaction.handle(effectiveTurnChangedEvent);
       }),
       this.gameEventGateway.onCountryFound((event) => {
         if (this.isCurrentPlayerWaiting()) {
@@ -81,6 +92,7 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
         }
 
         this.gameSessionStore.recordCountryFound(event.countryId);
+        this.soundManager.playEffect(SoundEffectName.SUCCESS);
       }),
       this.gameEventGateway.onGameActionVoteRequested((event) => {
         if (this.isCurrentPlayerWaiting()) {
@@ -92,11 +104,13 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
       this.gameEventGateway.onGameFinished(() => {
         this.gameSessionStore.clearCurrentTurn();
         this.gameTurnChangedReaction.clear();
+        this.soundManager.stopMainThemeSound();
       }),
       this.gameEventGateway.onGameRestarted(() => {
         this.gameSessionStore.clearCurrentTurn();
         this.gameSessionStore.clearFoundCountries();
         this.gameTurnChangedReaction.clear();
+        this.soundManager.stopMainThemeSound();
       }),
     ];
   }
@@ -119,6 +133,23 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
 
   private isCurrentPlayerWaiting(): boolean {
     return this.gameSessionStore.currentWaitingPlayer !== null;
+  }
+
+  private getEffectiveTurnDurationInSeconds(
+    turnStartedAt: number,
+    serverTurnDurationInSeconds: number,
+  ): number {
+    const roomTurnDurationInSeconds =
+      this.gameSessionStore.gameState?.turnDurationInSeconds ?? serverTurnDurationInSeconds;
+    const gameEndAt = this.gameSessionStore.gameState?.endAt;
+
+    if (!gameEndAt) {
+      return roomTurnDurationInSeconds;
+    }
+
+    const remainingGameTimeInSeconds = Math.ceil((gameEndAt - turnStartedAt) / 1000);
+
+    return Math.max(0, Math.min(roomTurnDurationInSeconds, remainingGameTimeInSeconds));
   }
 
   private async leaveRoomAfterDecliningRestart(): Promise<void> {
