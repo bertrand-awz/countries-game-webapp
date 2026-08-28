@@ -25,15 +25,36 @@
     });
   });
 
-  const winner = computed(() => rankedPlayers.value[0] ?? null);
   const totalCountriesFound = computed(() => {
     return props.gameState.continents.reduce((total, continent) => {
       return total + continent.countriesFoundNumber;
     }, 0);
   });
 
+  const podiumMedals = [
+    {
+      label: "1",
+      className: "border-amber-300/40 bg-amber-300/10 text-amber-200 ring-amber-300/30",
+      ariaLabel: "Gold medal",
+    },
+    {
+      label: "2",
+      className: "border-slate-200/40 bg-slate-200/10 text-slate-100 ring-slate-200/30",
+      ariaLabel: "Silver medal",
+    },
+    {
+      label: "3",
+      className: "border-orange-300/40 bg-orange-300/10 text-orange-200 ring-orange-300/30",
+      ariaLabel: "Bronze medal",
+    },
+  ] as const;
+
   function isCurrentPlayer(player: Player): boolean {
     return player.getId() === props.currentPlayerId;
+  }
+
+  function getPodiumMedal(playerIndex: number) {
+    return podiumMedals[playerIndex] ?? null;
   }
 </script>
 
@@ -74,18 +95,6 @@
           </div>
         </div>
 
-        <div
-          v-if="winner"
-          class="flex min-w-0 items-center gap-3 rounded-md border border-amber-300/20 bg-amber-300/10 px-3 py-2"
-        >
-          <MedalIcon class="size-5 shrink-0 text-amber-200" aria-hidden="true" />
-          <div class="min-w-0">
-            <p class="text-xs text-amber-100/80">
-              {{ translator("GAME.FINAL_SCOREBOARD.WINNER") }}
-            </p>
-            <p class="truncate text-sm font-bold text-white">{{ winner.getUsername() }}</p>
-          </div>
-        </div>
       </header>
 
       <div class="grid gap-3 border-b border-white/10 px-5 py-4 sm:grid-cols-2 sm:px-6">
@@ -137,6 +146,16 @@
                     class="rounded-sm bg-emerald-300/10 px-1.5 py-0.5 text-xs text-emerald-200"
                   >
                     {{ translator("GAME.FINAL_SCOREBOARD.YOU") }}
+                  </span>
+                  <span
+                    v-if="getPodiumMedal(index)"
+                    class="inline-flex size-7 shrink-0 items-center justify-center rounded-full border ring-1"
+                    :class="getPodiumMedal(index)?.className"
+                    :aria-label="getPodiumMedal(index)?.ariaLabel"
+                    :title="getPodiumMedal(index)?.ariaLabel"
+                  >
+                    <MedalIcon class="size-4" aria-hidden="true" />
+                    <span class="sr-only">{{ getPodiumMedal(index)?.label }}</span>
                   </span>
                 </div>
               </td>
