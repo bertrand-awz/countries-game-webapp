@@ -91,7 +91,7 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
           return;
         }
 
-        this.gameSessionStore.recordCountryFound(event.countryId);
+        this.gameSessionStore.recordCountryFound(event.countryId, event.foundByPlayer);
         this.soundManager.playEffect(SoundEffectName.SUCCESS);
       }),
       this.gameEventGateway.onGameActionVoteRequested((event) => {

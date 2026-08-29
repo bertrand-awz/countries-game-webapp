@@ -1,6 +1,8 @@
 import { defineStore } from "pinia";
 import { computed, ref, shallowRef } from "vue";
 
+import type { FoundCountry } from "@/domain/game/models/FoundCountry.ts";
+import type { Player } from "@/domain/game/models/Player.ts";
 import type { GameState } from "@/domain/game/models/state/GameState";
 
 type CurrentTurn = {
@@ -15,13 +17,14 @@ export const useGameSessionStore = defineStore("gameSession", () => {
   const playerId = ref<string | null>(null);
   const currentTurn = shallowRef<CurrentTurn | null>(null);
   const highlightedCountryId = ref<string | null>(null);
-  const foundCountryIds = ref<string[]>([]);
+  const foundCountries = ref<FoundCountry[]>([]);
   const isConnected = ref(false);
 
   const players = computed(() => gameState.value?.players ?? []);
   const waitingPlayers = computed(() => gameState.value?.waitingPlayers ?? []);
   const continents = computed(() => gameState.value?.continents ?? []);
   const status = computed(() => gameState.value?.status ?? null);
+  const foundCountryIds = computed(() => foundCountries.value.map((country) => country.countryId));
   const currentPlayer = computed(() => {
     return gameState.value?.players.find((player) => player.getId() === playerId.value) ?? null;
   });
@@ -40,6 +43,7 @@ export const useGameSessionStore = defineStore("gameSession", () => {
 
   function setGameState(newGameState: GameState): void {
     gameState.value = newGameState;
+    foundCountries.value = newGameState.foundCountries;
   }
 
   function setCurrentTurn(newCurrentTurn: CurrentTurn): void {
@@ -54,9 +58,16 @@ export const useGameSessionStore = defineStore("gameSession", () => {
     highlightedCountryId.value = countryId;
   }
 
-  function recordCountryFound(countryId: string): void {
+  function recordCountryFound(countryId: string, foundByPlayer: Player): void {
     if (!foundCountryIds.value.includes(countryId)) {
-      foundCountryIds.value = [...foundCountryIds.value, countryId];
+      foundCountries.value = [
+        ...foundCountries.value,
+        {
+          countryId,
+          foundByPlayerId: foundByPlayer.getId(),
+          playerColorSlot: foundByPlayer.getColorSlot(),
+        },
+      ];
     }
 
     highlightCountry(countryId);
@@ -67,7 +78,7 @@ export const useGameSessionStore = defineStore("gameSession", () => {
   }
 
   function clearFoundCountries(): void {
-    foundCountryIds.value = [];
+    foundCountries.value = [];
     clearHighlightedCountry();
   }
 
@@ -77,7 +88,7 @@ export const useGameSessionStore = defineStore("gameSession", () => {
     playerId.value = null;
     currentTurn.value = null;
     highlightedCountryId.value = null;
-    foundCountryIds.value = [];
+    foundCountries.value = [];
     isConnected.value = false;
   }
 
@@ -88,6 +99,7 @@ export const useGameSessionStore = defineStore("gameSession", () => {
     isConnected,
     currentTurn,
     highlightedCountryId,
+    foundCountries,
     foundCountryIds,
     players,
     waitingPlayers,

@@ -3,6 +3,10 @@
 
   import { GameConstraints } from "@/domain/game/constraints/gameConstraints.ts";
   import type { CreateRoomOptions } from "@/domain/game/ports/GameServer.ts";
+  import {
+    isSupportedLanguage,
+    SUPPORTED_ANSWER_VALIDATION_LANGUAGES,
+  } from "@/domain/shared/models/SupportedLanguage.ts";
   import BottomTextLink from "@/presentation/components/game/forms/BottomTextLink.vue";
   import LabeledCheckboxInput from "@/presentation/components/partials/inputs/LabeledCheckboxInput.vue";
   import LabeledNumberInput from "@/presentation/components/partials/inputs/LabeledNumberInput.vue";
@@ -38,24 +42,23 @@
   const freedomOfLanguage = ref(true);
   const fieldErrors = ref<FieldErrors>({});
 
-  const languageOptions = computed<SelectOption[]>(() => [
-    {
-      label: props.translator("LANGUAGES.FR"),
-      value: "fr",
-    },
-    {
-      label: props.translator("LANGUAGES.EN"),
-      value: "en",
-    },
-  ]);
+  const languageOptions = computed<SelectOption[]>(() =>
+    SUPPORTED_ANSWER_VALIDATION_LANGUAGES.map((language) => ({
+      label: props.translator(`LANGUAGES.${language.toUpperCase()}`),
+      value: language,
+    })),
+  );
 
-  watch([username, gameLanguage, maxPlayers, gameDuration, turnDurationInSeconds], () => {
-    props.clearSubmissionError();
+  watch(
+    [username, gameLanguage, maxPlayers, gameDuration, turnDurationInSeconds, freedomOfLanguage],
+    () => {
+      props.clearSubmissionError();
 
-    if (Object.keys(fieldErrors.value).length > 0) {
-      validate();
-    }
-  });
+      if (Object.keys(fieldErrors.value).length > 0) {
+        validate();
+      }
+    },
+  );
 
   function submit(): void {
     const trimmedUsername = username.value.trim();
@@ -69,7 +72,8 @@
       gameDurationInSeconds: gameDuration.value * 60,
       turnDurationInSeconds: turnDurationInSeconds.value,
       maxPlayersAllowed: maxPlayers.value,
-      gameLanguage: gameLanguage.value,
+      gameLanguage: getSelectedGameLanguage(),
+      allowAnswerValidationInPlayerCurrentLanguage: freedomOfLanguage.value,
     });
   }
 
@@ -88,9 +92,13 @@
       );
     }
 
-    if (!gameLanguage.value) {
+    if (!freedomOfLanguage.value && !gameLanguage.value) {
       nextErrors.gameLanguage = props.translator(
         "VIEWS.FORMS.GAME_ROOM_LOBBYING.VALIDATION.REQUIRED",
+      );
+    } else if (!freedomOfLanguage.value && !isSupportedLanguage(gameLanguage.value)) {
+      nextErrors.gameLanguage = props.translator(
+        "VIEWS.FORMS.GAME_ROOM_LOBBYING.VALIDATION.UNSUPPORTED_LANGUAGE",
       );
     }
 
@@ -132,6 +140,10 @@
       max: range.max,
     };
   }
+
+  function getSelectedGameLanguage() {
+    return isSupportedLanguage(gameLanguage.value) ? gameLanguage.value : "fr";
+  }
 </script>
 
 <template>
@@ -171,11 +183,27 @@
           :error="fieldErrors.username"
         />
 
+        <LabeledCheckboxInput
+          id="freedom-of-language"
+          v-model="freedomOfLanguage"
+          :label="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_LABELS.FREEDOM_OF_LANGUAGE')"
+          :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.FREEDOM_OF_LANGUAGE')"
+          :description="
+            translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.FREEDOM_OF_LANGUAGE')
+          "
+          :disabled="isSubmitting"
+        />
+
         <LabeledSelectionInput
+          v-if="!freedomOfLanguage"
           id="game-language"
           v-model="gameLanguage"
-          :label="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_LABELS.GAME_LANGUAGE')"
-          :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.GAME_LANGUAGE')"
+          :label="
+            translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_LABELS.ANSWER_VALIDATION_LANGUAGE')
+          "
+          :hint="
+            translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.ANSWER_VALIDATION_LANGUAGE')
+          "
           :options="languageOptions"
           :disabled="isSubmitting"
           :error="fieldErrors.gameLanguage"
@@ -212,17 +240,6 @@
           :max="GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.max"
           :disabled="isSubmitting"
           :error="fieldErrors.turnDurationInSeconds"
-        />
-
-        <LabeledCheckboxInput
-          id="freedom-of-language"
-          v-model="freedomOfLanguage"
-          :label="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_LABELS.FREEDOM_OF_LANGUAGE')"
-          :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.FREEDOM_OF_LANGUAGE')"
-          :description="
-            translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.FREEDOM_OF_LANGUAGE')
-          "
-          :disabled="isSubmitting"
         />
 
         <button

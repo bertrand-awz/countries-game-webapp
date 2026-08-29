@@ -13,6 +13,10 @@ import type { PlayerJoinRoomEvent } from "@/domain/game/events/PlayerJoinRoomEve
 import type { PlayerLeftRoomEvent } from "@/domain/game/events/PlayerLeftRoomEvent.ts";
 import type { TurnChangedEvent } from "@/domain/game/events/TurnChangedEvent.ts";
 import type { GameState } from "@/domain/game/models/state/GameState.ts";
+import type {
+  AnswerValidationLanguage,
+  SupportedLanguage,
+} from "@/domain/shared/models/SupportedLanguage.ts";
 
 export type Unsubscribe = () => void;
 
@@ -23,7 +27,8 @@ export type GameSession = {
 
 export type CreateRoomOptions = {
   username: string;
-  gameLanguage: string;
+  gameLanguage: SupportedLanguage;
+  allowAnswerValidationInPlayerCurrentLanguage: boolean;
   gameDurationInSeconds: number;
   turnDurationInSeconds: number;
   maxPlayersAllowed: number;
@@ -55,6 +60,7 @@ export interface GameCommandGateway {
   restartGame(): void;
   startGame(): void;
   updateRoomSettings(options: UpdateRoomSettingsOptions): void;
+  updateAnswerValidationLanguage(language: AnswerValidationLanguage): void;
   voteGameAction(action: GameActionVote, requestId: string, accepted: boolean): void;
 }
 

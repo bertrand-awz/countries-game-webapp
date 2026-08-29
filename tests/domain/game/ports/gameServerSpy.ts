@@ -22,6 +22,7 @@ import type {
   Unsubscribe,
   UpdateRoomSettingsOptions,
 } from "@/domain/game/ports/GameServer.ts";
+import type { AnswerValidationLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
 
 import { createGameState } from "../models/state/gameStateMother.ts";
 
@@ -35,6 +36,7 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
   startGameCallCount = 0;
   leaveRoomCallCount = 0;
   roomSettingsUpdatedWith: UpdateRoomSettingsOptions | null = null;
+  answerValidationLanguageUpdatedWith: AnswerValidationLanguage | null = null;
   voteGameActionCalls: Array<{
     action: GameActionVote;
     requestId: string;
@@ -128,6 +130,10 @@ export class GameServerSpy implements GameRoomGateway, GameCommandGateway, GameE
 
   updateRoomSettings(options: UpdateRoomSettingsOptions): void {
     this.roomSettingsUpdatedWith = options;
+  }
+
+  updateAnswerValidationLanguage(language: AnswerValidationLanguage): void {
+    this.answerValidationLanguageUpdatedWith = language;
   }
 
   voteGameAction(action: GameActionVote, requestId: string, accepted: boolean): void {

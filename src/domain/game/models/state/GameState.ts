@@ -1,3 +1,4 @@
+import type { FoundCountry } from "@/domain/game/models/FoundCountry.ts";
 import type { Player } from "@/domain/game/models/Player.ts";
 import type { FoundingContinentProgressionState } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
 import type { WaitingPlayer } from "@/domain/game/models/WaitingPlayer.ts";
@@ -21,6 +22,7 @@ export class GameState {
     readonly endAt: number,
     readonly status: GameStatus,
     readonly continents: FoundingContinentProgressionState[],
+    readonly foundCountries: FoundCountry[],
     readonly allowAnswerValidationInPlayerCurrentLanguage: boolean,
     readonly players: Player[],
     readonly waitingPlayers: WaitingPlayer[],

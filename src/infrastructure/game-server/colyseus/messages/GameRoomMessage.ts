@@ -19,6 +19,7 @@ export enum GameRoomMessage {
   PLAYER_JOIN_ROOM = "player_join_room",
   PLAYER_LEFT_ROOM = "player_left_room",
   UPDATE_ROOM_SETTINGS = "update_room_settings",
+  UPDATE_ANSWER_VALIDATION_LANGUAGE = "update_answer_validation_language",
   ROOM_SETTINGS_UPDATED = "room_settings_updated",
   UPDATE_ROOM_SETTINGS_REJECTED = "update_room_settings_rejected",
   START_GAME = "start_game",

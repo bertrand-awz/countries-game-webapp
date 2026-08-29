@@ -2,6 +2,7 @@
   import {
     CheckIcon,
     CopyIcon,
+    LanguagesIcon,
     LinkIcon,
     SettingsIcon,
     Share2Icon,
@@ -16,7 +17,16 @@
   import { RouteName } from "@/app/router/routeName.ts";
   import { GameConstraints } from "@/domain/game/constraints/gameConstraints.ts";
   import type { GameSetting } from "@/domain/game/settings";
+  import {
+    type AnswerValidationLanguage,
+    ANY_ANSWER_VALIDATION_LANGUAGE,
+    isAnswerValidationLanguage,
+    SUPPORTED_ANSWER_VALIDATION_LANGUAGES,
+  } from "@/domain/shared/models/SupportedLanguage.ts";
   import InputRangeSlider from "@/presentation/components/partials/inputs/InputRangeSlider.vue";
+  import LabeledSelectionInput, {
+    type SelectOption,
+  } from "@/presentation/components/partials/inputs/LabeledSelectionInput.vue";
 
   const props = defineProps<{
     translator: (translationKey: string) => string;
@@ -24,7 +34,10 @@
     gameDurationInMinutes: number;
     maxPlayersAllowed: number;
     turnDurationInSeconds: number;
+    answerValidationLanguage: AnswerValidationLanguage;
+    allowAnswerValidationInPlayerCurrentLanguage: boolean;
     applySettingCallback: (newSettings: GameSetting) => void;
+    updateAnswerValidationLanguageCallback: (language: AnswerValidationLanguage) => void;
   }>();
 
   type CopiedItem = "roomId" | "invitationLink";
@@ -37,6 +50,20 @@
   const maxPlayersAllowed = ref(props.maxPlayersAllowed);
   const timerMinutes = ref(props.gameDurationInMinutes);
   const turnDurationInSeconds = ref(props.turnDurationInSeconds);
+  const answerValidationLanguage = ref<string>(
+    props.answerValidationLanguage ?? ANY_ANSWER_VALIDATION_LANGUAGE,
+  );
+
+  const languageOptions = computed<SelectOption[]>(() => [
+    {
+      label: props.translator("LANGUAGES.ANY"),
+      value: ANY_ANSWER_VALIDATION_LANGUAGE,
+    },
+    ...SUPPORTED_ANSWER_VALIDATION_LANGUAGES.map((language) => ({
+      label: props.translator(`LANGUAGES.${language.toUpperCase()}`),
+      value: language,
+    })),
+  ]);
 
   const invitationLink = computed(() => {
     if (!props.roomId) {
@@ -55,6 +82,7 @@
     maxPlayersAllowed.value = props.maxPlayersAllowed;
     timerMinutes.value = props.gameDurationInMinutes;
     turnDurationInSeconds.value = props.turnDurationInSeconds;
+    answerValidationLanguage.value = props.answerValidationLanguage;
     isSettingsOpen.value = true;
   }
 
@@ -63,12 +91,21 @@
   }
 
   function applySettings() {
-    const newSettings = {
+    const newSettings: GameSetting = {
       maxPlayersAllowed: maxPlayersAllowed.value,
       durationInMinutes: timerMinutes.value,
       turnDurationInSeconds: turnDurationInSeconds.value,
     };
+
     props.applySettingCallback(newSettings);
+
+    if (
+      props.allowAnswerValidationInPlayerCurrentLanguage &&
+      isAnswerValidationLanguage(answerValidationLanguage.value) &&
+      answerValidationLanguage.value !== props.answerValidationLanguage
+    ) {
+      props.updateAnswerValidationLanguageCallback(answerValidationLanguage.value);
+    }
     closeSettingsModal();
   }
 
@@ -284,6 +321,26 @@
             :maximum="GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.max"
             :unit="translator('GAME.SIDEBAR.SETTINGS.MODAL.TURN_DURATION_UNIT')"
           />
+
+          <div
+            v-if="allowAnswerValidationInPlayerCurrentLanguage"
+            class="rounded-lg bg-white/5 px-3 py-3"
+          >
+            <div class="mb-3 flex items-center gap-x-2">
+              <LanguagesIcon class="size-4 text-emerald-300" />
+              <span class="text-sm font-normal">
+                {{ translator("GAME.SIDEBAR.SETTINGS.MODAL.ANSWER_VALIDATION_LANGUAGE") }}
+              </span>
+            </div>
+
+            <LabeledSelectionInput
+              id="answer-validation-language"
+              v-model="answerValidationLanguage"
+              :label="translator('GAME.SIDEBAR.SETTINGS.MODAL.ANSWER_VALIDATION_LANGUAGE')"
+              :hint="translator('GAME.SIDEBAR.SETTINGS.MODAL.ANSWER_VALIDATION_LANGUAGE_HINT')"
+              :options="languageOptions"
+            />
+          </div>
         </div>
 
         <!-- Footer -->

@@ -73,6 +73,7 @@ describe("Colyseus game gateways", () => {
       turnDurationInSeconds: 45,
       maxPlayersAllowed: 4,
     });
+    commands.updateAnswerValidationLanguage("de");
     commands.voteGameAction("pause", "request-1", true);
     commands.voteGameAction("resume", "request-2", false);
     commands.voteGameAction("restart", "request-3", true);
@@ -106,6 +107,12 @@ describe("Colyseus game gateways", () => {
           gameDurationInSeconds: 300,
           turnDurationInSeconds: 45,
           maxPlayersAllowed: 4,
+        },
+      },
+      {
+        message: GameRoomMessage.UPDATE_ANSWER_VALIDATION_LANGUAGE,
+        payload: {
+          answerValidationLanguage: "de",
         },
       },
       {
@@ -154,6 +161,7 @@ describe("Colyseus game gateways", () => {
     let gameFinishedEvent: GameFinishedEvent | null = null;
     let rejectedReason: string | null = null;
     let foundCountryId: string | null = null;
+    let foundByPlayerColorSlot: number | null = null;
 
     events.onPlayerJoinRoom((event) => {
       playerJoinEvent = event;
@@ -169,6 +177,7 @@ describe("Colyseus game gateways", () => {
     });
     events.onCountryFound((event) => {
       foundCountryId = event.countryId;
+      foundByPlayerColorSlot = event.foundByPlayer.getColorSlot();
     });
     const unsubscribeGameFinished = events.onGameFinished((event) => {
       gameFinishedEvent = event;
@@ -209,6 +218,7 @@ describe("Colyseus game gateways", () => {
     handlers.get(GameRoomMessage.COUNTRY_FOUND)?.({
       countryId: "CAN",
       player,
+      playerColorSlot: 4,
       pointsAwarded: 10,
     });
     handlers.get(GameRoomMessage.GAME_STARTED)?.({
@@ -258,6 +268,7 @@ describe("Colyseus game gateways", () => {
     });
     assert.equal(rejectedReason, "already found");
     assert.equal(foundCountryId, "CAN");
+    assert.equal(foundByPlayerColorSlot, 4);
     assert.deepEqual(gameStartedEvent, {
       startAt: 10,
       endAt: 310,
@@ -327,6 +338,8 @@ describe("Colyseus game gateways", () => {
           username: "Ada",
           score: 7,
           totalCountriesFound: 2,
+          answerValidationLanguage: "ja",
+          colorSlot: 7,
         },
       ],
     };
@@ -361,6 +374,8 @@ describe("Colyseus game gateways", () => {
 
     assert.equal(mappedState.status, GameStatus.PLAYING);
     assert.equal(mappedState.players[0].getId(), "player-1");
+    assert.equal(mappedState.players[0].getAnswerValidationLanguage(), "ja");
+    assert.equal(mappedState.players[0].getColorSlot(), 7);
     assert.deepEqual(removedHandlers, []);
   });
 

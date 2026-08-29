@@ -1,14 +1,20 @@
+import type { FoundCountry } from "@/domain/game/models/FoundCountry.ts";
 import { Player } from "@/domain/game/models/Player.ts";
 import type { FoundingContinentProgressionState } from "@/domain/game/models/state/FoundingContinentProgressionState.ts";
 import { GameState, GameStatus } from "@/domain/game/models/state/GameState.ts";
 import type { WaitingPlayer } from "@/domain/game/models/WaitingPlayer.ts";
-import type { SupportedLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
+import type {
+  AnswerValidationLanguage,
+  SupportedLanguage,
+} from "@/domain/shared/models/SupportedLanguage.ts";
 
 type PlayerMotherOptions = {
   id?: string;
   username?: string;
   score?: number;
   countriesFound?: number;
+  answerValidationLanguage?: AnswerValidationLanguage;
+  colorSlot?: number;
 };
 
 type GameStateMotherOptions = {
@@ -21,6 +27,7 @@ type GameStateMotherOptions = {
   endAt?: number;
   status?: GameStatus;
   continents?: FoundingContinentProgressionState[];
+  foundCountries?: FoundCountry[];
   allowAnswerValidationInPlayerCurrentLanguage?: boolean;
   players?: Player[];
   waitingPlayers?: WaitingPlayer[];
@@ -31,6 +38,8 @@ export function createPlayer(options: PlayerMotherOptions = {}): Player {
     options.id ?? "player-1",
     options.username ?? "Alice",
     options.score ?? 0,
+    options.answerValidationLanguage ?? "any",
+    options.colorSlot ?? 0,
   );
   player.updateTotalCountriesFound(options.countriesFound ?? 0);
 
@@ -58,6 +67,7 @@ export function createGameState(options: GameStateMotherOptions = {}): GameState
         countriesFoundNumber: 0,
       },
     ],
+    options.foundCountries ?? [],
     options.allowAnswerValidationInPlayerCurrentLanguage ?? false,
     players,
     options.waitingPlayers ?? [],

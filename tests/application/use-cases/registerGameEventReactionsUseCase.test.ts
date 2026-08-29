@@ -27,7 +27,7 @@ describe("RegisterGameEventReactionsUseCase", () => {
   });
 
   it("notifies the frontend when room lifecycle events happen", () => {
-    const alice = createPlayer({ id: "player-1", username: "Alice" });
+    const alice = createPlayer({ id: "player-1", username: "Alice", colorSlot: 5 });
     const grace = createPlayer({ id: "player-2", username: "Grace" });
     const gameServer = new GameServerSpy(createGameState({ players: [alice, grace] }));
     const notifier = new NotifierSpy();
@@ -107,7 +107,7 @@ describe("RegisterGameEventReactionsUseCase", () => {
   });
 
   it("keeps a persistent notification for the current player's turn", () => {
-    const alice = createPlayer({ id: "player-1", username: "Alice" });
+    const alice = createPlayer({ id: "player-1", username: "Alice", colorSlot: 5 });
     const bob = createPlayer({ id: "player-2", username: "Bob" });
     const gameServer = new GameServerSpy(createGameState({ players: [alice, bob] }));
     const notifier = new NotifierSpy();
@@ -232,7 +232,7 @@ describe("RegisterGameEventReactionsUseCase", () => {
   });
 
   it("highlights the country found by a player", () => {
-    const alice = createPlayer({ id: "player-1", username: "Alice" });
+    const alice = createPlayer({ id: "player-1", username: "Alice", colorSlot: 5 });
     const gameServer = new GameServerSpy(createGameState({ players: [alice] }));
     const soundManager = new SoundManagerSpy();
     restoreDependencies = overrideAppDependencies({
@@ -252,6 +252,13 @@ describe("RegisterGameEventReactionsUseCase", () => {
 
     assert.equal(gameSessionStore.highlightedCountryId, "CAN");
     assert.deepEqual(gameSessionStore.foundCountryIds, ["CAN"]);
+    assert.deepEqual(gameSessionStore.foundCountries, [
+      {
+        countryId: "CAN",
+        foundByPlayerId: "player-1",
+        playerColorSlot: 5,
+      },
+    ]);
     assert.deepEqual(soundManager.playedEffects, [SoundEffectName.SUCCESS]);
   });
 

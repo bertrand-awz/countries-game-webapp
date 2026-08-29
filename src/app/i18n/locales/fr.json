@@ -42,6 +42,7 @@
         "INPUT_LABELS": {
           "USERNAME": "Nom d'utilisateur",
           "GAME_LANGUAGE": "Langues du jeu",
+          "ANSWER_VALIDATION_LANGUAGE": "Langue de validation des réponses",
           "MAX_PLAYER": "Nombre maximal de joueurs dans la salle",
           "GAME_DURATION": "Durée d'une partie",
           "TURN_DURATION": "Durée d'un tour",
@@ -52,6 +53,7 @@
           "USERNAME_PLACEHOLDER": "Entrez un nom d'utilisateur",
           "ROOM_ID": "Identifiant de la salle à rejoindre. Il est généralement fourni par le créateur de la salle.",
           "GAME_LANGUAGE": "Langue principale utilisée pour les noms de pays pendant la partie.",
+          "ANSWER_VALIDATION_LANGUAGE": "Langue utilisée par le serveur pour valider et afficher les noms de pays acceptés.",
           "MAX_PLAYER": "Nombre maximal de joueurs pouvant rejoindre cette salle.",
           "GAME_DURATION": "Durée totale de la partie en minutes.",
           "TURN_DURATION": "Temps accordé à chaque joueur pour répondre, entre 30 et 55 secondes.",
@@ -78,7 +80,8 @@
         "VALIDATION": {
           "REQUIRED": "Ce champ est requis.",
           "USERNAME_MIN_LENGTH": "Le nom d'utilisateur doit contenir au moins {min} caractères.",
-          "NUMBER_RANGE": "La valeur doit être un nombre entier entre {min} et {max}."
+          "NUMBER_RANGE": "La valeur doit être un nombre entier entre {min} et {max}.",
+          "UNSUPPORTED_LANGUAGE": "Cette langue n'est pas acceptée par le serveur."
         }
       }
     }
@@ -141,6 +144,8 @@
           "GAME_DURATION_UNIT": "min",
           "TURN_DURATION": "Durée d'un tour",
           "TURN_DURATION_UNIT": "s",
+          "ANSWER_VALIDATION_LANGUAGE": "Langue de réponse",
+          "ANSWER_VALIDATION_LANGUAGE_HINT": "Ce choix n'affecte que vos propres réponses dans cette salle.",
           "BUTTON_INVITE": "Inviter",
           "BUTTON_APPLY": "Appliquer"
         }
@@ -230,7 +235,11 @@
     }
   },
   "LANGUAGES": {
+    "ANY": "N'importe quelle langue",
     "FR": "Français",
-    "EN": "Anglais"
+    "EN": "Anglais",
+    "DE": "Allemand",
+    "ES": "Espagnol",
+    "JA": "Japonais"
   }
 }

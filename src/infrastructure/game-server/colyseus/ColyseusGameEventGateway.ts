@@ -124,7 +124,10 @@ export class ColyseusGameEventGateway implements GameEventGateway {
       room.onMessage(GameRoomMessage.COUNTRY_FOUND, (message) => {
         this.emit(this.countryFoundCallbacks, {
           countryId: message.countryId,
-          foundByPlayer: message.player,
+          foundByPlayer: mapPlayer({
+            ...message.player,
+            colorSlot: message.playerColorSlot ?? message.player?.colorSlot,
+          }),
           pointsAwarded: message.pointsAwarded,
         });
       }),
@@ -239,12 +242,20 @@ function mapPlayer(messagePlayer: {
   username: string;
   score?: number;
   totalCountriesFound?: number;
+  answerValidationLanguage?: "any" | "fr" | "en" | "de" | "es" | "ja";
+  colorSlot?: number;
 }): Player {
   if (typeof (messagePlayer as unknown as Player).getId === "function") {
     return messagePlayer as unknown as Player;
   }
 
-  const player = new Player(messagePlayer.id, messagePlayer.username, messagePlayer.score ?? 0);
+  const player = new Player(
+    messagePlayer.id,
+    messagePlayer.username,
+    messagePlayer.score ?? 0,
+    messagePlayer.answerValidationLanguage ?? "any",
+    messagePlayer.colorSlot ?? 0,
+  );
   player.updateTotalCountriesFound(messagePlayer.totalCountriesFound ?? 0);
 
   return player;

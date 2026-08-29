@@ -5,6 +5,7 @@
   import type { GameState } from "@/domain/game/models/state/GameState.ts";
   import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
   import type { GameSetting } from "@/domain/game/settings";
+  import type { AnswerValidationLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
 
   import GameDashboardSidebarContent from "./GameDashboardSidebarContent.vue";
 
@@ -15,6 +16,7 @@
     translator: (translationKey: string) => string;
     soundManager: SoundManager;
     applySettingCallback: (newSettings: GameSetting) => void;
+    updateAnswerValidationLanguageCallback: (language: AnswerValidationLanguage) => void;
   }>();
 
   const gameState = defineModel<GameState>("gameState", { required: true });
@@ -74,6 +76,7 @@
               :room-id="roomId"
               :sound-manager="soundManager"
               :apply-setting-callback="applySettingCallback"
+              :update-answer-validation-language-callback="updateAnswerValidationLanguageCallback"
               :translator="translator"
             />
           </DialogPanel>
@@ -91,6 +94,7 @@
       :room-id="roomId"
       :sound-manager="soundManager"
       :apply-setting-callback="applySettingCallback"
+      :update-answer-validation-language-callback="updateAnswerValidationLanguageCallback"
       :translator="translator"
     />
   </div>

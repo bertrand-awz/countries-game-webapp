@@ -4,6 +4,7 @@
 
   import type { Player } from "@/domain/game/models/Player.ts";
   import type { GameState } from "@/domain/game/models/state/GameState.ts";
+  import { getPlayerColorBulletStyle } from "@/presentation/components/game/playerColorPalette.ts";
 
   const props = defineProps<{
     gameState: GameState;
@@ -140,6 +141,11 @@
               <td class="px-3 py-3">
                 <div class="flex min-w-0 items-center gap-2">
                   <span class="truncate font-semibold">{{ player.getUsername() }}</span>
+                  <span
+                    class="size-2.5 shrink-0 rounded-full"
+                    :style="getPlayerColorBulletStyle(player.getColorSlot())"
+                    aria-hidden="true"
+                  ></span>
                   <span
                     v-if="isCurrentPlayer(player)"
                     class="rounded-sm bg-emerald-300/10 px-1.5 py-0.5 text-xs text-emerald-200"

@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { Country } from "@/domain/game/models/Country.ts";
+  import type { FoundCountry } from "@/domain/game/models/FoundCountry.ts";
   import InteractiveGlobe from "@/presentation/components/game/dashboard/gameboardContents/globe/InteractiveGlobe.vue";
 
   import CountryNameAnswerInputForm from "./dashboard/gameboardContents/CountryNameAnswerInputForm.vue";
@@ -11,7 +12,7 @@
     answerInputFocusToken: string;
     answerInputClearToken: number;
     highlightedCountryId: string | null;
-    foundCountryIds: string[];
+    foundCountries: FoundCountry[];
   }>();
 </script>
 
@@ -27,7 +28,7 @@
       <InteractiveGlobe
         :countries="countriesFeatures"
         :highlighted-country-id="highlightedCountryId"
-        :found-country-ids="foundCountryIds"
+        :found-countries="foundCountries"
       />
     </div>
   </section>

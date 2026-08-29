@@ -3,6 +3,7 @@ import type {
   GameCommandGateway,
   UpdateRoomSettingsOptions,
 } from "@/domain/game/ports/GameServer.ts";
+import type { AnswerValidationLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
 
 import type { ColyseusRoomGateway } from "./ColyseusRoomGateway.js";
 import { GameRoomMessage } from "./messages/GameRoomMessage.js";
@@ -34,6 +35,12 @@ export class ColyseusGameCommandGateway implements GameCommandGateway {
 
   updateRoomSettings(options: UpdateRoomSettingsOptions): void {
     this.roomGateway.getActiveRoom().send(GameRoomMessage.UPDATE_ROOM_SETTINGS, options);
+  }
+
+  updateAnswerValidationLanguage(language: AnswerValidationLanguage): void {
+    this.roomGateway.getActiveRoom().send(GameRoomMessage.UPDATE_ANSWER_VALIDATION_LANGUAGE, {
+      answerValidationLanguage: language,
+    });
   }
 
   voteGameAction(action: GameActionVote, requestId: string, accepted: boolean): void {

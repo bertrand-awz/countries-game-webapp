@@ -14,7 +14,7 @@ describe("gameSessionStore", () => {
   });
 
   it("connects the local session to the matching player in the current game state", () => {
-    const alice = createPlayer({ id: "player-1", username: "Alice" });
+    const alice = createPlayer({ id: "player-1", username: "Alice", colorSlot: 3 });
     const bob = createPlayer({ id: "player-2", username: "Bob", score: 12 });
     const gameState = createGameState({
       status: GameStatus.PLAYING,
@@ -45,10 +45,17 @@ describe("gameSessionStore", () => {
       durationInSeconds: 45,
     });
 
-    store.recordCountryFound("FRA");
+    store.recordCountryFound("FRA", alice);
 
     assert.equal(store.highlightedCountryId, "FRA");
     assert.deepEqual(store.foundCountryIds, ["FRA"]);
+    assert.deepEqual(store.foundCountries, [
+      {
+        countryId: "FRA",
+        foundByPlayerId: "player-1",
+        playerColorSlot: 3,
+      },
+    ]);
   });
 
   it("clears the local session and derived game context when the session ends", () => {
@@ -56,7 +63,7 @@ describe("gameSessionStore", () => {
     store.setSession({ roomId: "room-1", playerId: "player-1" });
     store.setGameState(createGameState());
     store.highlightCountry("CAN");
-    store.recordCountryFound("FRA");
+    store.recordCountryFound("FRA", createPlayer({ id: "player-1", colorSlot: 2 }));
 
     store.reset();
 

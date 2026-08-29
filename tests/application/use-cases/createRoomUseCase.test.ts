@@ -31,6 +31,7 @@ describe("CreateRoomUseCase", () => {
     const options: CreateRoomOptions = {
       username: "Bertrand",
       gameLanguage: "fr",
+      allowAnswerValidationInPlayerCurrentLanguage: true,
       gameDurationInSeconds: 300,
       turnDurationInSeconds: 45,
       maxPlayersAllowed: 4,

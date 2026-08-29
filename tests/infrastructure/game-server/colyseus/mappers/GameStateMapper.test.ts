@@ -12,6 +12,8 @@ describe("GameStateMapper", () => {
       username: "Ada",
       score: 18,
       totalCountriesFound: 3,
+      answerValidationLanguage: "ja",
+      colorSlot: 6,
     };
     const colyseusState = {
       numberOfPlayers: 2,
@@ -29,6 +31,13 @@ describe("GameStateMapper", () => {
             countriesNumber: 44,
           },
           countriesFoundNumber: 5,
+        },
+      ],
+      foundCountries: [
+        {
+          countryId: "CAN",
+          foundByPlayerId: "player-1",
+          playerColorSlot: 6,
         },
       ],
       allowAnswerValidationInPlayerCurrentLanguage: true,
@@ -53,12 +62,21 @@ describe("GameStateMapper", () => {
         countriesFoundNumber: 5,
       },
     ]);
+    assert.deepEqual(gameState.foundCountries, [
+      {
+        countryId: "CAN",
+        foundByPlayerId: "player-1",
+        playerColorSlot: 6,
+      },
+    ]);
     assert.equal(gameState.players.length, 1);
     assert.equal(gameState.players[0] instanceof Player, true);
     assert.equal(gameState.players[0].getId(), "player-1");
     assert.equal(gameState.players[0].getUsername(), "Ada");
     assert.equal(gameState.players[0].getScore(), 18);
     assert.equal(gameState.players[0].getCountriesFoundNumber(), 3);
+    assert.equal(gameState.players[0].getAnswerValidationLanguage(), "ja");
+    assert.equal(gameState.players[0].getColorSlot(), 6);
     assert.deepEqual(gameState.waitingPlayers, [
       {
         id: "player-2",

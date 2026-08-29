@@ -4,18 +4,20 @@
   import { onMounted, ref, watch } from "vue";
 
   import type { Country } from "@/domain/game/models/Country";
+  import type { FoundCountry } from "@/domain/game/models/FoundCountry.ts";
+  import { getPlayerColor } from "@/presentation/components/game/playerColorPalette.ts";
 
   const props = withDefaults(
     defineProps<{
       countries: Country[];
       highlightedCountryId?: string | null;
-      foundCountryIds?: string[];
+      foundCountries?: FoundCountry[];
       width?: number;
       height?: number;
     }>(),
     {
       highlightedCountryId: null,
-      foundCountryIds: () => [],
+      foundCountries: () => [],
       width: 700,
       height: 700,
     },
@@ -124,15 +126,21 @@
   }
 
   function getCountryFill(countryId: string): string {
-    if (isCountryFound(countryId) || countryId === props.highlightedCountryId) {
+    const foundCountry = getFoundCountry(countryId);
+
+    if (foundCountry) {
+      return getPlayerColor(foundCountry.playerColorSlot);
+    }
+
+    if (countryId === props.highlightedCountryId) {
       return "#facc15";
     }
 
     return "#475569";
   }
 
-  function isCountryFound(countryId: string): boolean {
-    return props.foundCountryIds.includes(countryId);
+  function getFoundCountry(countryId: string): FoundCountry | undefined {
+    return props.foundCountries.find((country) => country.countryId === countryId);
   }
 
   function updateCountryColors(): void {
@@ -226,7 +234,7 @@
   );
 
   watch(
-    () => props.foundCountryIds,
+    () => props.foundCountries,
     () => {
       updateCountryColors();
     },

@@ -4,6 +4,7 @@ import { RequestGameRestartUseCase } from "./game-commands/requestGameRestartUse
 import { RequestGameResumeUseCase } from "./game-commands/requestGameResumeUseCase.ts";
 import { StartGameUseCase } from "./game-commands/startGameUseCase.ts";
 import { SubmitAnswerUseCase } from "./game-commands/submitAnswerUseCase.ts";
+import { UpdateAnswerValidationLanguageUseCase } from "./game-commands/updateAnswerValidationLanguageUseCase.ts";
 import { UpdateRoomSettingsUseCase } from "./game-commands/updateRoomSettingsUseCase.ts";
 import { SynchronizeCountdownSoundUseCase } from "./game-sound/synchronizeCountdownSoundUseCase.ts";
 import { JoinRoomUseCase } from "./joinRoomUseCase.ts";
@@ -22,4 +23,5 @@ export const requestGamePauseUseCase = new RequestGamePauseUseCase();
 export const requestGameResumeUseCase = new RequestGameResumeUseCase();
 export const requestGameRestartUseCase = new RequestGameRestartUseCase();
 export const updateRoomSettingsUseCase = new UpdateRoomSettingsUseCase();
+export const updateAnswerValidationLanguageUseCase = new UpdateAnswerValidationLanguageUseCase();
 export const synchronizeCountdownSoundUseCase = new SynchronizeCountdownSoundUseCase();

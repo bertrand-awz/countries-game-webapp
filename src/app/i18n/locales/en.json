@@ -42,6 +42,7 @@
         "INPUT_LABELS": {
           "USERNAME": "Username",
           "GAME_LANGUAGE": "Game default language",
+          "ANSWER_VALIDATION_LANGUAGE": "Answer validation language",
           "MAX_PLAYER": "Room's max players",
           "GAME_DURATION": "Game duration",
           "TURN_DURATION": "Turn duration",
@@ -52,6 +53,7 @@
           "USERNAME_PLACEHOLDER": "Enter a username",
           "ROOM_ID": "Room identifier to join. It is usually provided by the room creator.",
           "GAME_LANGUAGE": "Main language used for country names during the game.",
+          "ANSWER_VALIDATION_LANGUAGE": "Language used by the server to validate and display accepted country names.",
           "MAX_PLAYER": "Maximum number of players allowed to join this room.",
           "GAME_DURATION": "Total game duration in minutes.",
           "TURN_DURATION": "Time given to each player to answer, between 30 and 55 seconds.",
@@ -78,7 +80,8 @@
         "VALIDATION": {
           "REQUIRED": "This field is required",
           "USERNAME_MIN_LENGTH": "Username must contain at least {min} characters.",
-          "NUMBER_RANGE": "Value must be an integer between {min} and {max}."
+          "NUMBER_RANGE": "Value must be an integer between {min} and {max}.",
+          "UNSUPPORTED_LANGUAGE": "This language is not supported by the server."
         }
       }
     }
@@ -141,6 +144,8 @@
           "GAME_DURATION_UNIT": "min",
           "TURN_DURATION": "Turn duration",
           "TURN_DURATION_UNIT": "s",
+          "ANSWER_VALIDATION_LANGUAGE": "Answer language",
+          "ANSWER_VALIDATION_LANGUAGE_HINT": "Only affects your own answers in this room.",
           "BUTTON_INVITE": "Invite",
           "BUTTON_APPLY": "Apply"
         }
@@ -230,7 +235,11 @@
     }
   },
   "LANGUAGES": {
+    "ANY": "Any language",
     "FR": "French",
-    "EN": "English"
+    "EN": "English",
+    "DE": "German",
+    "ES": "Spanish",
+    "JA": "Japanese"
   }
 }

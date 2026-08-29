@@ -17,10 +17,12 @@
     startGameUseCase,
     submitCountryNameAnswerUseCase,
     synchronizeCountdownSoundUseCase,
+    updateAnswerValidationLanguageUseCase,
     updateRoomSettingsUseCase,
   } from "@/application/use-cases";
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
   import type { GameSetting } from "@/domain/game/settings";
+  import type { AnswerValidationLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
   import GameNavbar from "@/presentation/components/game/dashboard/GameDashboardNavbar.vue";
   import GameSidebar from "@/presentation/components/game/dashboard/GameDashboardSidebar.vue";
   import GameFinalScoreboardOverlay from "@/presentation/components/game/dashboard/GameFinalScoreboardOverlay.vue";
@@ -43,7 +45,7 @@
     currentPlayer,
     currentTurn,
     currentWaitingPlayer,
-    foundCountryIds,
+    foundCountries,
     gameState,
     highlightedCountryId,
     isConnected,
@@ -171,6 +173,10 @@
     updateRoomSettingsUseCase.setOptions(newSetting).execute();
   }
 
+  function updateAnswerValidationLanguage(language: AnswerValidationLanguage) {
+    updateAnswerValidationLanguageUseCase.setOptions({ language }).execute();
+  }
+
   function calculateTimeLeftInSeconds(endAt: number): number {
     return Math.max(0, Math.ceil((endAt - now.value) / 1000));
   }
@@ -200,6 +206,7 @@
       :translator="t"
       :sound-manager="soundManager"
       :apply-setting-callback="applySettingCallback"
+      :update-answer-validation-language-callback="updateAnswerValidationLanguage"
       @update:open="sidebarOpen = false"
     />
     <GameBoard
@@ -209,7 +216,7 @@
       :answer-input-focus-token="answerInputFocusToken"
       :answer-input-clear-token="answerInputClearToken"
       :highlighted-country-id="highlightedCountryId"
-      :found-country-ids="foundCountryIds"
+      :found-countries="foundCountries"
     />
     <GameFinalScoreboardOverlay
       v-if="gameState.status === GameStatus.FINISHED"

@@ -5,6 +5,7 @@
   import type { GameState } from "@/domain/game/models/state/GameState.ts";
   import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
   import type { GameSetting } from "@/domain/game/settings";
+  import type { AnswerValidationLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
 
   import GameIconAndTitle from "./sidebarContents/GameIconAndTitle.vue";
   import GameSettings from "./sidebarContents/gameSettings/GameSettings.vue";
@@ -18,6 +19,7 @@
     roomId: string | null;
     translator: (translationKey: string) => string;
     applySettingCallback: (newSetting: GameSetting) => void;
+    updateAnswerValidationLanguageCallback: (language: AnswerValidationLanguage) => void;
   }>();
 
   const opponents = computed(() => {
@@ -45,7 +47,12 @@
         :game-duration-in-minutes="Math.round(gameState.durationInSeconds / 60)"
         :max-players-allowed="gameState.maxPlayersAllowed"
         :turn-duration-in-seconds="gameState.turnDurationInSeconds"
+        :answer-validation-language="currentPlayer.getAnswerValidationLanguage()"
+        :allow-answer-validation-in-player-current-language="
+          gameState.allowAnswerValidationInPlayerCurrentLanguage
+        "
         :apply-setting-callback="applySettingCallback"
+        :update-answer-validation-language-callback="updateAnswerValidationLanguageCallback"
       />
     </nav>
   </div>

@@ -26,6 +26,8 @@ export class ColyseusRoomGateway implements GameRoomGateway {
   async createRoom(options: CreateRoomOptions): Promise<GameSession> {
     const room = await this.client.create(COUNTRIES_GAME_ROOM_NAME, {
       gameLanguage: options.gameLanguage,
+      allowAnswerValidationInPlayerCurrentLanguage:
+        options.allowAnswerValidationInPlayerCurrentLanguage,
       gameDurationInSeconds: options.gameDurationInSeconds,
       turnDurationInSeconds: options.turnDurationInSeconds,
       maxPlayersAllowed: options.maxPlayersAllowed,
