@@ -29,9 +29,7 @@ type SendCall = {
 type MessageHandler = (message: unknown) => void;
 
 function createRoomGatewayWithRoom(room: object): ColyseusRoomGateway {
-  const onStateChange = (() => {}) as unknown as ((
-    handler: (state: unknown) => void,
-  ) => void) & {
+  const onStateChange = (() => {}) as unknown as ((handler: (state: unknown) => void) => void) & {
     remove(handler: (state: unknown) => void): void;
   };
   onStateChange.remove = () => {};

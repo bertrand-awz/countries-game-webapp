@@ -94,7 +94,6 @@
             </h2>
           </div>
         </div>
-
       </header>
 
       <div class="grid gap-3 border-b border-white/10 px-5 py-4 sm:grid-cols-2 sm:px-6">

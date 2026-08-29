@@ -42,8 +42,9 @@ export class ColyseusGameEventGateway implements GameEventGateway {
   private readonly gamePausedCallbacks = new Set<EventCallback<GamePausedEvent>>();
   private readonly gameResumedCallbacks = new Set<EventCallback<GameResumedEvent>>();
   private readonly gameRestartedCallbacks = new Set<EventCallback<GameRestartedEvent>>();
-  private readonly gameActionVoteRequestedCallbacks =
-    new Set<EventCallback<GameActionVoteRequestedEvent>>();
+  private readonly gameActionVoteRequestedCallbacks = new Set<
+    EventCallback<GameActionVoteRequestedEvent>
+  >();
   private readonly gameFinishedCallbacks = new Set<EventCallback<GameFinishedEvent>>();
   private roomUnsubscriptions: Unsubscribe[] = [];
   private boundRoom: Room | null = null;
