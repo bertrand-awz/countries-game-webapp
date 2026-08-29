@@ -29,11 +29,27 @@ type SendCall = {
 type MessageHandler = (message: unknown) => void;
 
 function createRoomGatewayWithRoom(room: object): ColyseusRoomGateway {
+  const onStateChange = (() => {}) as unknown as ((
+    handler: (state: unknown) => void,
+  ) => void) & {
+    remove(handler: (state: unknown) => void): void;
+  };
+  onStateChange.remove = () => {};
   const gateway = Object.create(ColyseusRoomGateway.prototype) as ColyseusRoomGateway;
   const gatewayInternals = gateway as unknown as {
     room: object;
+    activeRoomChangeListeners: Set<(room: object | null) => void>;
   };
-  gatewayInternals.room = room;
+  gatewayInternals.room = {
+    roomId: "room-1",
+    sessionId: "player-1",
+    state: {},
+    onMessage: () => () => {},
+    onStateChange,
+    leave: async () => {},
+    ...room,
+  };
+  gatewayInternals.activeRoomChangeListeners = new Set();
 
   return gateway;
 }
@@ -225,8 +241,6 @@ describe("Colyseus game gateways", () => {
       requiredVoterSessionIds: ["player-1"],
     });
     handlers.get(GameRoomMessage.GAME_FINISHED)?.({ winner: player, reason: "time_elapsed" });
-    unsubscribeGameFinished();
-    unsubscribeVoteRequest();
 
     assert.deepEqual(playerJoinEvent, {
       playerId: "player-2",
@@ -275,10 +289,28 @@ describe("Colyseus game gateways", () => {
       requiredVoterIds: ["player-1"],
     });
     assert.deepEqual(gameFinishedEvent, { winner: player, reason: "time_elapsed" });
-    assert.equal(handlers.has(GameRoomMessage.GAME_FINISHED), false);
-    assert.equal(handlers.has(GameRoomMessage.PAUSE_GAME_REQUESTED), false);
-    assert.equal(handlers.has(GameRoomMessage.RESUME_GAME_REQUESTED), false);
-    assert.equal(handlers.has(GameRoomMessage.RESTART_GAME_REQUESTED), false);
+    unsubscribeGameFinished();
+    unsubscribeVoteRequest();
+    gameFinishedEvent = null;
+    voteRequestedEvent = null;
+    handlers.get(GameRoomMessage.GAME_FINISHED)?.({ winner: player, reason: "time_elapsed" });
+    handlers.get(GameRoomMessage.PAUSE_GAME_REQUESTED)?.({
+      requestId: "pause-request-2",
+      requestedByPlayerSessionId: "player-2",
+      requestedByUsername: "Grace",
+      requiredVoterSessionIds: ["player-1"],
+    });
+
+    assert.equal(gameFinishedEvent, null);
+    assert.equal(voteRequestedEvent, null);
+    assert.equal(handlers.has(GameRoomMessage.GAME_FINISHED), true);
+    assert.equal(handlers.has(GameRoomMessage.PAUSE_GAME_REQUESTED), true);
+    assert.equal(handlers.has(GameRoomMessage.RESUME_GAME_REQUESTED), true);
+    assert.equal(handlers.has(GameRoomMessage.RESTART_GAME_REQUESTED), true);
+    assert.equal(handlers.has(GameRoomMessage.ROOM_SETTINGS_UPDATED), true);
+    assert.equal(handlers.has(GameRoomMessage.UPDATE_ROOM_SETTINGS_REJECTED), true);
+    assert.equal(handlers.has(GameRoomMessage.COUNTRY_SUBMITTED), true);
+    assert.equal(handlers.has(GameRoomMessage.SUBMIT_COUNTRY_NAME_RESULT), true);
   });
 
   it("maps state changes into domain game states and returns an unsubscribe callback", () => {
@@ -324,10 +356,14 @@ describe("Colyseus game gateways", () => {
     const stateHandler = registeredStateHandler as unknown as (state: unknown) => void;
     stateHandler(rawState);
     unsubscribe();
+    stateHandler({
+      ...rawState,
+      status: GameStatus.FINISHED,
+    });
 
     assert.equal(mappedState.status, GameStatus.PLAYING);
     assert.equal(mappedState.players[0].getId(), "player-1");
-    assert.deepEqual(removedHandlers, [stateHandler]);
+    assert.deepEqual(removedHandlers, []);
   });
 
   it("leaves the active room once and then behaves as disconnected", async () => {

@@ -6,15 +6,18 @@ import type {
   GameRoomGateway,
   GameSession,
   JoinRoomOptions,
+  Unsubscribe,
 } from "@/domain/game/ports/GameServer.ts";
 
 import { GameStateMapper } from "./mappers/GameStateMapper.js";
 
 const COUNTRIES_GAME_ROOM_NAME = "countries_game";
+type ActiveRoomChangeListener = (room: Room | null) => void;
 
 export class ColyseusRoomGateway implements GameRoomGateway {
   private readonly client: Client;
   private room: Room | null = null;
+  private readonly activeRoomChangeListeners = new Set<ActiveRoomChangeListener>();
 
   constructor(endpoint: string = "http://localhost:2567") {
     this.client = new Client(endpoint);
@@ -49,12 +52,17 @@ export class ColyseusRoomGateway implements GameRoomGateway {
   }
 
   async leaveRoom(): Promise<void> {
-    if (!this.room) {
+    const room = this.room;
+
+    if (!room) {
       return;
     }
 
-    await this.room.leave();
-    this.room = null;
+    await room.leave();
+
+    if (this.room === room) {
+      this.setActiveRoom(null);
+    }
   }
 
   getActiveRoom(): Room {
@@ -65,11 +73,32 @@ export class ColyseusRoomGateway implements GameRoomGateway {
     return this.room;
   }
 
-  private async initializeRoom(room: Room): Promise<GameSession> {
-    await this.waitForInitialState(room);
-    this.room = room;
+  onActiveRoomChange(listener: ActiveRoomChangeListener): Unsubscribe {
+    this.activeRoomChangeListeners.add(listener);
 
-    return this.toGameSession(room);
+    if (this.room) {
+      listener(this.room);
+    }
+
+    return () => {
+      this.activeRoomChangeListeners.delete(listener);
+    };
+  }
+
+  private async initializeRoom(room: Room): Promise<GameSession> {
+    this.setActiveRoom(room);
+
+    try {
+      await this.waitForInitialState(room);
+
+      return this.toGameSession(room);
+    } catch (error) {
+      if (this.room === room) {
+        this.setActiveRoom(null);
+      }
+
+      throw error;
+    }
   }
 
   private waitForInitialState(room: Room): Promise<void> {
@@ -103,5 +132,10 @@ export class ColyseusRoomGateway implements GameRoomGateway {
       roomId: room.roomId,
       playerId: room.sessionId,
     };
+  }
+
+  private setActiveRoom(room: Room | null): void {
+    this.room = room;
+    this.activeRoomChangeListeners.forEach((listener) => listener(room));
   }
 }

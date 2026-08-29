@@ -1,3 +1,5 @@
+import type { Room } from "@colyseus/sdk";
+
 import type { CountryFoundEvent } from "@/domain/game/events/CountryFoundEvent.ts";
 import type { CountryRejectedEvent } from "@/domain/game/events/CountryRejectedEvent.ts";
 import type {
@@ -20,142 +22,214 @@ import type { ColyseusRoomGateway } from "./ColyseusRoomGateway.js";
 import { GameStateMapper } from "./mappers/GameStateMapper.js";
 import { GameRoomMessage } from "./messages/GameRoomMessage.js";
 
+type EventCallback<TEvent> = (event: TEvent) => void;
+
+const IGNORED_ROOM_MESSAGES = [
+  GameRoomMessage.COUNTRY_SUBMITTED,
+  GameRoomMessage.SUBMIT_COUNTRY_NAME_RESULT,
+  GameRoomMessage.ROOM_SETTINGS_UPDATED,
+  GameRoomMessage.UPDATE_ROOM_SETTINGS_REJECTED,
+] as const;
+
 export class ColyseusGameEventGateway implements GameEventGateway {
-  constructor(private readonly roomGateway: ColyseusRoomGateway) {}
+  private readonly stateChangeCallbacks = new Set<EventCallback<GameState>>();
+  private readonly countryFoundCallbacks = new Set<EventCallback<CountryFoundEvent>>();
+  private readonly countryRejectedCallbacks = new Set<EventCallback<CountryRejectedEvent>>();
+  private readonly playerJoinRoomCallbacks = new Set<EventCallback<PlayerJoinRoomEvent>>();
+  private readonly playerLeftRoomCallbacks = new Set<EventCallback<PlayerLeftRoomEvent>>();
+  private readonly turnChangedCallbacks = new Set<EventCallback<TurnChangedEvent>>();
+  private readonly gameStartedCallbacks = new Set<EventCallback<GameStartedEvent>>();
+  private readonly gamePausedCallbacks = new Set<EventCallback<GamePausedEvent>>();
+  private readonly gameResumedCallbacks = new Set<EventCallback<GameResumedEvent>>();
+  private readonly gameRestartedCallbacks = new Set<EventCallback<GameRestartedEvent>>();
+  private readonly gameActionVoteRequestedCallbacks =
+    new Set<EventCallback<GameActionVoteRequestedEvent>>();
+  private readonly gameFinishedCallbacks = new Set<EventCallback<GameFinishedEvent>>();
+  private roomUnsubscriptions: Unsubscribe[] = [];
+  private boundRoom: Room | null = null;
+
+  constructor(private readonly roomGateway: ColyseusRoomGateway) {
+    this.roomGateway.onActiveRoomChange((room) => this.bindActiveRoom(room));
+  }
 
   onCountryFound(callback: (event: CountryFoundEvent) => void): Unsubscribe {
-    return this.roomGateway.getActiveRoom().onMessage(GameRoomMessage.COUNTRY_FOUND, (message) => {
-      callback({
-        countryId: message.countryId,
-        foundByPlayer: message.player,
-        pointsAwarded: message.pointsAwarded,
-      });
-    });
+    return this.registerCallback(this.countryFoundCallbacks, callback);
   }
 
   onCountryRejected(callback: (event: CountryRejectedEvent) => void): Unsubscribe {
-    return this.roomGateway
-      .getActiveRoom()
-      .onMessage(GameRoomMessage.COUNTRY_REJECTED, (message) => {
-        callback({
-          reason: message.reason,
-        });
-      });
+    return this.registerCallback(this.countryRejectedCallbacks, callback);
   }
 
   onStateChange(callback: (state: GameState) => void): Unsubscribe {
-    const room = this.roomGateway.getActiveRoom();
+    return this.registerCallback(this.stateChangeCallbacks, callback);
+  }
+
+  onPlayerJoinRoom(callback: (event: PlayerJoinRoomEvent) => void): Unsubscribe {
+    return this.registerCallback(this.playerJoinRoomCallbacks, callback);
+  }
+
+  onPlayerLeftRoom(callback: (event: PlayerLeftRoomEvent) => void): Unsubscribe {
+    return this.registerCallback(this.playerLeftRoomCallbacks, callback);
+  }
+
+  onTurnChanged(callback: (event: TurnChangedEvent) => void): Unsubscribe {
+    return this.registerCallback(this.turnChangedCallbacks, callback);
+  }
+
+  onGameStarted(callback: (event: GameStartedEvent) => void): Unsubscribe {
+    return this.registerCallback(this.gameStartedCallbacks, callback);
+  }
+
+  onGamePaused(callback: (event: GamePausedEvent) => void): Unsubscribe {
+    return this.registerCallback(this.gamePausedCallbacks, callback);
+  }
+
+  onGameResumed(callback: (event: GameResumedEvent) => void): Unsubscribe {
+    return this.registerCallback(this.gameResumedCallbacks, callback);
+  }
+
+  onGameRestarted(callback: (event: GameRestartedEvent) => void): Unsubscribe {
+    return this.registerCallback(this.gameRestartedCallbacks, callback);
+  }
+
+  onGameActionVoteRequested(callback: (event: GameActionVoteRequestedEvent) => void): Unsubscribe {
+    return this.registerCallback(this.gameActionVoteRequestedCallbacks, callback);
+  }
+
+  onGameFinished(callback: (event: GameFinishedEvent) => void): Unsubscribe {
+    return this.registerCallback(this.gameFinishedCallbacks, callback);
+  }
+
+  private bindActiveRoom(room: Room | null): void {
+    if (this.boundRoom === room) {
+      return;
+    }
+
+    this.clearRoomSubscriptions();
+    this.boundRoom = room;
+
+    if (!room) {
+      return;
+    }
+
     const stateChangeHandler = (colyseusState: unknown) => {
-      callback(GameStateMapper.fromColyseusState(colyseusState));
+      this.emit(this.stateChangeCallbacks, GameStateMapper.fromColyseusState(colyseusState));
     };
 
     room.onStateChange(stateChangeHandler);
 
-    return () => room.onStateChange.remove(stateChangeHandler);
-  }
-
-  onPlayerJoinRoom(callback: (event: PlayerJoinRoomEvent) => void): Unsubscribe {
-    return this.roomGateway
-      .getActiveRoom()
-      .onMessage(GameRoomMessage.PLAYER_JOIN_ROOM, (message) => {
-        callback({
+    this.roomUnsubscriptions = [
+      () => room.onStateChange.remove(stateChangeHandler),
+      room.onMessage(GameRoomMessage.COUNTRY_FOUND, (message) => {
+        this.emit(this.countryFoundCallbacks, {
+          countryId: message.countryId,
+          foundByPlayer: message.player,
+          pointsAwarded: message.pointsAwarded,
+        });
+      }),
+      room.onMessage(GameRoomMessage.COUNTRY_REJECTED, (message) => {
+        this.emit(this.countryRejectedCallbacks, {
+          reason: message.reason,
+        });
+      }),
+      room.onMessage(GameRoomMessage.PLAYER_JOIN_ROOM, (message) => {
+        this.emit(this.playerJoinRoomCallbacks, {
           playerId: message.playerSessionId ?? message.player?.id,
           username: message.username ?? message.player?.username,
           numberOfPlayers: message.numberOfPlayers,
         });
-      });
-  }
-
-  onPlayerLeftRoom(callback: (event: PlayerLeftRoomEvent) => void): Unsubscribe {
-    return this.roomGateway
-      .getActiveRoom()
-      .onMessage(GameRoomMessage.PLAYER_LEFT_ROOM, (message) => {
-        callback({
+      }),
+      room.onMessage(GameRoomMessage.PLAYER_LEFT_ROOM, (message) => {
+        this.emit(this.playerLeftRoomCallbacks, {
           playerId: message.playerSessionId ?? message.player?.id,
           username: message.username ?? message.player?.username,
           numberOfPlayers: message.numberOfPlayers,
           code: message.code,
         });
-      });
-  }
-
-  onTurnChanged(callback: (event: TurnChangedEvent) => void): Unsubscribe {
-    return this.roomGateway.getActiveRoom().onMessage(GameRoomMessage.TURN_CHANGED, (message) => {
-      callback({
-        currentPlayer: mapPlayer(message.player),
-        turnDurationInSeconds: message.turnDurationInSeconds,
-        turnStartedAt: message.turnStartedAt,
-      });
-    });
-  }
-
-  onGameStarted(callback: (event: GameStartedEvent) => void): Unsubscribe {
-    return this.roomGateway.getActiveRoom().onMessage(GameRoomMessage.GAME_STARTED, (message) => {
-      callback({
-        startAt: message.startAt,
-        endAt: message.endAt,
-        durationInSeconds: message.durationInSeconds,
-        currentPlayerId: message.currentPlayerSessionId,
-        startedByPlayerId: message.startedBy,
-      });
-    });
-  }
-
-  onGamePaused(callback: (event: GamePausedEvent) => void): Unsubscribe {
-    return this.roomGateway.getActiveRoom().onMessage(GameRoomMessage.GAME_PAUSED, (message) => {
-      callback({
-        pausedAt: message.pausedAt,
-        pausedByPlayerId: message.pausedBy,
-      });
-    });
-  }
-
-  onGameResumed(callback: (event: GameResumedEvent) => void): Unsubscribe {
-    return this.roomGateway.getActiveRoom().onMessage(GameRoomMessage.GAME_RESUMED, (message) => {
-      callback({
-        resumedAt: message.resumedAt,
-        endAt: message.endAt,
-        resumedByPlayerId: message.resumedBy,
-      });
-    });
-  }
-
-  onGameRestarted(callback: (event: GameRestartedEvent) => void): Unsubscribe {
-    return this.roomGateway.getActiveRoom().onMessage(GameRoomMessage.GAME_RESTARTED, (message) => {
-      callback({
-        restartedAt: message.restartedAt,
-        currentPlayerId: message.currentPlayerSessionId,
-        restartedByPlayerId: message.restartedBy,
-      });
-    });
-  }
-
-  onGameActionVoteRequested(callback: (event: GameActionVoteRequestedEvent) => void): Unsubscribe {
-    const room = this.roomGateway.getActiveRoom();
-    const unsubscriptions = (
-      [
-        ["pause", GameRoomMessage.PAUSE_GAME_REQUESTED],
-        ["resume", GameRoomMessage.RESUME_GAME_REQUESTED],
-        ["restart", GameRoomMessage.RESTART_GAME_REQUESTED],
-      ] as const
-    ).map(([action, messageType]) =>
-      room.onMessage(messageType, (message) => {
-        callback(mapGameActionVoteRequestedMessage(action, message));
       }),
-    );
+      room.onMessage(GameRoomMessage.TURN_CHANGED, (message) => {
+        this.emit(this.turnChangedCallbacks, {
+          currentPlayer: mapPlayer(message.player),
+          turnDurationInSeconds: message.turnDurationInSeconds,
+          turnStartedAt: message.turnStartedAt,
+        });
+      }),
+      room.onMessage(GameRoomMessage.GAME_STARTED, (message) => {
+        this.emit(this.gameStartedCallbacks, {
+          startAt: message.startAt,
+          endAt: message.endAt,
+          durationInSeconds: message.durationInSeconds,
+          currentPlayerId: message.currentPlayerSessionId,
+          startedByPlayerId: message.startedBy,
+        });
+      }),
+      room.onMessage(GameRoomMessage.GAME_PAUSED, (message) => {
+        this.emit(this.gamePausedCallbacks, {
+          pausedAt: message.pausedAt,
+          pausedByPlayerId: message.pausedBy,
+        });
+      }),
+      room.onMessage(GameRoomMessage.GAME_RESUMED, (message) => {
+        this.emit(this.gameResumedCallbacks, {
+          resumedAt: message.resumedAt,
+          endAt: message.endAt,
+          resumedByPlayerId: message.resumedBy,
+        });
+      }),
+      room.onMessage(GameRoomMessage.GAME_RESTARTED, (message) => {
+        this.emit(this.gameRestartedCallbacks, {
+          restartedAt: message.restartedAt,
+          currentPlayerId: message.currentPlayerSessionId,
+          restartedByPlayerId: message.restartedBy,
+        });
+      }),
+      room.onMessage(GameRoomMessage.PAUSE_GAME_REQUESTED, (message) => {
+        this.emit(
+          this.gameActionVoteRequestedCallbacks,
+          mapGameActionVoteRequestedMessage("pause", message),
+        );
+      }),
+      room.onMessage(GameRoomMessage.RESUME_GAME_REQUESTED, (message) => {
+        this.emit(
+          this.gameActionVoteRequestedCallbacks,
+          mapGameActionVoteRequestedMessage("resume", message),
+        );
+      }),
+      room.onMessage(GameRoomMessage.RESTART_GAME_REQUESTED, (message) => {
+        this.emit(
+          this.gameActionVoteRequestedCallbacks,
+          mapGameActionVoteRequestedMessage("restart", message),
+        );
+      }),
+      room.onMessage(GameRoomMessage.GAME_FINISHED, (message) => {
+        this.emit(this.gameFinishedCallbacks, {
+          winner: message.winner ?? message.player,
+          reason: message.reason,
+        });
+      }),
+      ...IGNORED_ROOM_MESSAGES.map((messageType) => room.onMessage(messageType, () => {})),
+    ];
+  }
+
+  private clearRoomSubscriptions(): void {
+    this.roomUnsubscriptions.forEach((unsubscribe) => unsubscribe());
+    this.roomUnsubscriptions = [];
+    this.boundRoom = null;
+  }
+
+  private registerCallback<TEvent>(
+    callbacks: Set<EventCallback<TEvent>>,
+    callback: EventCallback<TEvent>,
+  ): Unsubscribe {
+    callbacks.add(callback);
 
     return () => {
-      unsubscriptions.forEach((unsubscribe) => unsubscribe());
+      callbacks.delete(callback);
     };
   }
 
-  onGameFinished(callback: (event: GameFinishedEvent) => void): Unsubscribe {
-    return this.roomGateway.getActiveRoom().onMessage(GameRoomMessage.GAME_FINISHED, (message) => {
-      callback({
-        winner: message.winner ?? message.player,
-        reason: message.reason,
-      });
-    });
+  private emit<TEvent>(callbacks: Set<EventCallback<TEvent>>, event: TEvent): void {
+    callbacks.forEach((callback) => callback(event));
   }
 }
 

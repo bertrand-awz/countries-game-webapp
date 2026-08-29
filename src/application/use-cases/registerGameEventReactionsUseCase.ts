@@ -13,7 +13,7 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
   private readonly gameRoomNotificationReaction: GameRoomNotificationReaction;
   private readonly gameActionVoteRequestedReaction: GameActionVoteRequestedReaction;
   private readonly gameTurnChangedReaction: GameTurnChangedReaction;
-  private unsubscriptions: Unsubscribe[] = [];
+  private unsubscribeCallbacks: Unsubscribe[] = [];
 
   constructor() {
     super();
@@ -35,7 +35,7 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
   execute(): void {
     this.clearSubscriptions();
 
-    this.unsubscriptions = [
+    this.unsubscribeCallbacks = [
       this.gameEventGateway.onPlayerJoinRoom((event) => {
         if (this.isCurrentPlayerWaiting()) {
           return;
@@ -116,8 +116,8 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
   }
 
   clearSubscriptions(): void {
-    this.unsubscriptions.forEach((unsubscribe) => unsubscribe());
-    this.unsubscriptions = [];
+    this.unsubscribeCallbacks.forEach((unsubscribe) => unsubscribe());
+    this.unsubscribeCallbacks = [];
   }
 
   private findPlayerUsername(playerId: string | undefined): string | null {
