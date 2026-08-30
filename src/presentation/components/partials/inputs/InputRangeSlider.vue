@@ -10,6 +10,7 @@
       minimum?: number;
       maximum?: number;
       unit?: string;
+      disabled?: boolean;
     }>(),
     {
       label: "",
@@ -19,6 +20,7 @@
       minimum: 0,
       maximum: 100,
       unit: "",
+      disabled: false,
     },
   );
 
@@ -59,8 +61,9 @@
       :min="minimum"
       :max="maximum"
       step="1"
+      :disabled="disabled"
       :style="{ background: backgroundStyle }"
-      class="input-sound-range w-full appearance-none"
+      class="input-sound-range w-full appearance-none disabled:cursor-not-allowed disabled:opacity-50"
     />
   </div>
 </template>

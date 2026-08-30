@@ -5,11 +5,9 @@
 
   defineProps<{
     translator: (translationKey: string) => string;
+    requestRestart: () => void;
+    exitGame: () => void | Promise<void>;
   }>();
-
-  function recommencer() {}
-
-  function quitter() {}
 </script>
 
 <template>
@@ -18,14 +16,14 @@
       button-class="navbar-restart-button"
       :icon="RotateCcwIcon"
       :label="translator('APP.RESTART')"
-      :on-click-callback="recommencer"
+      :on-click-callback="requestRestart"
     />
 
     <ClickableSoundButton
       button-class="navbar-exit-button"
       :icon="DoorOpenIcon"
       :label="translator('APP.EXIT')"
-      :on-click-callback="quitter"
+      :on-click-callback="exitGame"
     />
   </div>
 </template>

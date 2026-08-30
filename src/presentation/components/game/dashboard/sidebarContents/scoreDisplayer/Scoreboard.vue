@@ -2,6 +2,8 @@
   import { User2Icon, Users2Icon } from "@lucide/vue";
 
   import type { Player } from "@/domain/game/models/Player.ts";
+  import { getPlayerColorBulletStyle } from "@/presentation/components/game/playerColorPalette.ts";
+
   defineProps<{
     translator: (translationKey: string) => string;
   }>();
@@ -20,6 +22,11 @@
           <h3 class="text-sm font-semibold">
             {{ translator("GAME.SIDEBAR.SCORE_DISPLAYER.YOUR_SCORE") }}
           </h3>
+          <span
+            class="size-2.5 shrink-0 rounded-full"
+            :style="getPlayerColorBulletStyle(player.getColorSlot())"
+            aria-hidden="true"
+          ></span>
         </div>
 
         <span class="font-bold"> {{ player.getScore() }} </span>
@@ -41,7 +48,14 @@
             :key="opponent.getId()"
             class="mb-2 flex w-full justify-between last:mb-0"
           >
-            <span class="text-sm font-medium">{{ opponent.getUsername() }} </span>
+            <span class="flex min-w-0 items-center gap-x-2 text-sm font-medium">
+              <span class="truncate">{{ opponent.getUsername() }}</span>
+              <span
+                class="size-2.5 shrink-0 rounded-full"
+                :style="getPlayerColorBulletStyle(opponent.getColorSlot())"
+                aria-hidden="true"
+              ></span>
+            </span>
             <span class="text-sm font-bold"> {{ opponent.getScore() }} </span>
           </li>
         </ul>

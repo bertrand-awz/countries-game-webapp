@@ -1,4 +1,4 @@
-import { UseCase } from "./useCase.ts";
+import { UseCase } from "../useCase.ts";
 export type CountryNameAnswer = {
   countryName: string;
 };
@@ -10,6 +10,6 @@ export class SubmitAnswerUseCase extends UseCase<CountryNameAnswer> {
 
   execute(): void {
     // TODO: ajouter quoi executer ici à la soumission de la reponse
-    this.gameServer.submitCountry(this.options?.countryName ?? "");
+    this.gameCommandGateway.submitCountry(this.options?.countryName ?? "");
   }
 }

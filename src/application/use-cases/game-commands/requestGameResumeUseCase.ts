@@ -1,4 +1,4 @@
-import { UseCase } from "./useCase.ts";
+import { UseCase } from "../useCase.ts";
 
 export class RequestGameResumeUseCase extends UseCase<void, void> {
   constructor() {
@@ -6,6 +6,6 @@ export class RequestGameResumeUseCase extends UseCase<void, void> {
   }
 
   execute(): void {
-    this.gameServer.resumeGame();
+    this.gameCommandGateway.resumeGame();
   }
 }

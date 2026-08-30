@@ -14,8 +14,11 @@
     translator: (translationKey: string) => string;
     requestPause: () => void;
     requestResume: () => void;
+    requestRestart: () => void;
+    exitGame: () => void | Promise<void>;
     startGame: () => void;
     timeLeftInSeconds: number;
+    totalDurationInSeconds: number;
   }>();
 
   defineEmits<{
@@ -51,6 +54,7 @@
             <div class="flex flex-1 items-center justify-start gap-3 md:gap-4">
               <TimeDisplayer
                 :time-left-in-seconds="timeLeftInSeconds"
+                :total-duration-in-seconds="totalDurationInSeconds"
                 :translator="translator"
                 :show-timer="!sidebarOpened"
                 :game-status="gameStatus"
@@ -67,7 +71,11 @@
 
             <!-- Right side -->
             <div class="flex flex-1 items-center justify-end gap-3 md:gap-4">
-              <RestartAndExitButtons :translator="translator" />
+              <RestartAndExitButtons
+                :translator="translator"
+                :request-restart="requestRestart"
+                :exit-game="exitGame"
+              />
               <LanguagesMenu />
             </div>
           </div>

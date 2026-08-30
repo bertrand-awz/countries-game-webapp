@@ -3,6 +3,7 @@ import { Howl } from "howler";
 import countdownSound from "@/assets/sounds/countdown.mp3";
 import backgroundMusicSound from "@/assets/sounds/main-theme.mp3";
 import mouseClickSound from "@/assets/sounds/mouse-click.mp3";
+import successEffectSound from "@/assets/sounds/success-effect.mp3";
 import {
   LoopableSoundEffectName,
   SoundEffectName,
@@ -18,6 +19,8 @@ export class HowlerSoundManager implements SoundManager {
 
   private soundEffectVolume = 0.1;
   private mainThemeVolume = 0.2;
+  private mainThemeIsActive = false;
+  private soundEffectsEnabled = true;
 
   constructor() {
     this.effects = {
@@ -37,7 +40,7 @@ export class HowlerSoundManager implements SoundManager {
       }),
 
       [SoundEffectName.SUCCESS]: new Howl({
-        src: ["/sounds/effects/success.mp3"],
+        src: [successEffectSound],
         volume: this.soundEffectVolume,
       }),
 
@@ -70,11 +73,23 @@ export class HowlerSoundManager implements SoundManager {
     return Math.round(this.soundEffectVolume * SOUND_SCALE);
   }
 
+  areSoundEffectsEnabled(): boolean {
+    return this.soundEffectsEnabled;
+  }
+
   playEffect(effectName: SoundEffectName): void {
+    if (!this.soundEffectsEnabled) {
+      return;
+    }
+
     this.effects[effectName].play();
   }
 
   playEffectInLoop(effectName: LoopableSoundEffectName) {
+    if (!this.soundEffectsEnabled) {
+      return;
+    }
+
     const loopableEffect = this.loopableEffects[effectName];
     if (!loopableEffect.playing()) loopableEffect.play();
   }
@@ -83,12 +98,35 @@ export class HowlerSoundManager implements SoundManager {
     const loopableEffect = this.loopableEffects[effectName];
     if (loopableEffect.playing()) loopableEffect.stop();
   }
+
+  stopAllSounds(): void {
+    this.stopMainThemeSound();
+
+    Object.values(this.effects).forEach((sound) => {
+      sound.stop();
+    });
+
+    Object.values(this.loopableEffects).forEach((sound) => {
+      sound.stop();
+    });
+  }
+
   playMainThemeSound(): void {
-    if (this.backgroundMusic.playing()) {
+    if (this.mainThemeIsActive || this.backgroundMusic.playing()) {
       return;
     }
 
+    this.mainThemeIsActive = true;
     this.backgroundMusic.play();
+  }
+
+  stopMainThemeSound(): void {
+    if (!this.mainThemeIsActive && !this.backgroundMusic.playing()) {
+      return;
+    }
+
+    this.mainThemeIsActive = false;
+    this.backgroundMusic.stop();
   }
 
   setMainThemeVolume(volume: number): void {
@@ -105,6 +143,22 @@ export class HowlerSoundManager implements SoundManager {
 
     Object.values(this.loopableEffects).forEach((sound) => {
       sound.volume(this.soundEffectVolume);
+    });
+  }
+
+  setSoundEffectsEnabled(isEnabled: boolean): void {
+    this.soundEffectsEnabled = isEnabled;
+
+    if (isEnabled) {
+      return;
+    }
+
+    Object.values(this.effects).forEach((sound) => {
+      sound.stop();
+    });
+
+    Object.values(this.loopableEffects).forEach((sound) => {
+      sound.stop();
     });
   }
 

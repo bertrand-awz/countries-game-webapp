@@ -42,8 +42,10 @@
         "INPUT_LABELS": {
           "USERNAME": "Username",
           "GAME_LANGUAGE": "Game default language",
+          "ANSWER_VALIDATION_LANGUAGE": "Answer validation language",
           "MAX_PLAYER": "Room's max players",
           "GAME_DURATION": "Game duration",
+          "TURN_DURATION": "Turn duration",
           "FREEDOM_OF_LANGUAGE": "Freedom of language"
         },
         "INPUT_HINTS": {
@@ -51,26 +53,42 @@
           "USERNAME_PLACEHOLDER": "Enter a username",
           "ROOM_ID": "Room identifier to join. It is usually provided by the room creator.",
           "GAME_LANGUAGE": "Main language used for country names during the game.",
+          "ANSWER_VALIDATION_LANGUAGE": "Language used by the server to validate and display accepted country names.",
           "MAX_PLAYER": "Maximum number of players allowed to join this room.",
           "GAME_DURATION": "Total game duration in minutes.",
+          "TURN_DURATION": "Time given to each player to answer, between 30 and 55 seconds.",
           "FREEDOM_OF_LANGUAGE": "Allows the server to accept responses in the languages selected by the players."
         },
         "BUTTONS": {
           "CREATE_ROOM": "Create a room",
-          "JOIN_ROOM": "Join a room"
+          "JOIN_ROOM": "Join room",
+          "SUBMITTING": "Connecting..."
         },
         "BOTTOM_TEXTS": {
           "JOIN_ROOM_QUESTION": "Do you want to join your friends?",
           "JOIN_ROOM_LINK_LABEL": "Join room instead",
           "CREATE_ROOM_QUESTION": "Do you want your own room?",
           "CREATE_ROOM_LINK_LABEL": "Create room instead"
+        },
+        "ERRORS": {
+          "ROOM_LOCKED": "This room is locked",
+          "ROOM_LOCKED_JOIN_ADVICE": "It has reached the maximum number of allowed users, so you cannot join it. Use the link below to create your own game room and invite other players.",
+          "ROOM_FULL": "This room is already full",
+          "UNABLE_TO_CONNECT": "Unable to join the room",
+          "JOIN_CREATE_ROOM_ADVICE": "You can check the room ID or create your own room to start a new game."
+        },
+        "VALIDATION": {
+          "REQUIRED": "This field is required",
+          "USERNAME_MIN_LENGTH": "Username must contain at least {min} characters.",
+          "NUMBER_RANGE": "Value must be an integer between {min} and {max}.",
+          "UNSUPPORTED_LANGUAGE": "This language is not supported by the server."
         }
       }
     }
   },
   "HOME": {
     "TITLE": "Name the countries of the world",
-    "DESCRIPTION": "Find country names, improve your geography memory, and beat your best score.",
+    "DESCRIPTION": "Find names of countries, improve your geography memory, and beat your best score or your friends.",
     "START": "Start"
   },
   "GAME": {
@@ -81,11 +99,27 @@
     "CORRECT": "Correct answer: {country}",
     "WRONG": "Wrong answer",
     "ALREADY_FOUND": "Country already found: {country}",
+    "WAITING_QUEUE": {
+      "EYEBROW": "Waiting queue",
+      "TITLE": "You will join the next game",
+      "DESCRIPTION": "The current game has already started. You stay connected to the room and will be admitted automatically when a seat is available in the next lobby.",
+      "POSITION_LABEL": "Your position",
+      "POSITION": "{position} / {total}",
+      "ESTIMATE_LABEL": "Estimated time",
+      "TIME_LEFT": "{minutes} min {seconds} s",
+      "LESS_THAN_ONE_MINUTE": "Less than one minute",
+      "NEXT_ROUND": "Admission expected at the next restart.",
+      "PLAYERS_TITLE": "Players in queue",
+      "YOU": "You",
+      "CREATE_ROOM": "Create a room"
+    },
     "SIDEBAR": {
       "SOUND_CONTROLLER": {
         "TITLE": "Sound Management",
         "BACKGROUND_SOUND": "Background music",
-        "SOUND_EFFECTS": "Sound effects"
+        "SOUND_EFFECTS": "Sound effects",
+        "ENABLE_SOUND_EFFECTS": "Play sound effects",
+        "PERSONAL_SOUND_EFFECTS_SETTING": "Only affects this browser."
       },
       "SCORE_DISPLAYER": {
         "TITLE": "Scoreboard",
@@ -108,6 +142,10 @@
           "MAX_PLAYERS_ALLOWED": "Maximum players in the room",
           "GAME_DURATION": "Game duration",
           "GAME_DURATION_UNIT": "min",
+          "TURN_DURATION": "Turn duration",
+          "TURN_DURATION_UNIT": "s",
+          "ANSWER_VALIDATION_LANGUAGE": "Answer language",
+          "ANSWER_VALIDATION_LANGUAGE_HINT": "Only affects your own answers in this room.",
           "BUTTON_INVITE": "Invite",
           "BUTTON_APPLY": "Apply"
         }
@@ -120,6 +158,73 @@
         "PAUSE": "Pause"
       }
     },
+    "NOTIFICATIONS": {
+      "CLOSE": "Close notification",
+      "PLAYER_JOINED": {
+        "TITLE": "Player joined",
+        "MESSAGE": "{username} joined the room. Players present: {numberOfPlayers}."
+      },
+      "PLAYER_LEFT": {
+        "TITLE": "Player left",
+        "MESSAGE": "{username} left the room. Players present: {numberOfPlayers}."
+      },
+      "GAME_STARTED": {
+        "TITLE": "Game started",
+        "MESSAGE": "{username} started the game.",
+        "MESSAGE_WITHOUT_PLAYER": "The game started."
+      },
+      "TURN": {
+        "YOUR_TURN_TITLE": "Your turn",
+        "YOUR_TURN_MESSAGE": "You have {seconds} seconds to name a country.",
+        "PLAYER_TURN_TITLE": "{username}'s turn",
+        "PLAYER_TURN_MESSAGE": "{username} has {seconds} seconds to answer.",
+        "TIME_LEFT": "Time left"
+      },
+      "VOTE_REQUESTS": {
+        "PAUSE": {
+          "TITLE": "Pause request",
+          "MESSAGE": "{username} wants to pause the game."
+        },
+        "RESUME": {
+          "TITLE": "Resume request",
+          "MESSAGE": "{username} wants to resume the game."
+        },
+        "RESTART": {
+          "TITLE": "Play again request",
+          "MESSAGE": "{username} wants to play a new game."
+        },
+        "WAITING": {
+          "PAUSE": {
+            "TITLE": "Pause request sent",
+            "MESSAGE": "Waiting for the other players to agree."
+          },
+          "RESUME": {
+            "TITLE": "Resume request sent",
+            "MESSAGE": "Waiting for the other players to agree."
+          },
+          "RESTART": {
+            "TITLE": "Play again request sent",
+            "MESSAGE": "Waiting for the other players to agree."
+          }
+        },
+        "ACTIONS": {
+          "ACCEPT": "Accept",
+          "DECLINE": "Decline"
+        }
+      }
+    },
+    "FINAL_SCOREBOARD": {
+      "MATCH_COMPLETE": "Match complete",
+      "TITLE": "Game Scores",
+      "PLAYERS": "Players",
+      "DURATION": "Duration",
+      "COUNTRIES_FOUND": "Countries found",
+      "RANK": "Rank",
+      "PLAYER": "Player",
+      "SCORE": "Score",
+      "YOU": "You",
+      "PLAY_AGAIN": "Play again"
+    },
     "CONTINENT_NAME": {
       "AFRICA": "Africa",
       "NORTH_AMERICA": "North America",
@@ -131,7 +236,11 @@
     }
   },
   "LANGUAGES": {
+    "ANY": "Any language",
     "FR": "French",
-    "EN": "English"
+    "EN": "English",
+    "DE": "German",
+    "ES": "Spanish",
+    "JA": "Japanese"
   }
 }

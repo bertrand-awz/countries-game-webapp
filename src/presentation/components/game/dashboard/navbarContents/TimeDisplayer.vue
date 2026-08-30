@@ -2,6 +2,7 @@
   import { PauseIcon, PlayIcon, TimerIcon } from "@lucide/vue";
   import { computed } from "vue";
 
+  import { GameConstraints } from "@/domain/game/constraints/gameConstraints.ts";
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
 
   import ClickableSoundButton from "./ClickableSoundButton.vue";
@@ -15,6 +16,7 @@
   const props = defineProps<{
     translator: (translationKey: string) => string;
     timeLeftInSeconds: number;
+    totalDurationInSeconds: number;
     showTimer: boolean;
   }>();
 
@@ -44,6 +46,20 @@
 
   const gameStatus = defineModel<GameStatus>("gameStatus", { required: true });
 
+  const warningThresholdInSeconds = computed(() => {
+    return toDurationPercentageThreshold(
+      props.totalDurationInSeconds,
+      GameConstraints.TIMER_WARNING_REMAINING_TIME_PERCENTAGE,
+    );
+  });
+
+  const alertThresholdInSeconds = computed(() => {
+    return toDurationPercentageThreshold(
+      props.totalDurationInSeconds,
+      GameConstraints.TIMER_ALERT_REMAINING_TIME_PERCENTAGE,
+    );
+  });
+
   const timerStateClass = computed(() => {
     const classes: string[] = [];
 
@@ -51,9 +67,9 @@
       classes.push("animate-pulse");
     }
 
-    if (props.timeLeftInSeconds <= 150) {
+    if (props.timeLeftInSeconds <= alertThresholdInSeconds.value) {
       classes.push("navbar-timer-container-alert-mode");
-    } else if (props.timeLeftInSeconds <= 300) {
+    } else if (props.timeLeftInSeconds <= warningThresholdInSeconds.value) {
       classes.push("navbar-timer-container-warning-mode");
     }
 
@@ -83,6 +99,10 @@
       gameStatus.value === GameStatus.FINISHED
     );
   });
+
+  function toDurationPercentageThreshold(durationInSeconds: number, percentage: number): number {
+    return Math.ceil(durationInSeconds * (percentage / 100));
+  }
 </script>
 
 <template>

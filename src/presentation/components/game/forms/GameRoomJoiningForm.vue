@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, onBeforeUnmount, ref } from "vue";
+  import { computed, onBeforeUnmount, ref, watch } from "vue";
   import { useRoute } from "vue-router";
 
   import type { JoinRoomOptions } from "@/domain/game/ports/GameServer.ts";
@@ -8,14 +8,26 @@
 
   const props = defineProps<{
     toRoomCreationRedirection: () => void;
-    translator: (translationKey: string) => string;
+    translator: (translationKey: string, values?: Record<string, string | number>) => string;
     onSubmitRoomJoiningForm: (joinRoomOptions: JoinRoomOptions) => Promise<void>;
+    isSubmitting: boolean;
+    submissionError: string | null;
+    submissionErrorAdvice: string;
+    clearSubmissionError: () => void;
   }>();
+
+  type FieldErrors = {
+    username?: string;
+    roomId?: string;
+  };
+
+  const USERNAME_MIN_LENGTH = 2;
 
   const route = useRoute();
 
   const username = ref("");
   const manualRoomId = ref("");
+  const fieldErrors = ref<FieldErrors>({});
 
   const isManualRoomIdInputAllowed = computed(() => {
     return route.meta.manualRoomIdInputAllowed === true;
@@ -35,17 +47,51 @@
     },
   });
 
+  watch([username, roomId], () => {
+    props.clearSubmissionError();
+
+    if (Object.keys(fieldErrors.value).length > 0) {
+      validate();
+    }
+  });
+
   function submit(): void {
     const trimmedUsername = username.value.trim();
     const trimmedRoomId = roomId.value.trim();
 
-    if (!trimmedUsername || !trimmedRoomId) {
+    if (!validate()) {
       return;
     }
+
     props.onSubmitRoomJoiningForm({
       username: trimmedUsername,
       roomId: trimmedRoomId,
     });
+  }
+
+  function validate(): boolean {
+    const nextErrors: FieldErrors = {};
+    const trimmedUsername = username.value.trim();
+    const trimmedRoomId = roomId.value.trim();
+
+    if (!trimmedUsername) {
+      nextErrors.username = props.translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.VALIDATION.REQUIRED");
+    } else if (trimmedUsername.length < USERNAME_MIN_LENGTH) {
+      nextErrors.username = props.translator(
+        "VIEWS.FORMS.GAME_ROOM_LOBBYING.VALIDATION.USERNAME_MIN_LENGTH",
+        {
+          min: USERNAME_MIN_LENGTH,
+        },
+      );
+    }
+
+    if (!trimmedRoomId) {
+      nextErrors.roomId = props.translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.VALIDATION.REQUIRED");
+    }
+
+    fieldErrors.value = nextErrors;
+
+    return Object.keys(nextErrors).length === 0;
   }
 
   onBeforeUnmount(() => {
@@ -69,6 +115,17 @@
       </div>
 
       <form class="mt-8 space-y-5" @submit.prevent="submit">
+        <div
+          v-if="submissionError"
+          role="alert"
+          class="space-y-3 rounded-lg border border-yellow-300/30 bg-yellow-300/10 px-3 py-3 text-sm text-yellow-50"
+        >
+          <p>{{ submissionError }}</p>
+          <p class="text-yellow-100/80">
+            {{ submissionErrorAdvice }}
+          </p>
+        </div>
+
         <LabeledTextInput
           id="username"
           v-model="username"
@@ -78,6 +135,8 @@
             translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.USERNAME_PLACEHOLDER')
           "
           autocomplete="off"
+          :disabled="isSubmitting"
+          :error="fieldErrors.username"
         />
 
         <LabeledTextInput
@@ -88,6 +147,8 @@
           :hint="translator('VIEWS.FORMS.GAME_ROOM_LOBBYING.INPUT_HINTS.ROOM_ID')"
           placeholder="ABC123"
           autocomplete="off"
+          :disabled="isSubmitting"
+          :error="fieldErrors.roomId"
         />
 
         <div v-else class="rounded-lg border border-white/10 bg-white/5 px-3 py-2">
@@ -95,13 +156,21 @@
           <p class="mt-1 text-sm font-semibold text-white">
             {{ routeRoomId }}
           </p>
+          <p v-if="fieldErrors.roomId" class="mt-2 text-xs text-red-300">
+            {{ fieldErrors.roomId }}
+          </p>
         </div>
 
         <button
           type="submit"
-          class="flex w-full justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500"
+          :disabled="isSubmitting"
+          class="flex w-full justify-center rounded-lg bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {{ translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.BUTTONS.JOIN_ROOM") }}
+          {{
+            isSubmitting
+              ? translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.BUTTONS.SUBMITTING")
+              : translator("VIEWS.FORMS.GAME_ROOM_LOBBYING.BUTTONS.JOIN_ROOM")
+          }}
         </button>
       </form>
       <BottomTextLink

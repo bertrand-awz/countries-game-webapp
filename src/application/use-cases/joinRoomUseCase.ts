@@ -1,9 +1,12 @@
 import type { GameSession, JoinRoomOptions } from "@/domain/game/ports/GameServer.ts";
 
+import { RegisterGameEventReactionsUseCase } from "./registerGameEventReactionsUseCase.ts";
 import { UseCase } from "./useCase.ts";
 
 export class JoinRoomUseCase extends UseCase<JoinRoomOptions, GameSession> {
-  constructor() {
+  constructor(
+    private readonly registerGameEventReactionsUseCase = new RegisterGameEventReactionsUseCase(),
+  ) {
     super();
   }
 
@@ -17,14 +20,15 @@ export class JoinRoomUseCase extends UseCase<JoinRoomOptions, GameSession> {
       throw new Error("Room joining options are required.");
     }
 
-    const session = await this.gameServer.joinRoom(this.options);
+    const session = await this.gameRoomGateway.joinRoom(this.options);
     const gameSessionStore = this.gameSessionStore;
 
     gameSessionStore.setSession(session);
-    this.gameServer.onStateChange((gameState) => {
+    this.gameEventGateway.onStateChange((gameState) => {
       gameSessionStore.setGameState(gameState);
     });
-    gameSessionStore.setGameState(this.gameServer.getState());
+    gameSessionStore.setGameState(this.gameRoomGateway.getState());
+    this.registerGameEventReactionsUseCase.execute();
 
     return session;
   }

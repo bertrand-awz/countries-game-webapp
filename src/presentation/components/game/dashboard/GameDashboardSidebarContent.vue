@@ -1,20 +1,32 @@
 <script setup lang="ts">
+  import { computed } from "vue";
+
+  import type { Player } from "@/domain/game/models/Player.ts";
   import type { GameState } from "@/domain/game/models/state/GameState.ts";
   import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
   import type { GameSetting } from "@/domain/game/settings";
+  import type { AnswerValidationLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
 
   import GameIconAndTitle from "./sidebarContents/GameIconAndTitle.vue";
   import GameSettings from "./sidebarContents/gameSettings/GameSettings.vue";
   import ScoresDisplayer from "./sidebarContents/scoreDisplayer/ScoresDisplayer.vue";
   import SoundController from "./sidebarContents/soundController/SoundController.vue";
 
-  defineProps<{
+  const props = defineProps<{
     soundManager: SoundManager;
     gameState: GameState;
+    currentPlayer: Player;
     roomId: string | null;
     translator: (translationKey: string) => string;
     applySettingCallback: (newSetting: GameSetting) => void;
+    updateAnswerValidationLanguageCallback: (language: AnswerValidationLanguage) => void;
   }>();
+
+  const opponents = computed(() => {
+    return props.gameState.players.filter(
+      (player) => player.getId() !== props.currentPlayer.getId(),
+    );
+  });
 </script>
 
 <template>
@@ -24,15 +36,23 @@
     <nav class="flex flex-1 flex-col gap-8">
       <ScoresDisplayer
         :translator="translator"
-        :opponents="gameState.players"
-        :player="gameState.players[0]"
+        :opponents="opponents"
+        :player="currentPlayer"
         :found-countries-by-continent-progressions="gameState.continents"
       />
       <SoundController :translator="translator" :sound-manager="soundManager" />
       <GameSettings
         :translator="translator"
         :room-id="roomId"
+        :game-duration-in-minutes="Math.round(gameState.durationInSeconds / 60)"
+        :max-players-allowed="gameState.maxPlayersAllowed"
+        :turn-duration-in-seconds="gameState.turnDurationInSeconds"
+        :answer-validation-language="currentPlayer.getAnswerValidationLanguage()"
+        :allow-answer-validation-in-player-current-language="
+          gameState.allowAnswerValidationInPlayerCurrentLanguage
+        "
         :apply-setting-callback="applySettingCallback"
+        :update-answer-validation-language-callback="updateAnswerValidationLanguageCallback"
       />
     </nav>
   </div>

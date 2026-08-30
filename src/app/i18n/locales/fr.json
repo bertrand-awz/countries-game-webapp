@@ -42,8 +42,10 @@
         "INPUT_LABELS": {
           "USERNAME": "Nom d'utilisateur",
           "GAME_LANGUAGE": "Langues du jeu",
+          "ANSWER_VALIDATION_LANGUAGE": "Langue de validation des réponses",
           "MAX_PLAYER": "Nombre maximal de joueurs dans la salle",
           "GAME_DURATION": "Durée d'une partie",
+          "TURN_DURATION": "Durée d'un tour",
           "FREEDOM_OF_LANGUAGE": "Liberté de langue"
         },
         "INPUT_HINTS": {
@@ -51,26 +53,42 @@
           "USERNAME_PLACEHOLDER": "Entrez un nom d'utilisateur",
           "ROOM_ID": "Identifiant de la salle à rejoindre. Il est généralement fourni par le créateur de la salle.",
           "GAME_LANGUAGE": "Langue principale utilisée pour les noms de pays pendant la partie.",
+          "ANSWER_VALIDATION_LANGUAGE": "Langue utilisée par le serveur pour valider et afficher les noms de pays acceptés.",
           "MAX_PLAYER": "Nombre maximal de joueurs pouvant rejoindre cette salle.",
           "GAME_DURATION": "Durée totale de la partie en minutes.",
+          "TURN_DURATION": "Temps accordé à chaque joueur pour répondre, entre 30 et 55 secondes.",
           "FREEDOM_OF_LANGUAGE": "Permet au serveur d'accepter les réponses dans les langues choisies par les joueurs."
         },
         "BUTTONS": {
-          "CREATE_ROOM": "Create a room",
-          "JOIN_ROOM": "Join a room"
+          "CREATE_ROOM": "Créer une salle",
+          "JOIN_ROOM": "Joindre la salle",
+          "SUBMITTING": "Connexion..."
         },
         "BOTTOM_TEXTS": {
           "JOIN_ROOM_QUESTION": "Souhaitez-vous vous joindre à une partie?",
           "JOIN_ROOM_LINK_LABEL": "Joindre une partie",
           "CREATE_ROOM_QUESTION": "Souhaitez-vous créer votre salle?",
           "CREATE_ROOM_LINK_LABEL": "Créer une salle de jeu"
+        },
+        "ERRORS": {
+          "ROOM_LOCKED": "Cette salle est verrouillée",
+          "ROOM_LOCKED_JOIN_ADVICE": "Elle a atteint le nombre maximal d'utilisateurs autorisés; vous ne pouvez pas la rejoindre. Utilisez le lien ci-dessous pour créer votre propre salle de jeu et inviter d'autres joueurs.",
+          "ROOM_FULL": "La salle est déjà pleine",
+          "UNABLE_TO_CONNECT": "Impossible de rejoindre la salle",
+          "JOIN_CREATE_ROOM_ADVICE": "Vous pouvez vérifier l'identifiant de la salle ou créer votre propre salle pour lancer une nouvelle partie."
+        },
+        "VALIDATION": {
+          "REQUIRED": "Ce champ est requis.",
+          "USERNAME_MIN_LENGTH": "Le nom d'utilisateur doit contenir au moins {min} caractères.",
+          "NUMBER_RANGE": "La valeur doit être un nombre entier entre {min} et {max}.",
+          "UNSUPPORTED_LANGUAGE": "Cette langue n'est pas acceptée par le serveur."
         }
       }
     }
   },
   "HOME": {
     "TITLE": "Nomme les pays du monde",
-    "DESCRIPTION": "Trouve le nom des pays, améliore ta mémoire géographique et bats ton meilleur score.",
+    "DESCRIPTION": "Trouve les noms des pays, améliore ta mémoire géographique et bats ton meilleur score ou celui de tes amis.",
     "START": "Commencer"
   },
   "GAME": {
@@ -81,11 +99,27 @@
     "CORRECT": "Bonne réponse : {country}",
     "WRONG": "Mauvaise réponse",
     "ALREADY_FOUND": "Pays déjà trouvé : {country}",
+    "WAITING_QUEUE": {
+      "EYEBROW": "File d'attente",
+      "TITLE": "Vous serez admis à la prochaine partie",
+      "DESCRIPTION": "La partie en cours est déjà lancée. Vous restez connecté à la salle et vous serez admis automatiquement dès qu'une place sera disponible au prochain lobby.",
+      "POSITION_LABEL": "Votre position",
+      "POSITION": "{position} / {total}",
+      "ESTIMATE_LABEL": "Temps estimé",
+      "TIME_LEFT": "{minutes} min {seconds} s",
+      "LESS_THAN_ONE_MINUTE": "Moins d'une minute",
+      "NEXT_ROUND": "Admission prévue à la prochaine relance.",
+      "PLAYERS_TITLE": "Joueurs dans la file",
+      "YOU": "Vous",
+      "CREATE_ROOM": "Créer une salle"
+    },
     "SIDEBAR": {
       "SOUND_CONTROLLER": {
         "TITLE": "Gestion sonore",
         "BACKGROUND_SOUND": "Musique de fonds",
-        "SOUND_EFFECTS": "Effets sonores"
+        "SOUND_EFFECTS": "Effets sonores",
+        "ENABLE_SOUND_EFFECTS": "Activer les effets sonores",
+        "PERSONAL_SOUND_EFFECTS_SETTING": "Ce choix n'affecte que vous."
       },
       "SCORE_DISPLAYER": {
         "TITLE": "Pointage",
@@ -108,6 +142,10 @@
           "MAX_PLAYERS_ALLOWED": "Maximum de joueurs permis",
           "GAME_DURATION": "Durée de la partie",
           "GAME_DURATION_UNIT": "min",
+          "TURN_DURATION": "Durée d'un tour",
+          "TURN_DURATION_UNIT": "s",
+          "ANSWER_VALIDATION_LANGUAGE": "Langue de réponse",
+          "ANSWER_VALIDATION_LANGUAGE_HINT": "Ce choix n'affecte que vos propres réponses dans cette salle.",
           "BUTTON_INVITE": "Inviter",
           "BUTTON_APPLY": "Appliquer"
         }
@@ -120,6 +158,73 @@
         "PAUSE": "Pause"
       }
     },
+    "NOTIFICATIONS": {
+      "CLOSE": "Fermer la notification",
+      "PLAYER_JOINED": {
+        "TITLE": "Joueur arrivé",
+        "MESSAGE": "{username} a rejoint la salle. Joueurs présents : {numberOfPlayers}."
+      },
+      "PLAYER_LEFT": {
+        "TITLE": "Joueur parti",
+        "MESSAGE": "{username} a quitté la salle. Joueurs présents : {numberOfPlayers}."
+      },
+      "GAME_STARTED": {
+        "TITLE": "Partie lancée",
+        "MESSAGE": "{username} a démarré la partie.",
+        "MESSAGE_WITHOUT_PLAYER": "La partie a démarré."
+      },
+      "TURN": {
+        "YOUR_TURN_TITLE": "À vous de jouer",
+        "YOUR_TURN_MESSAGE": "Vous avez {seconds} secondes pour nommer un pays.",
+        "PLAYER_TURN_TITLE": "Tour de {username}",
+        "PLAYER_TURN_MESSAGE": "{username} a {seconds} secondes pour répondre.",
+        "TIME_LEFT": "Temps restant"
+      },
+      "VOTE_REQUESTS": {
+        "PAUSE": {
+          "TITLE": "Demande de pause",
+          "MESSAGE": "{username} souhaite mettre la partie en pause."
+        },
+        "RESUME": {
+          "TITLE": "Demande de reprise",
+          "MESSAGE": "{username} souhaite reprendre la partie."
+        },
+        "RESTART": {
+          "TITLE": "Nouvelle partie",
+          "MESSAGE": "{username} souhaite jouer une nouvelle partie."
+        },
+        "WAITING": {
+          "PAUSE": {
+            "TITLE": "Demande de pause envoyée",
+            "MESSAGE": "En attente de l'accord des autres joueurs."
+          },
+          "RESUME": {
+            "TITLE": "Demande de reprise envoyée",
+            "MESSAGE": "En attente de l'accord des autres joueurs."
+          },
+          "RESTART": {
+            "TITLE": "Demande de nouvelle partie envoyée",
+            "MESSAGE": "En attente de l'accord des autres joueurs."
+          }
+        },
+        "ACTIONS": {
+          "ACCEPT": "Accepter",
+          "DECLINE": "Refuser"
+        }
+      }
+    },
+    "FINAL_SCOREBOARD": {
+      "MATCH_COMPLETE": "Partie terminée",
+      "TITLE": "Scores de la partie",
+      "PLAYERS": "Joueurs",
+      "DURATION": "Durée",
+      "COUNTRIES_FOUND": "Pays trouvés",
+      "RANK": "Rang",
+      "PLAYER": "Joueur",
+      "SCORE": "Score",
+      "YOU": "Vous",
+      "PLAY_AGAIN": "Jouer une nouvelle partie"
+    },
     "CONTINENT_NAME": {
       "AFRICA": "Afrique",
       "NORTH_AMERICA": "Amérique du Nord",
@@ -131,7 +236,11 @@
     }
   },
   "LANGUAGES": {
+    "ANY": "N'importe quelle langue",
     "FR": "Français",
-    "EN": "Anglais"
+    "EN": "Anglais",
+    "DE": "Allemand",
+    "ES": "Espagnol",
+    "JA": "Japonais"
   }
 }

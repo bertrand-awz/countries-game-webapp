@@ -2,34 +2,57 @@
   import { storeToRefs } from "pinia";
   import { computed, onBeforeUnmount, ref, watch } from "vue";
   import { useI18n } from "vue-i18n";
+  import { useRouter } from "vue-router";
 
   import { useAppDependencies } from "@/app/composables/useAppDependencies.ts";
   import LoadingLayout from "@/app/layouts/LoadingLayout.vue";
+  import { RouteName } from "@/app/router/routeName.ts";
   import { useGameMapStore } from "@/application/stores/gameMapStore.ts";
   import { useGameSessionStore } from "@/application/stores/gameSessionStore.ts";
   import {
+    leaveRoomUseCase,
     requestGamePauseUseCase,
+    requestGameRestartUseCase,
     requestGameResumeUseCase,
     startGameUseCase,
     submitCountryNameAnswerUseCase,
+    synchronizeCountdownSoundUseCase,
+    updateAnswerValidationLanguageUseCase,
+    updateRoomSettingsUseCase,
   } from "@/application/use-cases";
   import { GameStatus } from "@/domain/game/models/state/GameState.ts";
   import type { GameSetting } from "@/domain/game/settings";
+  import type { AnswerValidationLanguage } from "@/domain/shared/models/SupportedLanguage.ts";
   import GameNavbar from "@/presentation/components/game/dashboard/GameDashboardNavbar.vue";
   import GameSidebar from "@/presentation/components/game/dashboard/GameDashboardSidebar.vue";
+  import GameFinalScoreboardOverlay from "@/presentation/components/game/dashboard/GameFinalScoreboardOverlay.vue";
+  import GameWaitingQueue from "@/presentation/components/game/dashboard/GameWaitingQueue.vue";
   import GameBoard from "@/presentation/components/game/GameBoard.vue";
 
   const { soundManager } = useAppDependencies();
 
   const { t } = useI18n();
+  const router = useRouter();
   const gameMapStore = useGameMapStore();
   const gameSessionStore = useGameSessionStore();
   await gameMapStore.preload();
   const sidebarOpen = ref(false);
   const now = ref(Date.now());
   const pausedTimeLeftInSeconds = ref<number | null>(null);
+  const answerInputClearToken = ref(0);
 
-  const { currentPlayer, gameState, roomId } = storeToRefs(gameSessionStore);
+  const {
+    currentPlayer,
+    currentTurn,
+    currentWaitingPlayer,
+    foundCountries,
+    gameState,
+    highlightedCountryId,
+    isConnected,
+    isCurrentPlayerTurn,
+    roomId,
+    waitingPlayers,
+  } = storeToRefs(gameSessionStore);
   const timerInterval = window.setInterval(() => {
     if (gameState.value?.status === GameStatus.PLAYING) {
       now.value = Date.now();
@@ -58,22 +81,58 @@
     return calculateTimeLeftInSeconds(state.endAt);
   });
 
+  const canCurrentPlayerAnswer = computed(() => {
+    return isCurrentPlayerTurn.value && gameState.value?.status === GameStatus.PLAYING;
+  });
+
+  const answerInputFocusToken = computed(() => {
+    if (!canCurrentPlayerAnswer.value || !currentTurn.value) {
+      return "";
+    }
+
+    return `${currentTurn.value.playerId}-${currentTurn.value.startedAt}`;
+  });
+
   watch(
     () => gameState.value?.status,
     (status, previousStatus) => {
       if (status === GameStatus.PLAYING) {
         pausedTimeLeftInSeconds.value = null;
         now.value = Date.now();
-        soundManager.playMainThemeSound();
       } else if (status === GameStatus.PAUSED && previousStatus === GameStatus.PLAYING) {
         pausedTimeLeftInSeconds.value = calculateTimeLeftInSeconds(gameState.value?.endAt ?? 0);
+      }
+
+      if (status === GameStatus.FINISHED && previousStatus !== GameStatus.FINISHED) {
+        answerInputClearToken.value += 1;
       }
     },
     { immediate: true },
   );
 
+  watch(
+    [timeLeftInSeconds, gameState],
+    ([timeLeft, state]) => {
+      synchronizeCountdownSoundUseCase
+        .setOptions({
+          gameStatus: state?.status,
+          timeLeftInSeconds: timeLeft,
+          totalDurationInSeconds: state?.durationInSeconds ?? 0,
+        })
+        .execute();
+    },
+    { immediate: true },
+  );
+
+  watch(isConnected, (connected, wasConnected) => {
+    if (!connected && wasConnected) {
+      void router.push({ name: RouteName.HOME });
+    }
+  });
+
   onBeforeUnmount(() => {
     window.clearInterval(timerInterval);
+    synchronizeCountdownSoundUseCase.stop();
   });
 
   function start() {
@@ -88,12 +147,34 @@
     requestGameResumeUseCase.execute();
   }
 
+  function restart() {
+    requestGameRestartUseCase.execute();
+  }
+
+  async function exit() {
+    await leaveRoomUseCase.execute();
+    await router.push({ name: RouteName.HOME });
+  }
+
+  async function createRoomFromQueue() {
+    await leaveRoomUseCase.execute();
+    await router.push({ name: RouteName.GAME_ROOM_CREATION });
+  }
+
   function submitCountryNameAnswer(playerAnswer: string) {
+    if (!canCurrentPlayerAnswer.value) {
+      return;
+    }
+
     submitCountryNameAnswerUseCase.setOptions({ countryName: playerAnswer }).execute();
   }
 
   function applySettingCallback(newSetting: GameSetting) {
-    void newSetting;
+    updateRoomSettingsUseCase.setOptions(newSetting).execute();
+  }
+
+  function updateAnswerValidationLanguage(language: AnswerValidationLanguage) {
+    updateAnswerValidationLanguageUseCase.setOptions({ language }).execute();
   }
 
   function calculateTimeLeftInSeconds(endAt: number): number {
@@ -110,22 +191,51 @@
       :game-status="gameState.status"
       :request-pause="pause"
       :request-resume="resume"
+      :request-restart="restart"
+      :exit-game="exit"
       :start-game="start"
       :time-left-in-seconds="timeLeftInSeconds"
+      :total-duration-in-seconds="gameState.durationInSeconds"
       @open-sidebar="sidebarOpen = true"
     />
     <GameSidebar
       v-model:open="sidebarOpen"
       :game-state="gameState"
+      :current-player="currentPlayer"
       :room-id="roomId"
       :translator="t"
       :sound-manager="soundManager"
       :apply-setting-callback="applySettingCallback"
+      :update-answer-validation-language-callback="updateAnswerValidationLanguage"
       @update:open="sidebarOpen = false"
     />
     <GameBoard
       :country-name-answer-submitter="submitCountryNameAnswer"
       :countries-features="gameMapStore.getCountriesFeatures"
+      :can-answer="canCurrentPlayerAnswer"
+      :answer-input-focus-token="answerInputFocusToken"
+      :answer-input-clear-token="answerInputClearToken"
+      :highlighted-country-id="highlightedCountryId"
+      :found-countries="foundCountries"
+    />
+    <GameFinalScoreboardOverlay
+      v-if="gameState.status === GameStatus.FINISHED"
+      :game-state="gameState"
+      :current-player-id="gameSessionStore.playerId"
+      :translator="t"
+      :request-restart="restart"
+      :exit-game="exit"
+    />
+  </div>
+
+  <div v-else-if="gameState && currentWaitingPlayer" class="font-mono-app h-screen bg-black">
+    <GameWaitingQueue
+      :waiting-player="currentWaitingPlayer"
+      :waiting-players="waitingPlayers"
+      :time-left-in-seconds="timeLeftInSeconds"
+      :translator="t"
+      :create-room="createRoomFromQueue"
+      :leave-queue="exit"
     />
   </div>
 

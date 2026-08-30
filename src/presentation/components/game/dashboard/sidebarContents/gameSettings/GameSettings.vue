@@ -2,10 +2,12 @@
   import {
     CheckIcon,
     CopyIcon,
+    LanguagesIcon,
     LinkIcon,
     SettingsIcon,
     Share2Icon,
     TimerIcon,
+    TimerResetIcon,
     UsersRoundIcon,
     XIcon,
   } from "@lucide/vue";
@@ -15,12 +17,27 @@
   import { RouteName } from "@/app/router/routeName.ts";
   import { GameConstraints } from "@/domain/game/constraints/gameConstraints.ts";
   import type { GameSetting } from "@/domain/game/settings";
+  import {
+    type AnswerValidationLanguage,
+    ANY_ANSWER_VALIDATION_LANGUAGE,
+    isAnswerValidationLanguage,
+    SUPPORTED_ANSWER_VALIDATION_LANGUAGES,
+  } from "@/domain/shared/models/SupportedLanguage.ts";
   import InputRangeSlider from "@/presentation/components/partials/inputs/InputRangeSlider.vue";
+  import LabeledSelectionInput, {
+    type SelectOption,
+  } from "@/presentation/components/partials/inputs/LabeledSelectionInput.vue";
 
   const props = defineProps<{
     translator: (translationKey: string) => string;
     roomId: string | null;
+    gameDurationInMinutes: number;
+    maxPlayersAllowed: number;
+    turnDurationInSeconds: number;
+    answerValidationLanguage: AnswerValidationLanguage;
+    allowAnswerValidationInPlayerCurrentLanguage: boolean;
     applySettingCallback: (newSettings: GameSetting) => void;
+    updateAnswerValidationLanguageCallback: (language: AnswerValidationLanguage) => void;
   }>();
 
   type CopiedItem = "roomId" | "invitationLink";
@@ -30,13 +47,23 @@
   const copiedItem = ref<CopiedItem | null>(null);
   let copiedFeedbackTimeoutId: number | null = null;
 
-  const playersCount = defineModel<number>("playersCount", {
-    default: GameConstraints.ALLOWED_PLAYERS_NUMBER.min,
-  });
+  const maxPlayersAllowed = ref(props.maxPlayersAllowed);
+  const timerMinutes = ref(props.gameDurationInMinutes);
+  const turnDurationInSeconds = ref(props.turnDurationInSeconds);
+  const answerValidationLanguage = ref<string>(
+    props.answerValidationLanguage ?? ANY_ANSWER_VALIDATION_LANGUAGE,
+  );
 
-  const timerMinutes = defineModel<number>("timerMinutes", {
-    default: GameConstraints.ALLOWED_TIME_IN_MINUTES.min,
-  });
+  const languageOptions = computed<SelectOption[]>(() => [
+    {
+      label: props.translator("LANGUAGES.ANY"),
+      value: ANY_ANSWER_VALIDATION_LANGUAGE,
+    },
+    ...SUPPORTED_ANSWER_VALIDATION_LANGUAGES.map((language) => ({
+      label: props.translator(`LANGUAGES.${language.toUpperCase()}`),
+      value: language,
+    })),
+  ]);
 
   const invitationLink = computed(() => {
     if (!props.roomId) {
@@ -52,6 +79,10 @@
   });
 
   function openSettingsModal() {
+    maxPlayersAllowed.value = props.maxPlayersAllowed;
+    timerMinutes.value = props.gameDurationInMinutes;
+    turnDurationInSeconds.value = props.turnDurationInSeconds;
+    answerValidationLanguage.value = props.answerValidationLanguage;
     isSettingsOpen.value = true;
   }
 
@@ -60,8 +91,21 @@
   }
 
   function applySettings() {
-    const newSettings = { numPlayers: playersCount.value, durationInMinutes: timerMinutes.value };
+    const newSettings: GameSetting = {
+      maxPlayersAllowed: maxPlayersAllowed.value,
+      durationInMinutes: timerMinutes.value,
+      turnDurationInSeconds: turnDurationInSeconds.value,
+    };
+
     props.applySettingCallback(newSettings);
+
+    if (
+      props.allowAnswerValidationInPlayerCurrentLanguage &&
+      isAnswerValidationLanguage(answerValidationLanguage.value) &&
+      answerValidationLanguage.value !== props.answerValidationLanguage
+    ) {
+      props.updateAnswerValidationLanguageCallback(answerValidationLanguage.value);
+    }
     closeSettingsModal();
   }
 
@@ -246,7 +290,7 @@
           </div>
 
           <InputRangeSlider
-            v-model:input-value="playersCount"
+            v-model:input-value="maxPlayersAllowed"
             :label="translator('GAME.SIDEBAR.SETTINGS.MODAL.MAX_PLAYERS_ALLOWED')"
             label-class="text-sm font-normal"
             :icon-component="UsersRoundIcon"
@@ -266,6 +310,37 @@
             :maximum="GameConstraints.ALLOWED_TIME_IN_MINUTES.max"
             :unit="translator('GAME.SIDEBAR.SETTINGS.MODAL.GAME_DURATION_UNIT')"
           />
+
+          <InputRangeSlider
+            v-model:input-value="turnDurationInSeconds"
+            :label="translator('GAME.SIDEBAR.SETTINGS.MODAL.TURN_DURATION')"
+            label-class="text-sm font-normal"
+            :icon-component="TimerResetIcon"
+            :icon-color-class="'size-4 text-emerald-300'"
+            :minimum="GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.min"
+            :maximum="GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.max"
+            :unit="translator('GAME.SIDEBAR.SETTINGS.MODAL.TURN_DURATION_UNIT')"
+          />
+
+          <div
+            v-if="allowAnswerValidationInPlayerCurrentLanguage"
+            class="rounded-lg bg-white/5 px-3 py-3"
+          >
+            <div class="mb-3 flex items-center gap-x-2">
+              <LanguagesIcon class="size-4 text-emerald-300" />
+              <span class="text-sm font-normal">
+                {{ translator("GAME.SIDEBAR.SETTINGS.MODAL.ANSWER_VALIDATION_LANGUAGE") }}
+              </span>
+            </div>
+
+            <LabeledSelectionInput
+              id="answer-validation-language"
+              v-model="answerValidationLanguage"
+              :label="translator('GAME.SIDEBAR.SETTINGS.MODAL.ANSWER_VALIDATION_LANGUAGE')"
+              :hint="translator('GAME.SIDEBAR.SETTINGS.MODAL.ANSWER_VALIDATION_LANGUAGE_HINT')"
+              :options="languageOptions"
+            />
+          </div>
         </div>
 
         <!-- Footer -->

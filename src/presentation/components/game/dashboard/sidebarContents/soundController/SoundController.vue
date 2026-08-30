@@ -4,6 +4,7 @@
 
   import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
   import InputRangeSlider from "@/presentation/components/partials/inputs/InputRangeSlider.vue";
+  import LabeledCheckboxInput from "@/presentation/components/partials/inputs/LabeledCheckboxInput.vue";
 
   const props = defineProps<{
     translator: (translationKey: string) => string;
@@ -13,6 +14,7 @@
   const mainVolume = ref(props.soundManager.getMainVolume());
 
   const effectsVolume = ref(props.soundManager.getSoundEffectVolume());
+  const soundEffectsEnabled = ref(props.soundManager.areSoundEffectsEnabled());
 
   watch(mainVolume, (value: number) => {
     props.soundManager.setMainThemeVolume(value);
@@ -20,6 +22,10 @@
 
   watch(effectsVolume, (value: number) => {
     props.soundManager.setSoundEffectVolume(value);
+  });
+
+  watch(soundEffectsEnabled, (isEnabled: boolean) => {
+    props.soundManager.setSoundEffectsEnabled(isEnabled);
   });
 </script>
 
@@ -43,6 +49,13 @@
         unit="%"
       />
 
+      <LabeledCheckboxInput
+        id="sound-effects-enabled"
+        v-model="soundEffectsEnabled"
+        :label="translator('GAME.SIDEBAR.SOUND_CONTROLLER.ENABLE_SOUND_EFFECTS')"
+        :description="translator('GAME.SIDEBAR.SOUND_CONTROLLER.PERSONAL_SOUND_EFFECTS_SETTING')"
+      />
+
       <InputRangeSlider
         v-model:input-value="effectsVolume"
         :label="translator('GAME.SIDEBAR.SOUND_CONTROLLER.SOUND_EFFECTS')"
@@ -51,6 +64,7 @@
         :minimum="0"
         :maximum="100"
         unit="%"
+        :disabled="!soundEffectsEnabled"
       />
     </div>
   </section>
