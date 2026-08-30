@@ -58,7 +58,13 @@
 </script>
 
 <template>
-  <form id="answer-form" autocomplete="off" :aria-hidden="!isActive" @submit.prevent="onSubmit">
+  <form
+    id="answer-form"
+    class="answer-input-form"
+    autocomplete="off"
+    :aria-hidden="!isActive"
+    @submit.prevent="onSubmit"
+  >
     <div id="answer-input-container" class="answer-input-container" @click="focusInput">
       <input
         id="answer-input"
