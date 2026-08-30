@@ -10,27 +10,7 @@ import { SoundEffectName } from "@/domain/game/ports/SoundManager.ts";
 import { UseCase } from "./useCase.ts";
 
 export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
-  private readonly gameRoomNotificationReaction: GameRoomNotificationReaction;
-  private readonly gameActionVoteRequestedReaction: GameActionVoteRequestedReaction;
-  private readonly gameTurnChangedReaction: GameTurnChangedReaction;
   private unsubscribeCallbacks: Unsubscribe[] = [];
-
-  constructor() {
-    super();
-    this.gameRoomNotificationReaction = new GameRoomNotificationReaction(this.notifier);
-    this.gameActionVoteRequestedReaction = new GameActionVoteRequestedReaction(
-      this.notifier,
-      this.gameCommandGateway,
-      () => this.gameSessionStore.playerId,
-      () => {
-        void this.leaveRoomAfterDecliningRestart();
-      },
-    );
-    this.gameTurnChangedReaction = new GameTurnChangedReaction(
-      this.notifier,
-      () => this.gameSessionStore.playerId,
-    );
-  }
 
   execute(): void {
     this.clearSubscriptions();
@@ -118,6 +98,25 @@ export class RegisterGameEventReactionsUseCase extends UseCase<void, void> {
   clearSubscriptions(): void {
     this.unsubscribeCallbacks.forEach((unsubscribe) => unsubscribe());
     this.unsubscribeCallbacks = [];
+  }
+
+  private get gameRoomNotificationReaction(): GameRoomNotificationReaction {
+    return new GameRoomNotificationReaction(this.notifier);
+  }
+
+  private get gameActionVoteRequestedReaction(): GameActionVoteRequestedReaction {
+    return new GameActionVoteRequestedReaction(
+      this.notifier,
+      this.gameCommandGateway,
+      () => this.gameSessionStore.playerId,
+      () => {
+        void this.leaveRoomAfterDecliningRestart();
+      },
+    );
+  }
+
+  private get gameTurnChangedReaction(): GameTurnChangedReaction {
+    return new GameTurnChangedReaction(this.notifier, () => this.gameSessionStore.playerId);
   }
 
   private findPlayerUsername(playerId: string | undefined): string | null {

@@ -1,4 +1,4 @@
-import { appDependencies } from "@/app";
+import { type AppDependencies, appDependencies } from "@/app";
 import { useGameSessionStore } from "@/application/stores/gameSessionStore.ts";
 import type { GameMapApi } from "@/domain/game/ports/GameMapApi.ts";
 import type {
@@ -10,29 +10,30 @@ import type { SoundManager } from "@/domain/game/ports/SoundManager.ts";
 import type { Notifier } from "@/domain/notification/ports/Notifier.ts";
 
 export abstract class UseCase<TOptions = void, TResult = void> {
-  protected readonly gameRoomGateway: GameRoomGateway;
-  protected readonly gameCommandGateway: GameCommandGateway;
-  protected readonly gameEventGateway: GameEventGateway;
-  protected readonly soundManager: SoundManager;
-  protected readonly gameMapApi: GameMapApi;
-  protected readonly notifier: Notifier;
   protected options?: TOptions;
 
-  constructor() {
-    const {
-      soundManager,
-      gameMapApi,
-      gameRoomGateway,
-      gameCommandGateway,
-      gameEventGateway,
-      notifier,
-    } = appDependencies;
-    this.soundManager = soundManager;
-    this.gameRoomGateway = gameRoomGateway;
-    this.gameCommandGateway = gameCommandGateway;
-    this.gameEventGateway = gameEventGateway;
-    this.gameMapApi = gameMapApi;
-    this.notifier = notifier;
+  protected get gameRoomGateway(): GameRoomGateway {
+    return getConfiguredAppDependency("gameRoomGateway");
+  }
+
+  protected get gameCommandGateway(): GameCommandGateway {
+    return getConfiguredAppDependency("gameCommandGateway");
+  }
+
+  protected get gameEventGateway(): GameEventGateway {
+    return getConfiguredAppDependency("gameEventGateway");
+  }
+
+  protected get soundManager(): SoundManager {
+    return getConfiguredAppDependency("soundManager");
+  }
+
+  protected get gameMapApi(): GameMapApi {
+    return getConfiguredAppDependency("gameMapApi");
+  }
+
+  protected get notifier(): Notifier {
+    return getConfiguredAppDependency("notifier");
   }
 
   setOptions(options: TOptions): this {
@@ -45,4 +46,18 @@ export abstract class UseCase<TOptions = void, TResult = void> {
   }
 
   abstract execute(): TResult | Promise<TResult> | void;
+}
+
+function getConfiguredAppDependency<TKey extends keyof AppDependencies>(
+  dependencyName: TKey,
+): AppDependencies[TKey] {
+  const dependency = appDependencies[dependencyName];
+
+  if (!dependency) {
+    throw new Error(
+      `App dependency "${String(dependencyName)}" was used before app dependencies were configured.`,
+    );
+  }
+
+  return dependency;
 }
