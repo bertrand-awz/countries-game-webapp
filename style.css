@@ -23,11 +23,11 @@
   }
 
   .game-board {
-    @apply h-full w-full flex-row justify-between bg-black lg:pl-72;
+    @apply flex h-full w-full flex-col bg-black lg:pl-72;
   }
 
   .game-board-map {
-    @apply flex items-center justify-center;
+    @apply relative flex min-h-0 flex-1 items-center justify-center overflow-hidden;
   }
   .navbar {
     @apply relative border-b border-white/10 bg-neutral-950;
