@@ -22,13 +22,25 @@ export type AppDependencies = {
   notifier: Notifier;
 };
 
-const colyseusRoomGateway = new ColyseusRoomGateway();
-
-export const appDependencies: AppDependencies = {
-  gameRoomGateway: colyseusRoomGateway,
-  gameCommandGateway: new ColyseusGameCommandGateway(colyseusRoomGateway),
-  gameEventGateway: new ColyseusGameEventGateway(colyseusRoomGateway),
-  soundManager: new HowlerSoundManager(),
-  gameMapApi: new AxiosGameMapApi(),
-  notifier: new ToastNotifier(),
+type AppConfig = {
+  gameServerUrl: string;
 };
+
+export const appDependencies = {} as AppDependencies;
+
+export function createAppDependencies(config: AppConfig): AppDependencies {
+  const colyseusRoomGateway = new ColyseusRoomGateway(config.gameServerUrl);
+
+  return {
+    gameRoomGateway: colyseusRoomGateway,
+    gameCommandGateway: new ColyseusGameCommandGateway(colyseusRoomGateway),
+    gameEventGateway: new ColyseusGameEventGateway(colyseusRoomGateway),
+    soundManager: new HowlerSoundManager(),
+    gameMapApi: new AxiosGameMapApi(config.gameServerUrl),
+    notifier: new ToastNotifier(),
+  };
+}
+
+export function configureAppDependencies(dependencies: AppDependencies): void {
+  Object.assign(appDependencies, dependencies);
+}

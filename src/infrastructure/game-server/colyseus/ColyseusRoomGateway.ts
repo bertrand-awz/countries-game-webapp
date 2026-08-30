@@ -19,7 +19,7 @@ export class ColyseusRoomGateway implements GameRoomGateway {
   private room: Room | null = null;
   private readonly activeRoomChangeListeners = new Set<ActiveRoomChangeListener>();
 
-  constructor(endpoint: string = "http://localhost:2567") {
+  constructor(endpoint: string) {
     this.client = new Client(endpoint);
   }
 

@@ -7,9 +7,9 @@ import type { GameMapApi } from "@/domain/game/ports/GameMapApi.ts";
 export class AxiosGameMapApi implements GameMapApi {
   private readonly apiClient: AxiosInstance;
 
-  constructor() {
+  constructor(baseUrl: string) {
     this.apiClient = axios.create({
-      baseURL: "http://localhost:2567",
+      baseURL: baseUrl,
     });
   }
 
