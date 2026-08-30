@@ -316,7 +316,7 @@
             :label="translator('GAME.SIDEBAR.SETTINGS.MODAL.TURN_DURATION')"
             label-class="text-sm font-normal"
             :icon-component="TimerResetIcon"
-            :icon-color-class="'size-4 text-cyan-300'"
+            :icon-color-class="'size-4 text-emerald-300'"
             :minimum="GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.min"
             :maximum="GameConstraints.ALLOWED_TURN_TIME_IN_SECONDS.max"
             :unit="translator('GAME.SIDEBAR.SETTINGS.MODAL.TURN_DURATION_UNIT')"
