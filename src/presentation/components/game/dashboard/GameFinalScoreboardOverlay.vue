@@ -32,6 +32,10 @@
     }, 0);
   });
 
+  const formattedGameDuration = computed(() => {
+    return formatDuration(props.gameState.durationInSeconds);
+  });
+
   const podiumMedals = [
     {
       label: "1",
@@ -56,6 +60,19 @@
 
   function getPodiumMedal(playerIndex: number) {
     return podiumMedals[playerIndex] ?? null;
+  }
+
+  function formatDuration(durationInSeconds: number): string {
+    const safeDurationInSeconds = Math.max(0, Math.round(durationInSeconds));
+    const hours = Math.floor(safeDurationInSeconds / 3600);
+    const minutes = Math.floor((safeDurationInSeconds % 3600) / 60);
+    const seconds = safeDurationInSeconds % 60;
+
+    if (hours > 0) {
+      return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    return `${minutes}:${String(seconds).padStart(2, "0")}`;
   }
 </script>
 
@@ -97,10 +114,15 @@
         </div>
       </header>
 
-      <div class="grid gap-3 border-b border-white/10 px-5 py-4 sm:grid-cols-2 sm:px-6">
+      <div class="grid gap-3 border-b border-white/10 px-5 py-4 sm:grid-cols-3 sm:px-6">
         <div class="rounded-md bg-white/5 px-3 py-3">
           <p class="text-xs text-gray-400">{{ translator("GAME.FINAL_SCOREBOARD.PLAYERS") }}</p>
           <p class="mt-1 text-xl font-bold">{{ gameState.players.length }}</p>
+        </div>
+
+        <div class="rounded-md bg-white/5 px-3 py-3">
+          <p class="text-xs text-gray-400">{{ translator("GAME.FINAL_SCOREBOARD.DURATION") }}</p>
+          <p class="mt-1 text-xl font-bold">{{ formattedGameDuration }}</p>
         </div>
 
         <div class="rounded-md bg-white/5 px-3 py-3">

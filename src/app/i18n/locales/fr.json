@@ -214,9 +214,10 @@
       }
     },
     "FINAL_SCOREBOARD": {
-      "MATCH_COMPLETE": "Match terminé",
-      "TITLE": "Tableau final",
+      "MATCH_COMPLETE": "Partie terminée",
+      "TITLE": "Scores de la partie",
       "PLAYERS": "Joueurs",
+      "DURATION": "Durée",
       "COUNTRIES_FOUND": "Pays trouvés",
       "RANK": "Rang",
       "PLAYER": "Joueur",
