@@ -4,8 +4,6 @@ coverage
 .vite
 tests
 test-support
-deploy
-docker-compose*.yml
 
 .git
 .agents
